@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
+import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -67,29 +69,43 @@ class Dashboard extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: const GNav(
+      bottomNavigationBar: GNav(
         backgroundColor: Colors.black,
         color: Colors.white,
-        activeColor: Color.fromARGB(255, 101, 166, 213),
-        tabBackgroundColor: Color.fromARGB(255, 26, 26, 26),
+        activeColor: const Color.fromARGB(255, 101, 166, 213),
+        tabBackgroundColor: const Color.fromARGB(255, 26, 26, 26),
         gap: 7,
         tabs: [
-          GButton(
+          const GButton(
             icon: Icons.home,
             text: 'Inicio',
           ),
-          GButton(
+           GButton(
             icon: Icons.airplane_ticket_rounded,
             text: 'Ticket',
+            onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TicketsPage()),
+                );
+              }
           ),
-          GButton(
+          const GButton(
             icon: Icons.picture_as_pdf_rounded,
             text: 'Documentos',
           ),
           GButton(
-            icon: Icons.person,
-            text: 'Perfil',
-          ),
+              icon: Icons.person,
+              text: 'Perfil',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PerfilUsuario()),
+                );
+              }
+              ),
         ],
       ),
     );

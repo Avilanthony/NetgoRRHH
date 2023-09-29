@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
+import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 
 class PerfilUsuario extends StatelessWidget {
   const PerfilUsuario({Key? key}) : super(key: key);
@@ -49,29 +51,45 @@ class PerfilUsuario extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const GNav(
+      bottomNavigationBar: GNav(
         backgroundColor: Colors.black,
         color: Colors.white,
-        activeColor: Color.fromARGB(255, 101, 166, 213),
-        tabBackgroundColor: Color.fromARGB(255, 26, 26, 26),
+        activeColor: const Color.fromARGB(255, 101, 166, 213),
+        tabBackgroundColor: const Color.fromARGB(255, 26, 26, 26),
         gap: 7,
         tabs: [
           GButton(
-            icon: Icons.home,
-            text: 'Inicio',
-          ),
+              icon: Icons.home,
+              text: 'Inicio',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Dashboard()),
+                );
+              }),
           GButton(
-            icon: Icons.airplane_ticket_rounded,
-            text: 'Ticket',
-          ),
-          GButton(
+              icon: Icons.airplane_ticket_rounded,
+              text: 'Ticket',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TicketsPage()),
+                );
+              }),
+          const GButton(
             icon: Icons.picture_as_pdf_rounded,
             text: 'Documentos',
           ),
           GButton(
-            icon: Icons.person,
-            text: 'Perfil',
-          ),
+              icon: Icons.person,
+              text: 'Perfil',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PerfilUsuario()),
+                );
+              }),
         ],
       ),
     );
@@ -101,121 +119,3 @@ itemPerfil(String title, String subtitle, IconData iconData) {
     ),
   );
 }
-
-/*class ProfileMenuWidget extends StatelessWidget {
-  const ProfileMenuWidget({
-    Key? key,
-    required this.title,
-    required this.icon,
-    required this.onPressed,
-    this.endIcon = true,
-    this.textColor,
-  }) : super(key: key);
-
-  final String title;
-  final IconData icon;
-  final VoidCallback onPressed;
-  final bool endIcon;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: const Color.fromARGB(128, 220, 204, 204),
-        ),
-        child: Icon(icon, color: const Color.fromARGB(255, 30, 0, 255)),
-      ),
-      title: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-      trailing: Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: const Color.fromARGB(255, 117, 107, 107).withOpacity(0.1)),
-        child: const Icon(LineAwesomeIcons.angle_right,
-            size: 18.0, color: Colors.grey),
-      ),
-    );
-  }
-}*/
-
-/*SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(50),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 150,
-                height: 150,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: const Image(
-                      image: AssetImage('assets/images/scarleth.png')),
-                ),
-              ),
-              const SizedBox(height: 25),
-              Text.rich(
-                TextSpan(
-                    text: 'Scarleth Baquedano',
-                    style: GoogleFonts.josefinSans(
-                        fontSize: 30, fontWeight: FontWeight.bold)),
-              ),
-              Text.rich(
-                TextSpan(
-                    text: 'Nombre\n',
-                    style: GoogleFonts.josefinSans(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 25),
-              Text.rich(
-                TextSpan(
-                    text: 'abigail@correo.com',
-                    style: GoogleFonts.josefinSans(
-                        fontSize: 30, fontWeight: FontWeight.bold)),
-              ),
-              Text.rich(
-                TextSpan(
-                    text: 'Correo\n',
-                    style: GoogleFonts.josefinSans(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
-              ),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey,
-                      side: BorderSide.none,
-                      shape: const StadiumBorder()),
-                  child: const Text('EditarPerfil'),
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Divider(),
-              const SizedBox(height: 10),
-
-              //MENU
-              ProfileMenuWidget(title: "Ajustes", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(title: "Ajustes", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(title: "Ajustes", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(title: "Ajustes", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(title: "Detalles", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(title: "Ajustes", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              const Divider(),
-              const SizedBox(height: 10),
-              ProfileMenuWidget(title: "Información", icon: LineAwesomeIcons.cog, onPressed: (){}),
-              ProfileMenuWidget(
-                title: "Salir", 
-                icon: LineAwesomeIcons.alternate_sign_out,
-                textColor: Colors.red,
-                endIcon: false,
-                onPressed: (){}),
-            ],
-          ),
-        ),
-      ),*/

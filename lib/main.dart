@@ -1,9 +1,6 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
-import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
-import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 
