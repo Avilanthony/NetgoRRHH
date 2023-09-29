@@ -1,243 +1,217 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/widgets/tickets.dart';
+import 'package:recursos_humanos_netgo/login.dart';
+import 'package:recursos_humanos_netgo/signup.dart';
 
 void main() {
-  runApp(
-    
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Netgo RRHH',
-      home: TicketsPage(),
-    )
-
-  );
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: HomePage(),
+  ));
 }
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatelessWidget {
 
   @override
-  Widget build(BuildContext context){
+
+  Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
 
-        children: <Widget>[
+      body: SafeArea(
 
-          Container(
-            height: 400,
-            decoration: BoxDecoration(
+        child: Container(
 
-              image: DecorationImage(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
 
-                image: AssetImage('assets/images/Header.png'),
-                fit: BoxFit.fill
-                  
-              )
+          child: Column(
 
-            ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
 
-            child: Stack(
+            children: <Widget>[
 
-              children: <Widget>[
+              //AQUI
+              Column(
 
-                Positioned(
 
-                  left: 30,
-                  width: 80,
-                  height: 200,
+                children: <Widget>[
 
-                  child: Container(
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: AssetImage('assets/images/light-1.png')
-
-                      )
-
-                    ),
-
-                  ),
-
-                ),
-
-                Positioned(
-
-                  left: 140,
-                  width: 80,
-                  height: 150,
-
-                  child: Container(
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: AssetImage('assets/images/light-2.png')
-
-                      )
-
-                    ),
-
-                  ),
-
-                ),
-
-                 Positioned(
-
-                  right: 40,
-                  top: 5,
-                  width: 80,
-                  height: 150,
-
-                  child: Container(
-
-                    decoration: BoxDecoration(
-
-                      image: DecorationImage(
-
-                        image: AssetImage('assets/images/clock.png')
-
-                      )
-
-                    ),
-
-                  ),
-
-                ),
-
-                Positioned(
-
-                  child: Container(
-
-                    margin: EdgeInsets.only(top:50),
-
-                    child: Center(
-
-                      child: Text("Login", style: TextStyle(color: Color.fromARGB(255, 43, 43, 43), fontSize: 40, fontWeight: FontWeight.bold)),
-                  
-                    )
-
-                  ),
-
-                ),
-
-              ],
-
-            ),
-
-          ),
-
-          Padding(
-            padding: EdgeInsets.all(30.0),
-
-            child: Column(
-
-              children:<Widget>[
-                
-                Container(
-
-                  padding: EdgeInsets.all(5),
-
-                  decoration: BoxDecoration(
-
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-
-                        color: Color.fromRGBO(143, 148, 251, 0.2),
-                        blurRadius: 20.0,
-                        offset: Offset.fromDirection(0, 10)
-                      )
-                    ]
-
-                  ),
-
-                  child: Column(
-
-                    children: <Widget>[
-
-                      Container(
-
-                        padding: EdgeInsets.all(8.0),
-
-                        decoration: BoxDecoration(
-
-                          border: Border(bottom: BorderSide(color:Colors.grey))
-
-                        ),
-
-                        child: TextField(
-
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Correo",
-                            hintStyle: TextStyle(color: Colors.grey[400])
-                          ),
-
-                        ),
-
-                      ),
-
-                      Container(
-
-                        padding: EdgeInsets.all(8.0),
-
-                        child: TextField(
-
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Contraseña",
-                            hintStyle: TextStyle(color: Colors.grey[400])
-                          ),
-
-                        ),
-
-                      ),
-
-                      SizedBox(
-
-                        height: 30,
-                      ),
-
-                      Container(
-
-                        height: 50,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-
-                              Color.fromRGBO(143, 148, 251, 0.2),
-
-                            ]
-                          )
-                        ),
-                      )
-
-                    ],
+                  Text(
                     
+                    "Bienvenido",
+
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+
+                  ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Text(
+                    
+                    "Para acceder a la aplicación primero debes ingresar tus datos",
+
+                    textAlign: TextAlign.center,
+
+                    style: TextStyle(
+                      color: Colors.grey[780],
+                      fontSize: 15,
+                    ),
+
+                  ),
+
+
+                ],
+
+              ),
+
+              //AQUI
+
+              Container(
+
+                height: MediaQuery.of(context).size.height / 3,
+
+                decoration: BoxDecoration(
+
+                  image: DecorationImage(
+
+                    image: AssetImage("assets/images/Header.png")
+
                   )
 
-                )
+                ),
 
-              ]
-            ),
-          ),
-            
+              ),
 
-        ]
+              //AQUÍ
 
+              Column(
+                children: <Widget>[
+                  MaterialButton(
+
+                    minWidth: double.infinity,
+                    height: 60,
+                    onPressed: (){
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                        
+                    },
+
+                    shape: RoundedRectangleBorder(
+
+                      side: BorderSide(
+
+                        color: Colors.black
+
+                      ),
+
+                      borderRadius: BorderRadius.circular(50)
+
+                    ),
+
+                    child: Text(
+
+                      "Ingresar", 
+
+                      style: TextStyle(
+
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18
+
+                      ),
+
+                    ),
+
+                  ),
+
+                  //SIGUIENTE BOTÓN
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Container(
+
+                    padding: EdgeInsets.only(top: 1.5, left: 1.5),
+                    
+                    decoration: BoxDecoration(
+
+                      borderRadius: BorderRadius.circular(50),
+
+                      border: Border(
+
+                        bottom: BorderSide(color: Colors.black),
+                        top: BorderSide(color: Colors.black),
+                        left: BorderSide(color: Colors.black),
+                        right: BorderSide(color: Colors.black),
+
+                      )
+
+                    ),
+                    
+                    child: MaterialButton(
+
+                      minWidth: double.infinity,
+                      height: 60,
+
+                      onPressed: (){
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+
+                      },
+
+                      color: Color.fromARGB(255, 139, 194, 68),
+                      elevation: 0,
+
+                      shape: RoundedRectangleBorder(
+
+                        borderRadius: BorderRadius.circular(50)
+
+                      ),
+
+                      child: Text(
+
+                        "Registrarse", 
+
+                        style: TextStyle(
+                          
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18
+
+                        ),
+
+                      ),
+
+                    ),
+
+                  )
+
+                ],
+
+              )
+
+            ],
+
+          )
+
+        ),
+      
       ),
 
     );
-    
+
   }
 
 }
