@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
+import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 
 void main() {
   runApp(
@@ -10,7 +11,7 @@ void main() {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Netgo RRHH',
-      home: PerfilUsuario(),
+      home: TicketsPage(),
     )
 
   );

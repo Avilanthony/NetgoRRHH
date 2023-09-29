@@ -74,7 +74,7 @@ class PerfilUsuario extends StatelessWidget {
           ),
         ],
       ),
-          );
+    );
   }
 }
 
