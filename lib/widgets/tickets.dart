@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:ticket_widget/ticket_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TicketsPage extends StatefulWidget {
   const TicketsPage({super.key});
@@ -16,14 +17,24 @@ class _TicketsPage extends State<TicketsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text.rich(
+          TextSpan(
+              text: 'RR-HH Netgo - Perfil',
+              style: GoogleFonts.josefinSans(
+                  fontSize: 20, fontWeight: FontWeight.bold)),
+          textAlign: TextAlign.center,
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(0),
         child: Column(
           children: [
             const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Text(
               "Tickets".toUpperCase(),
               style: const TextStyle(
@@ -32,14 +43,14 @@ class _TicketsPage extends State<TicketsPage> {
                   color: Colors.white),
             ),
             const Text(
-              "\nAqui puede crear su ticke \nal departamento de \nrecursos humanos",
+              "\nCrear un ticke para el \n departamento de recursos humanos",
               style: TextStyle(
                   fontSize: 15,
                   fontStyle: FontStyle.italic,
                   color: Colors.white),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 10),
             const TicketWidget(
               width: 300,
               height: 500,
@@ -56,7 +67,7 @@ class _TicketsPage extends State<TicketsPage> {
                               radius: 60,
                               child: CircleAvatar(
                                 backgroundImage:
-                                    AssetImage('assets/images/papi.jpg'),
+                                    AssetImage('assets/images/user.png'),
                                 backgroundColor: Colors.black,
                                 radius: 55,
                               ),

@@ -58,7 +58,7 @@ class Dashboard extends StatelessWidget {
                               ?.copyWith(color: Colors.white)),
                       trailing: const CircleAvatar(
                         radius: 30,
-                        backgroundImage: AssetImage('assets/images/papi.jpg'),
+                        backgroundImage: AssetImage('assets/images/user.png'),
                       ),
                     ),
                   ],

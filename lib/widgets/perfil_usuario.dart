@@ -29,7 +29,7 @@ class PerfilUsuario extends StatelessWidget {
           children: [
             const CircleAvatar(
               radius: 90,
-              backgroundImage: AssetImage('assets/images/papi.jpg'),
+              backgroundImage: AssetImage('assets/images/user.png'),
             ),
             const SizedBox(height: 25),
             itemPerfil('Henry Cavil', 'Nombre', CupertinoIcons.person),
