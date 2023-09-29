@@ -1,13 +1,16 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
+import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 
 void main() {
   runApp(
     
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      title: 'Netgo RRHH',
+      home: PerfilUsuario(),
     )
 
   );
