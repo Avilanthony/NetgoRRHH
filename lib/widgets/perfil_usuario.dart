@@ -35,7 +35,7 @@ class PerfilUsuario extends StatelessWidget {
               backgroundImage: AssetImage('assets/images/user.png'),
             ),
             const SizedBox(height: 25),
-            itemPerfil('Henry Cavil', 'Nombre', CupertinoIcons.person),
+            itemPerfil('Anthony Avila', 'Nombre', CupertinoIcons.person),
             const SizedBox(height: 20),
             itemPerfil('+504 9452-1396', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),

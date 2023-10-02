@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:recursos_humanos_netgo/login.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
 
 class SignupPage extends StatelessWidget {
   
