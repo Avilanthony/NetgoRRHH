@@ -136,7 +136,7 @@ class SignupPage extends StatelessWidget {
                       height: 60,
                       onPressed: (){
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
 
                       },
                       color: Color.fromARGB(255, 81, 124, 193),
