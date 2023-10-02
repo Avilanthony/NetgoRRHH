@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
-import 'package:recursos_humanos_netgo/widgets/documentos.dart';
+import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 
-class PerfilUsuario extends StatelessWidget {
-  const PerfilUsuario({Key? key}) : super(key: key);
+class Documentos extends StatelessWidget {
+  const Documentos({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class PerfilUsuario extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         title: Text.rich(
           TextSpan(
-              text: 'Perfil',
+              text: 'Documentos',
               style: GoogleFonts.josefinSans(
                   fontSize: 20, 
                   fontWeight: FontWeight.bold,
@@ -27,30 +27,28 @@ class PerfilUsuario extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const CircleAvatar(
-              radius: 90,
-              backgroundImage: AssetImage('assets/images/user.png'),
+            Text(
+              "Documentos".toUpperCase(),
+              style: GoogleFonts.croissantOne(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             const SizedBox(height: 25),
-            itemPerfil('Henry Cavil', 'Nombre', CupertinoIcons.person),
+            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle),
             const SizedBox(height: 20),
-            itemPerfil('+504 9452-1396', 'Telefono', CupertinoIcons.phone),
+            itemPerfil('Contancia', '', CupertinoIcons.doc),
             const SizedBox(height: 20),
-            itemPerfil(
-                'Tegucigalpa, Honduras', 'Localidad', CupertinoIcons.map),
+            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust),
             const SizedBox(height: 20),
-            itemPerfil('Henry@Netgo.com', 'Correo', CupertinoIcons.mail),
-            const SizedBox(height: 25),
-            ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(10),
-                    shadowColor: Colors.black,
-                    backgroundColor: const Color.fromARGB(255, 81, 124, 193)),
-                child: const Text('Editar Perfil'))
+            itemPerfil('Informe', '', CupertinoIcons.doc_append),
+            const SizedBox(height: 20),
+            itemPerfil('Contrato', '', CupertinoIcons.doc_person),
+            const SizedBox(height: 20),
+            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart),
           ],
         ),
       ),
@@ -112,7 +110,7 @@ itemPerfil(String title, String subtitle, IconData iconData) {
       boxShadow: [
         BoxShadow(
           offset: const Offset(0, 5),
-          color: const Color.fromARGB(179, 10, 47, 196).withOpacity(0.2),
+          color: const Color.fromARGB(146, 17, 0, 255).withOpacity(0.2),
           spreadRadius: 5,
           blurRadius: 10,
         ),
@@ -120,8 +118,9 @@ itemPerfil(String title, String subtitle, IconData iconData) {
     ),
     child: ListTile(
       title: Text(title),
-      subtitle: Text(subtitle),
-      leading: Icon(iconData),
+      leading: Icon(iconData) ,
+      iconColor: const Color.fromARGB(255, 81, 124, 193),
+      trailing: const Icon(Icons.arrow_forward, color: Color.fromARGB(255, 81, 124, 193)),
       textColor: const Color.fromARGB(255, 0, 0, 0),
     ),
   );

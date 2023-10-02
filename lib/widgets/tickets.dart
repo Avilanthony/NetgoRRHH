@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
+import 'package:recursos_humanos_netgo/widgets/documentos.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,12 +19,14 @@ class _TicketsPage extends State<TicketsPage> {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         title: Text.rich(
           TextSpan(
-              text: 'RR-HH Netgo - Perfil',
+              text: 'Tickets',
               style: GoogleFonts.josefinSans(
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
           textAlign: TextAlign.center,
         ),
       ),
@@ -32,22 +35,22 @@ class _TicketsPage extends State<TicketsPage> {
         child: Column(
           children: [
             const Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
-            const SizedBox(height: 10),
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+            const SizedBox(height: 8),
             Text(
               "Tickets".toUpperCase(),
-              style: const TextStyle(
+              style: GoogleFonts.croissantOne(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: const Color.fromARGB(255, 255, 255, 255)),
             ),
-            const Text(
-              "\nCrear un ticke para el \n departamento de recursos humanos",
-              style: TextStyle(
+            Text(
+              "\nCrear un ticket para el \n departamento de recursos humanos",
+              style: GoogleFonts.croissantOne(
                   fontSize: 15,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 255, 255, 255)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
@@ -68,12 +71,12 @@ class _TicketsPage extends State<TicketsPage> {
                               child: CircleAvatar(
                                 backgroundImage:
                                     AssetImage('assets/images/user.png'),
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color.fromARGB(255, 172, 172, 172),
                                 radius: 55,
                               ),
                             ),
                             Text(
-                              "Henry Cavil",
+                              "Anthony Avila",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
@@ -85,7 +88,7 @@ class _TicketsPage extends State<TicketsPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.archive,
-                                    color: Colors.grey, size: 18),
+                                    color: Colors.blueGrey, size: 18),
                                 Text(
                                   'Dep. Contabilidad',
                                   style: TextStyle(
@@ -121,7 +124,8 @@ class _TicketsPage extends State<TicketsPage> {
               width: 140,
               child: ElevatedButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 139, 194, 68)),
                 child: const Text('Enviar'),
               ),
             )
@@ -129,10 +133,10 @@ class _TicketsPage extends State<TicketsPage> {
         ),
       ),
       bottomNavigationBar: GNav(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         color: Colors.white,
-        activeColor: const Color.fromARGB(255, 101, 166, 213),
-        tabBackgroundColor: const Color.fromARGB(255, 26, 26, 26),
+        activeColor: const Color.fromARGB(255, 255, 255, 255),
+        tabBackgroundColor: const Color.fromARGB(255, 115, 150, 207),
         gap: 7,
         tabs: [
           GButton(
@@ -153,10 +157,15 @@ class _TicketsPage extends State<TicketsPage> {
                   MaterialPageRoute(builder: (context) => const TicketsPage()),
                 );
               }),
-          const GButton(
-            icon: Icons.picture_as_pdf_rounded,
-            text: 'Documentos',
-          ),
+          GButton(
+              icon: Icons.picture_as_pdf_rounded,
+              text: 'Documentos',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Documentos()),
+                );
+              }),
           GButton(
               icon: Icons.person,
               text: 'Perfil',
