@@ -14,18 +14,6 @@ class Documentos extends StatelessWidget {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-        title: Text.rich(
-          TextSpan(
-              text: 'Documentos',
-              style: GoogleFonts.josefinSans(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          textAlign: TextAlign.center,
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -44,15 +32,15 @@ class Documentos extends StatelessWidget {
             const SizedBox(height: 20),
             itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust),
             const SizedBox(height: 20),
-            itemPerfil('Informe', '', CupertinoIcons.doc_append),
-            const SizedBox(height: 20),
             itemPerfil('Contrato', '', CupertinoIcons.doc_person),
             const SizedBox(height: 20),
             itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart),
+            const SizedBox(height: 20),
+            itemPerfil('Notificaciones Generales', '', CupertinoIcons.bell),
           ],
         ),
       ),
-      bottomNavigationBar: GNav(
+      /*bottomNavigationBar: GNav(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         color: Colors.white,
         activeColor: const Color.fromARGB(255, 255, 255, 255),
@@ -97,7 +85,7 @@ class Documentos extends StatelessWidget {
                 );
               }),
         ],
-      ),
+      ),*/
     );
   }
 }
@@ -118,9 +106,10 @@ itemPerfil(String title, String subtitle, IconData iconData) {
     ),
     child: ListTile(
       title: Text(title),
-      leading: Icon(iconData) ,
+      leading: Icon(iconData),
       iconColor: const Color.fromARGB(255, 81, 124, 193),
-      trailing: const Icon(Icons.arrow_forward, color: Color.fromARGB(255, 81, 124, 193)),
+      trailing: const Icon(Icons.arrow_forward,
+          color: Color.fromARGB(255, 81, 124, 193)),
       textColor: const Color.fromARGB(255, 0, 0, 0),
     ),
   );

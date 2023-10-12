@@ -14,22 +14,17 @@ class PerfilUsuario extends StatelessWidget {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-        title: Text.rich(
-          TextSpan(
-              text: 'Perfil',
-              style: GoogleFonts.josefinSans(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          textAlign: TextAlign.center,
-        ),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           children: [
+            Text(
+              "Perfil".toUpperCase(),
+              style: GoogleFonts.croissantOne(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 0, 0, 0)),
+            ),
             const CircleAvatar(
               radius: 90,
               backgroundImage: AssetImage('assets/images/user.png'),
@@ -42,7 +37,7 @@ class PerfilUsuario extends StatelessWidget {
             itemPerfil(
                 'Tegucigalpa, Honduras', 'Localidad', CupertinoIcons.map),
             const SizedBox(height: 20),
-            itemPerfil('Henry@Netgo.com', 'Correo', CupertinoIcons.mail),
+            itemPerfil('Anthony@Netgo.com', 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 25),
             ElevatedButton(
                 onPressed: () {},
@@ -54,7 +49,7 @@ class PerfilUsuario extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: GNav(
+      /*bottomNavigationBar: GNav(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         color: Colors.white,
         activeColor: const Color.fromARGB(255, 255, 255, 255),
@@ -99,7 +94,7 @@ class PerfilUsuario extends StatelessWidget {
                 );
               }),
         ],
-      ),
+      ),*/
     );
   }
 }

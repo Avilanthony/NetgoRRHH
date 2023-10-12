@@ -18,7 +18,7 @@ class _TicketsPage extends State<TicketsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         title: Text.rich(
           TextSpan(
@@ -29,7 +29,7 @@ class _TicketsPage extends State<TicketsPage> {
                   color: Colors.white)),
           textAlign: TextAlign.center,
         ),
-      ),
+      ),*/
       body: Padding(
         padding: const EdgeInsets.all(0),
         child: Column(
@@ -132,7 +132,7 @@ class _TicketsPage extends State<TicketsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: GNav(
+      /*bottomNavigationBar: GNav(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         color: Colors.white,
         activeColor: const Color.fromARGB(255, 255, 255, 255),
@@ -177,7 +177,7 @@ class _TicketsPage extends State<TicketsPage> {
                 );
               }),
         ],
-      ),
+      ),*/
     );
   }
 }
