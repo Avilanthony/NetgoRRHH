@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
-import 'package:recursos_humanos_netgo/widgets/documentos.dart';
-import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 

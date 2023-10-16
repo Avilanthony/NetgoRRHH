@@ -1,10 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
-import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
-import 'package:recursos_humanos_netgo/widgets/tickets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Documentos extends StatelessWidget {
   const Documentos({Key? key}) : super(key: key);
@@ -26,91 +25,56 @@ class Documentos extends StatelessWidget {
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             const SizedBox(height: 25),
-            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle),
+            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, ""),
             const SizedBox(height: 20),
-            itemPerfil('Contancia', '', CupertinoIcons.doc),
+            itemPerfil('Contancia', '', CupertinoIcons.doc, ""),
             const SizedBox(height: 20),
-            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust),
+            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, ""),
             const SizedBox(height: 20),
-            itemPerfil('Contrato', '', CupertinoIcons.doc_person),
+            itemPerfil('Contrato', '', CupertinoIcons.doc_person, ""),
             const SizedBox(height: 20),
-            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart),
+            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, ""),
             const SizedBox(height: 20),
-            itemPerfil('Notificaciones Generales', '', CupertinoIcons.bell),
+            itemPerfil('Notificaciones Generales', '', CupertinoIcons.bell, ""),
+            const SizedBox(height: 20),
+            itemPerfil('Pagina Web', '', CupertinoIcons.macwindow, 'https://netgogroup.com/'),
           ],
         ),
       ),
-      /*bottomNavigationBar: GNav(
-        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-        color: Colors.white,
-        activeColor: const Color.fromARGB(255, 255, 255, 255),
-        tabBackgroundColor: const Color.fromARGB(255, 115, 150, 207),
-        gap: 7,
-        tabs: [
-          GButton(
-              icon: Icons.home,
-              text: 'Inicio',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Dashboard()),
-                );
-              }),
-          GButton(
-              icon: Icons.airplane_ticket_rounded,
-              text: 'Ticket',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TicketsPage()),
-                );
-              }),
-          GButton(
-              icon: Icons.picture_as_pdf_rounded,
-              text: 'Documentos',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Documentos()),
-                );
-              }),
-          GButton(
-              icon: Icons.person,
-              text: 'Perfil',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PerfilUsuario()),
-                );
-              }),
-        ],
-      ),*/
     );
   }
 }
 
-itemPerfil(String title, String subtitle, IconData iconData) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          offset: const Offset(0, 5),
-          color: const Color.fromARGB(146, 17, 0, 255).withOpacity(0.2),
-          spreadRadius: 5,
-          blurRadius: 10,
-        ),
-      ],
-    ),
-    child: ListTile(
-      title: Text(title),
-      leading: Icon(iconData),
-      iconColor: const Color.fromARGB(255, 81, 124, 193),
-      trailing: const Icon(Icons.arrow_forward,
-          color: Color.fromARGB(255, 81, 124, 193)),
-      textColor: const Color.fromARGB(255, 0, 0, 0),
+Widget itemPerfil(String title, String subtitle, IconData iconData, String url) {
+  return GestureDetector(
+    onTap: () async {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'No se pudo abrir la URL: $url';
+      }
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 5),
+            color: const Color.fromARGB(146, 17, 0, 255).withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(title),
+        leading: Icon(iconData),
+        iconColor: const Color.fromARGB(255, 81, 124, 193),
+        trailing: const Icon(Icons.arrow_forward,
+            color: Color.fromARGB(255, 81, 124, 193)),
+        textColor: const Color.fromARGB(255, 0, 0, 0),
+      ),
     ),
   );
 }

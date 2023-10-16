@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
-import 'package:recursos_humanos_netgo/widgets/documentos.dart';
-import 'package:recursos_humanos_netgo/widgets/tickets.dart';
 
 class PerfilUsuario extends StatelessWidget {
   const PerfilUsuario({Key? key}) : super(key: key);
