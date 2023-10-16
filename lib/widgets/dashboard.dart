@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:recursos_humanos_netgo/widgets/documentos.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/widgets/tickets.dart';
@@ -38,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.notifications, // Reemplaza con tu propio ícono de notificaciones
+              Icons.notifications,
               color: Colors.white,
               size: 30,
             ),
@@ -76,20 +77,20 @@ class _DashboardState extends State<Dashboard> {
                         ListTile(
                           title: Text(
                             '¡Hola Anthony!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(color: Colors.white),
+                            style: GoogleFonts.josefinSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                           subtitle: Text(
                             'Bienvenido',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(color: Colors.white),
+                            style: GoogleFonts.josefinSans(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                           trailing: const CircleAvatar(
-                            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                            backgroundColor: Colors.white,
                             radius: 30,
                             child: CircleAvatar(
                               backgroundImage:
@@ -122,41 +123,54 @@ class _DashboardState extends State<Dashboard> {
           const TicketsPage(),
           const Documentos(),
           const PerfilUsuario(),
+          const TicketsPage(),
         ],
       ),
-      bottomNavigationBar: GNav(
-        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-        color: Colors.white,
-        activeColor: const Color.fromARGB(255, 255, 255, 255),
-        tabBackgroundColor: const Color.fromARGB(255, 115, 150, 207),
-        gap: 7,
-        selectedIndex: _currentIndex,
-        onTabChange: (index) {
-          setState(() {
-            _currentIndex = index;
-            _pageController.animateToPage(index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.ease);
-          });
-        },
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: 'Inicio',
-          ),
-          GButton(
-            icon: Icons.airplane_ticket_rounded,
-            text: 'Ticket',
-          ),
-          GButton(
-            icon: Icons.picture_as_pdf_rounded,
-            text: 'Documentos',
-          ),
-          GButton(
-            icon: Icons.person,
-            text: 'Perfil',
-          ),
-        ],
+      bottomNavigationBar: Container(
+        height: 70,
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 81, 124, 193),
+        ),
+        child: GNav(
+          backgroundColor: const Color.fromARGB(255, 81, 124, 193),
+          color: Colors.white,
+          activeColor: const Color.fromARGB(255, 255, 255, 255),
+          tabBackgroundColor: const Color.fromARGB(255, 115, 150, 207),
+          gap: 0,
+          iconSize: 20,
+          textStyle: GoogleFonts.josefinSans(fontSize: 13, color: Colors.white),
+          selectedIndex: _currentIndex,
+          onTabChange: (index) {
+            setState(() {
+              _currentIndex = index;
+              _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease);
+            });
+          },
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Inicio',
+            ),
+            GButton(
+              icon: Icons.airplane_ticket_rounded,
+              text: 'Ticket',
+            ),
+            GButton(
+              icon: LineAwesomeIcons.file,
+              text: 'Archivos',
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Perfil',
+            ),
+            GButton(
+              icon: LineAwesomeIcons.cog,
+              text: 'Ajustes',
+            ),
+          ],
+        ),
       ),
     );
   }

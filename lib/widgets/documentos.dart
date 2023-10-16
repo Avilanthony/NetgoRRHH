@@ -10,7 +10,6 @@ class Documentos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
       body: Padding(
@@ -24,20 +23,22 @@ class Documentos extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
-            const SizedBox(height: 25),
-            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, ""),
-            const SizedBox(height: 20),
-            itemPerfil('Contancia', '', CupertinoIcons.doc, ""),
-            const SizedBox(height: 20),
-            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, ""),
-            const SizedBox(height: 20),
-            itemPerfil('Contrato', '', CupertinoIcons.doc_person, ""),
-            const SizedBox(height: 20),
-            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, ""),
-            const SizedBox(height: 20),
-            itemPerfil('Notificaciones Generales', '', CupertinoIcons.bell, ""),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             itemPerfil('Pagina Web', '', CupertinoIcons.macwindow, 'https://netgogroup.com/'),
+            const SizedBox(height: 10),
+            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Contancia', '', CupertinoIcons.doc, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Contrato', '', CupertinoIcons.doc_person, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Notificaciones Generales', '', CupertinoIcons.bell, ""),
+            const SizedBox(height: 10),
+            itemPerfil('Usuarios', '', CupertinoIcons.person_2_alt, ""),
           ],
         ),
       ),
