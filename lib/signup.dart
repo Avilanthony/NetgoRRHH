@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:recursos_humanos_netgo/imagen_de_perfil.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 
 class SignupPage extends StatelessWidget {
@@ -105,10 +106,64 @@ class SignupPage extends StatelessWidget {
                 ),
                 
                 //AQUÍ
+                 Padding(
+
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  
+                  child: MaterialButton(
+
+                    minWidth: double.infinity,
+                    height: 60,
+                    onPressed: (){
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ImagenDePerfilPage()));
+                        
+                    },
+
+                    shape: RoundedRectangleBorder(
+
+                      side: BorderSide(
+
+                        color: Colors.black
+
+                      ),
+
+                      borderRadius: BorderRadius.circular(50)
+
+                    ),
+
+                    child: Text(
+
+                      "Añadir Foto de  Perfil", 
+
+                      style: TextStyle(
+
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18
+
+                      ),
+
+                    ),
+
+                  ),
+
+                ),
+
+                Padding(
+
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+
+                  child: SizedBox(
+                    height: 20,
+                  ),
+                
+                
+                ),
                 
                 Padding(
           
                   padding: EdgeInsets.symmetric(horizontal: 40),
+                  
                     
                   child: Container(
                     
