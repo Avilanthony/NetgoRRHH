@@ -1,4 +1,9 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/common_buttons.dart';
 import '../constants.dart';
 import '../screens/select_photo_options_screen.dart';
@@ -13,7 +18,51 @@ class ImagenDePerfilPage extends StatefulWidget {
   State<ImagenDePerfilPage> createState() => _ImagenDePerfilPage();
 }
 
+
 class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
+  
+
+  File? _image;
+
+  Future _pickImage(ImageSource source) async {
+
+    try {
+
+      final image = await ImagePicker().pickImage(source: source);
+
+      if(image == null) return;
+
+      File? img= File(image.path);
+
+      img = await _cropImage(imageFile: img);
+
+      setState(() {
+
+        _image = img;
+        Navigator.of(context).pop();
+
+      });
+      
+    } on PlatformException catch (e) {
+
+      print(e);
+      Navigator.of(context).pop();
+      
+    }
+
+  }
+
+  Future<File?> _cropImage({required File imageFile}) async {
+
+    CroppedFile? croppedImage = 
+    await ImageCropper().cropImage(sourcePath: imageFile.path);
+
+    if(croppedImage == null) return null;
+    
+    return File(croppedImage.path);
+
+  }
+
   void _showSelectPhotoOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -31,7 +80,9 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
           builder: (context, scrollController) {
             return SingleChildScrollView(
               controller: scrollController,
-              child: const SelectPhotoOptionsScreen(),
+              child: SelectPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
             );
           }),
     );
@@ -40,6 +91,28 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      appBar: AppBar(
+
+        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
+        backgroundColor: Colors.white,
+        
+        leading: IconButton(
+          onPressed: () {
+
+            Navigator.pop(
+              context
+            );
+            
+          },
+
+          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+        
+        ),
+
+      ),
+
       body: SafeArea(
         child: Padding(
           padding:
@@ -90,11 +163,18 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
                             shape: BoxShape.circle,
                             color: Colors.grey.shade200,
                           ),
-                          child: const Center(
-                            child: Text(
-                              'No image selected',
-                              style: TextStyle(fontSize: 20),
-                            ),
+                          child: Center(
+                            child: _image == null 
+                              ? const Text(
+                                'No image selected',
+                                style: TextStyle(fontSize: 20),
+                              )
+                              : CircleAvatar(
+
+                                backgroundImage: FileImage(_image!),
+                                radius: 200.0,
+
+                              ),
                           )),
                     ),
                   ),
