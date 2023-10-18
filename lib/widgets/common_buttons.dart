@@ -30,7 +30,7 @@ class CommonButtons extends StatelessWidget {
         ),
         child: Text(
           textLabel,
-          style: TextStyle(color: textColor, fontSize: 18),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
     );

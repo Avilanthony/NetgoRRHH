@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recursos_humanos_netgo/widgets/editar_perfil.dart';
 
 class PerfilUsuario extends StatelessWidget {
   const PerfilUsuario({Key? key}) : super(key: key);
@@ -10,7 +13,7 @@ class PerfilUsuario extends StatelessWidget {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           children: [
@@ -25,7 +28,7 @@ class PerfilUsuario extends StatelessWidget {
               radius: 90,
               backgroundImage: AssetImage('assets/images/user.png'),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
             itemPerfil('Anthony Avila', 'Nombre', CupertinoIcons.person),
             const SizedBox(height: 20),
             itemPerfil('+504 9452-1396', 'Telefono', CupertinoIcons.phone),
@@ -34,17 +37,54 @@ class PerfilUsuario extends StatelessWidget {
                 'Tegucigalpa, Honduras', 'Localidad', CupertinoIcons.map),
             const SizedBox(height: 20),
             itemPerfil('Anthony@Netgo.com', 'Correo', CupertinoIcons.mail),
-            const SizedBox(height: 25),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            /* ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(10),
                     shadowColor: Colors.black,
                     backgroundColor: const Color.fromARGB(255, 81, 124, 193)),
-                child: const Text('Editar Perfil'))
+                child: const Text('Editar Perfil')), */
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Container(
+                padding: EdgeInsets.only(top: 1.5, left: 1.5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.black),
+                      top: BorderSide(color: Colors.black),
+                      left: BorderSide(color: Colors.black),
+                      right: BorderSide(color: Colors.black),
+                    )),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: 60,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditarPerfilPage()));
+                  },
+                  color: Color.fromARGB(255, 81, 124, 193),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Text(
+                    "Editar Perfil",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
+
       /*bottomNavigationBar: GNav(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         color: Colors.white,
