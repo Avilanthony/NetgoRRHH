@@ -34,20 +34,20 @@ class Settings extends StatelessWidget {
                   mainAxisSpacing: 30,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    itemSettings('Usuarios', CupertinoIcons.person_2_fill,
-                        Colors.black),
+                    itemSettings(
+                        'Usuarios', CupertinoIcons.person_2_fill, Colors.black),
                     itemSettings(
                         'Notificar', CupertinoIcons.bell, Colors.black),
-                    itemSettings('Permisos', CupertinoIcons.person_2_fill,
-                        Colors.black),
-                    itemSettings('Usuarios', CupertinoIcons.person_2_fill,
-                        Colors.black),
-                    itemSettings('Usuarios', CupertinoIcons.person_2_fill,
-                        Colors.black),
-                    itemSettings('Usuarios', CupertinoIcons.person_2_fill,
-                        Colors.black),
-                    itemSettings('Usuarios', CupertinoIcons.person_2_fill,
-                        Colors.black),
+                    itemSettings(
+                        'Permisos', CupertinoIcons.person_2_fill, Colors.black),
+                    itemSettings(
+                        'Usuarios', CupertinoIcons.person_2_fill, Colors.black),
+                    itemSettings(
+                        'Usuarios', CupertinoIcons.person_2_fill, Colors.black),
+                    itemSettings(
+                        'Usuarios', CupertinoIcons.person_2_fill, Colors.black),
+                    itemSettings(
+                        'Usuarios', CupertinoIcons.person_2_fill, Colors.black),
                   ],
                 ),
               ],
