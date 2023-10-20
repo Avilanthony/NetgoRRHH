@@ -14,10 +14,10 @@ class EditarPerfilPage extends StatefulWidget {
   static const id = 'set_photo_screen';
 
   @override
-  State<EditarPerfilPage> createState() => _EditarPerfilPage();
+  State<EditarPerfilPage> createState() => _EditarPerfilPageState();
 }
 
-class _EditarPerfilPage extends State<EditarPerfilPage> {
+class _EditarPerfilPageState extends State<EditarPerfilPage> {
   File? _image;
 
   Future _pickImage(ImageSource source) async {
