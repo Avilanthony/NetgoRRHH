@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recursos_humanos_netgo/screens/constancia.dart';
 import 'package:recursos_humanos_netgo/screens/dni.dart';
+import 'package:recursos_humanos_netgo/screens/screens_1/notificacion_personal.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ itemSettings(
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ConstanciaPdfViewerScreen()),
+                builder: (context) => const PersonalNotificationScreen()),
           );
           break;
         default:
