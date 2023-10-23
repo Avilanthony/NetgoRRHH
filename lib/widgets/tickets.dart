@@ -96,7 +96,7 @@ class _TicketsPage extends State<TicketsPage> {
                                     Icon(Icons.archive,
                                         color: Colors.blueGrey, size: 18),
                                     Text(
-                                      'Dep. Contabilidad',
+                                      'Dep. TI',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           color: Colors.blueGrey),
@@ -111,11 +111,11 @@ class _TicketsPage extends State<TicketsPage> {
                                 ),
                                 SizedBox(height: 20),
                                 TextField(
+                                  maxLines: 10,
                                   decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 90),
+                                      
                                       border: InputBorder.none,
-                                      hintText: 'Contexto',
+                                      hintText: 'Ingrese una descripción de su ticket...',
                                       hintStyle: TextStyle(color: Colors.grey)),
                                 )
                               ],

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recursos_humanos_netgo/screens/constancia.dart';
 import 'package:recursos_humanos_netgo/screens/contrato.dart';
+import 'package:recursos_humanos_netgo/screens/dni.dart';
+import 'package:recursos_humanos_netgo/screens/vacaciones.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,26 +52,25 @@ itemPerfil(String title, String subtitle, IconData iconData, BuildContext contex
         case 'DNI':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PerfilUsuario()),
+            MaterialPageRoute(builder: (context) => const ImagenDniPage()),
           );
           break;
         case 'Contancia':
-          // Aquí deberías cambiar 'NombrePantalla' con el nombre de tu pantalla deseada
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PdfViewerScreen()),
+            MaterialPageRoute(builder: (context) => const ConstanciaPdfViewerScreen()),
           );
           break;
           case 'Vacaciones':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PerfilUsuario()),
+            MaterialPageRoute(builder: (context) => VacationRequestScreen()),
           );
           break;
           case 'Contrato':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PerfilUsuario()),
+            MaterialPageRoute(builder: (context) => const ContratoPdfViewerScreen()),
           );
           break;
           case 'Boleta de pago':

@@ -1,30 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 // ignore: depend_on_referenced_packages
 
-class PdfViewerScreen extends StatefulWidget {
-  const PdfViewerScreen({Key? key}) : super(key: key);
+class ContratoPdfViewerScreen extends StatefulWidget {
+  const ContratoPdfViewerScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
   _PdfViewerScreenState createState() => _PdfViewerScreenState();
 }
 
-class _PdfViewerScreenState extends State<PdfViewerScreen> {
+class _PdfViewerScreenState extends State<ContratoPdfViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       appBar: AppBar(
-        title: const Text('Visor de PDF'),
+        backgroundColor: const Color.fromARGB(255, 81, 124, 193),
+        title: Text.rich(
+          TextSpan(
+              text: 'CONTRATO',
+              style: GoogleFonts.josefinSans(
+                  fontSize: 20, fontWeight: FontWeight.bold)),
+          textAlign: TextAlign.center,
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: () async {
-              ();
+            icon: const Icon(
+              Icons.download,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () {
+              // Agrega la lógica para mostrar las notificaciones aquí
             },
           ),
         ],
       ),
+      body: Container(
+          color:
+              const Color.fromRGBO(216,212,212,1), // Establece el color de fondo del segundo Container
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: SfPdfViewer.asset('assets/pdf/contrato.pdf'),
+          ),
+        ),
+      
+    ),
     );
+    
   }
 }
