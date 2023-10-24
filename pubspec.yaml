@@ -46,6 +46,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^23.1.41
   open_file: ^3.3.2
   path_provider: ^2.1.1
+  flutter_staggered_grid_view: ^0.7.0 #NO SE USA
 
 dev_dependencies:
   flutter_test:

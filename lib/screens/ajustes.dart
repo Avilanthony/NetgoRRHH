@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recursos_humanos_netgo/screens/dni.dart';
+import 'package:recursos_humanos_netgo/screens/screens_1/gestion_usuarios.dart';
 import 'package:recursos_humanos_netgo/screens/screens_1/notificacion_personal.dart';
 
 class Settings extends StatelessWidget {
@@ -63,7 +64,7 @@ itemSettings(
         case 'Usuarios':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ImagenDniPage()),
+            MaterialPageRoute(builder: (context) => GestionUsuariosPage()),
           );
           break;
         case 'Notificar':

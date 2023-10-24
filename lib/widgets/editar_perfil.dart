@@ -245,7 +245,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50)),
                                   child: Text(
-                                    "Registrarse",
+                                    "Actualizar",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
