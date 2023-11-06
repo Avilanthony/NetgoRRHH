@@ -45,6 +45,7 @@ class _GestionUsuariosPage extends State<GestionUsuariosPage> {
             icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
           ),
         ),
+        backgroundColor: const Color.fromARGB(255, 236, 237, 255),
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,

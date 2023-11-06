@@ -1,16 +1,21 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PersonalNotificationScreen extends StatefulWidget {
-  const PersonalNotificationScreen({super.key});
+  const PersonalNotificationScreen({Key? key}) : super(key: key);
 
   @override
-  State<PersonalNotificationScreen> createState() =>
-      _PersonalNotificationScreen();
+  _PersonalNotificationScreenState createState() =>
+      _PersonalNotificationScreenState();
 }
 
-class _PersonalNotificationScreen extends State<PersonalNotificationScreen> {
+class _PersonalNotificationScreenState
+    extends State<PersonalNotificationScreen> {
   String dropdownValue = 'Todos';
+  bool showDepartmentDropdown = false;
+  bool showPersonDropdown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,48 +42,91 @@ class _PersonalNotificationScreen extends State<PersonalNotificationScreen> {
               Text(
                 "Notificar".toUpperCase(),
                 style: GoogleFonts.croissantOne(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 81, 124, 193),),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 81, 124, 193),
+                ),
               ),
               const SizedBox(height: 20),
-              Text(
-                "Departamento:",
-                style: GoogleFonts.croissantOne(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 0, 0, 0)),
-                textAlign: TextAlign.center,
+              Row(
+                children: [
+                  Checkbox(
+                    value: showDepartmentDropdown,
+                    onChanged: (value) {
+                      setState(() {
+                        showDepartmentDropdown = value!;
+                        showPersonDropdown = false;
+                      });
+                    },
+                  ),
+                  const Text('Por departamento'),
+                ],
               ),
-              const SizedBox(height: 5),
-              DropdownButton<String>(
-                value: dropdownValue,
-                icon: const Icon(Icons.arrow_downward),
-                iconSize: 24,
-                elevation: 16,
-                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                underline: Container(
-                  height: 2,
-                  color: const Color.fromARGB(255, 0, 0, 0),
+              if (showDepartmentDropdown)
+                Column(
+                  children: [
+                    const SizedBox(height: 5),
+                    DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      underline: Container(
+                        height: 2,
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'Todos',
+                        'Contabilidad',
+                        'TI',
+                        'Soporte',
+                        'Ventas'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
-                },
-                items: <String>[
-                  'Todos',
-                  'Contabilidad',
-                  'TI',
-                  'Soporte',
-                  'Ventas'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              Row(
+                children: [
+                  Checkbox(
+                    value: showPersonDropdown,
+                    onChanged: (value) {
+                      setState(() {
+                        showPersonDropdown = value!;
+                        showDepartmentDropdown = false;
+                      });
+                    },
+                  ),
+                  const Text('Por Usuario'),
+                ],
               ),
+              if (showPersonDropdown)
+                Column(
+                  children: [
+                    const SizedBox(height: 5),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      child: const TextField(
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: 'Nombre de Usuario',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               const SizedBox(height: 20),
               Text(
                 "Asunto:",
@@ -99,7 +147,7 @@ class _PersonalNotificationScreen extends State<PersonalNotificationScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Text(
                 "Notificación:",
                 style: GoogleFonts.croissantOne(
@@ -126,7 +174,8 @@ class _PersonalNotificationScreen extends State<PersonalNotificationScreen> {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 81, 124, 193),),
+                    backgroundColor: const Color.fromARGB(255, 81, 124, 193),
+                  ),
                   child: const Text('Enviar'),
                 ),
               )

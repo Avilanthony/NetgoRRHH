@@ -13,6 +13,7 @@ class PerfilUsuario extends StatelessWidget {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(

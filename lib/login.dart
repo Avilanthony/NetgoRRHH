@@ -21,13 +21,13 @@ class LoginPage extends StatelessWidget {
     
         resizeToAvoidBottomInset: false, //PARA QUE CUANDO SE ABRA EL TECLADO NO EXISTA OVERFLOW
         
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 236, 237, 255),
     
         appBar: AppBar(
     
           elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-          backgroundColor: Colors.white,
+          backgroundColor: const Color.fromARGB(255, 236, 237, 255),
           
           leading: IconButton(
             onPressed: () {

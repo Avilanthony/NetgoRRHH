@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: SafeArea(
 
         child: Container(

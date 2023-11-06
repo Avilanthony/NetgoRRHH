@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recursos_humanos_netgo/screens/adjuntar_boleta.dart';
+import 'package:recursos_humanos_netgo/screens/departamentos.dart';
 import 'package:recursos_humanos_netgo/screens/screens_1/gestion_usuarios.dart';
 import 'package:recursos_humanos_netgo/screens/screens_1/notificacion_personal.dart';
 
@@ -42,10 +43,15 @@ class Settings extends StatelessWidget {
                     children: [
                       itemSettings('Usuarios', CupertinoIcons.person_2_fill,
                           Colors.black, context),
-                      itemSettings('Notificar', CupertinoIcons.bell, Colors.black,
+                      itemSettings('Notificar', CupertinoIcons.bell,
+                          Colors.black, context),
+                      itemSettings(
+                          'Adjuntar Boleta',
+                          CupertinoIcons.arrow_up_doc_fill,
+                          Colors.black,
                           context),
-                      itemSettings('Adjuntar Boleta', CupertinoIcons.arrow_up_doc_fill, Colors.black,
-                          context),
+                      itemSettings('Departamentos', CupertinoIcons.building_2_fill,
+                          Colors.black, context),
                     ],
                   ),
                 ],
@@ -79,8 +85,13 @@ itemSettings(
         case 'Adjuntar Boleta':
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) =>  AdjuntarBoletaPage()),
+            MaterialPageRoute(builder: (context) => AdjuntarBoletaPage()),
+          );
+            break;
+        case 'Departamentos':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DepartamentViewScreen()),
           );
           break;
         default:

@@ -102,6 +102,7 @@ class _ImagenDniPage extends State<ImagenDniPage> {
           ),
         ],
       ),
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: SafeArea(
         child: Padding(
           padding:

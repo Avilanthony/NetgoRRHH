@@ -15,6 +15,7 @@ class Documentos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

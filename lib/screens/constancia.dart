@@ -39,6 +39,7 @@ class _ConstanciaSolicitudScreenState extends State<ConstanciaPdfViewerScreen> {
           textAlign: TextAlign.center,
         ),
       ),
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 30),
         child: Column(

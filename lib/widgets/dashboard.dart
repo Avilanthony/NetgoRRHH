@@ -50,6 +50,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
+      backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
