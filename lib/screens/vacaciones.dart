@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 class VacationRequestScreen extends StatefulWidget {
   const VacationRequestScreen({super.key});
@@ -72,13 +72,13 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
                           height: 50,
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
                           "Hola, Anthony Ávila",
@@ -89,7 +89,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
                           height: 20,
@@ -106,13 +106,13 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
                           height: 60,
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
                           "34 días",
@@ -124,7 +124,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
                           height: 60,
@@ -141,7 +141,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
                           height: 80,

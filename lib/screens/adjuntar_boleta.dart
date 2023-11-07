@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 //import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:recursos_humanos_netgo/screens/gestionar_boleta.dart';
 /* import 'package:recursos_humanos_netgo/signup.dart'; */
 /* import 'package:recursos_humanos_netgo/widgets/dashboard.dart'; */
 
@@ -95,7 +96,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                       SizedBox(height: 30,),
                       makeInput(label: "Usuario a entregar"),
                       SizedBox(height: 10,),
-                      Image.asset("assets/images/Personaje4.png"),
+                      Image.asset("assets/images/Personaje5.png"),
                       SizedBox(height: 30,),
                       Text('Sube el archivo', style: TextStyle(fontSize: 25, color: Colors.grey.shade800, fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
@@ -148,6 +149,10 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                             height: 60,
                             onPressed: () {
                               /* _registroHabilitado ? _registrarse() : null; */
+                              Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GestionarBoletaPage()));
                             },
                             color: Color.fromARGB(255, 81, 124, 193),
                             elevation: 0,
