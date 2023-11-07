@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recursos_humanos_netgo/screens/adjuntar_boleta.dart';
 
 class GestionarBoletaPage extends StatefulWidget {
   const GestionarBoletaPage({super.key});
@@ -120,9 +121,9 @@ class _GestionarBoletaPageState extends State<GestionarBoletaPage> {
 
                               children: <Widget>[
 
-                                itemUsuarios('Anthony Avila', 'Contabilidad',),
-                                itemUsuarios('Adoniss Ponce', 'Contabilidad',),
-                                itemUsuarios('Henry Cabrera', 'Contabilidad',),
+                                itemUsuarios('Anthony Avila', 'Contabilidad', context),
+                                itemUsuarios('Adoniss Ponce', 'Contabilidad', context),
+                                itemUsuarios('Henry Cabrera', 'Contabilidad', context),
 
                               ]
 
@@ -148,7 +149,7 @@ class _GestionarBoletaPageState extends State<GestionarBoletaPage> {
   }
 }
 
-itemUsuarios(String nombreComp, String depart) {
+itemUsuarios(String nombreComp, String depart, context) {
   return Column(
     children: <Widget>[
       Container(
@@ -184,7 +185,9 @@ itemUsuarios(String nombreComp, String depart) {
                           //minWidth: double.infinity,
                           //height: 0,
                           onPressed: () {
-                            //_registroHabilitado ? _registrarse() : null;
+                             Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => AdjuntarBoletaPage()));
+                              
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 81, 124, 193), // Cambia el color del botón a rojo

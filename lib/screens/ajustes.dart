@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recursos_humanos_netgo/screens/adjuntar_boleta.dart';
 import 'package:recursos_humanos_netgo/screens/departamentos.dart';
+import 'package:recursos_humanos_netgo/screens/gestionar_boleta.dart';
 import 'package:recursos_humanos_netgo/screens/screens_1/gestion_usuarios.dart';
 import 'package:recursos_humanos_netgo/screens/screens_1/notificacion_personal.dart';
 
@@ -85,7 +85,7 @@ itemSettings(
         case 'Adjuntar Boleta':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AdjuntarBoletaPage()),
+            MaterialPageRoute(builder: (context) => const GestionarBoletaPage()),
           );
             break;
         case 'Departamentos':

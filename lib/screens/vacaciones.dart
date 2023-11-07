@@ -119,7 +119,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 81, 124, 193),
+                            color:  Color.fromARGB(255, 81, 124, 193),
                             fontSize: 50,
                           ),
                         ),
@@ -131,7 +131,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
                           "Si tienes alguna consulta, puedes abocarte con nosotros por medio de mensaje privado.",
                           textAlign: TextAlign.center,
@@ -152,7 +152,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height / 3,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage("assets/images/Personaje4.png"),
                           fit: BoxFit.cover)),

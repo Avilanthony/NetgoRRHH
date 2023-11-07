@@ -85,7 +85,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
           child: Container(
             width: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -93,22 +93,30 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
 
                     children: <Widget>[
 
-                      SizedBox(height: 30,),
-                      makeInput(label: "Usuario a entregar"),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 35,),
+                      const Text(
+                        'Usuario a Entregar:',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      const SizedBox(height: 10,),
+                      const Text(
+                        'Anthony Joshua Avila Laguna',
+                        style: TextStyle( fontSize: 18),
+                      ),
+                      const SizedBox(height: 30,),
                       Image.asset("assets/images/Personaje5.png"),
-                      SizedBox(height: 30,),
+                      const SizedBox(height: 30,),
                       Text('Sube el archivo', style: TextStyle(fontSize: 25, color: Colors.grey.shade800, fontWeight: FontWeight.bold),),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       Text('El archivo debe ser en formato PDF', style: TextStyle(fontSize: 15, color: Colors.grey.shade500),),
-                      SizedBox(height: 15,),
+                      const SizedBox(height: 15,),
                       /* GestureDetector( */
                       //onTap: selectFile,
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+                        padding:  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
                         child: DottedBorder(
                           borderType: BorderType.RRect,
-                          radius: Radius.circular(10),
+                          radius: const Radius.circular(10),
                           dashPattern: [10, 4],
                           strokeCap: StrokeCap.round,
                           color: Colors.blue.shade400,
@@ -122,22 +130,22 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Iconsax.folder_open, color: Colors.blue, size: 40,),
-                                SizedBox(height: 15,),
+                                const Icon(Iconsax.folder_open, color: Colors.blue, size: 40,),
+                                const SizedBox(height: 15,),
                                 Text('Selecciona tu archivo', style: TextStyle(fontSize: 15, color: Colors.grey.shade400),),
                               ],
                             ),
                           ),
                         )
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Container(
-                          padding: EdgeInsets.only(top: 1.5, left: 1.5),
+                          padding: const EdgeInsets.only(top: 1.5, left: 1.5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            border: Border(
+                            border: const Border(
                               bottom: BorderSide(color: Colors.black),
                               top: BorderSide(color: Colors.black),
                               left: BorderSide(color: Colors.black),
@@ -158,7 +166,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50)),
-                            child: Text(
+                            child: const Text(
                               "Enviar",
                               style: TextStyle(
                                 color: Colors.white,
@@ -188,77 +196,6 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
         )
     
       ),
-    );
-
-  }
-
-    //CLASES
-
-  Widget makeInput({label, obsecureText = false}){
-
-    return Column(
-
-      crossAxisAlignment: CrossAxisAlignment.start,
-
-      children: <Widget>[
-
-        Text(
-          
-          label, 
-          style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-
-        ),),
-
-        SizedBox(
-
-          height: 5,
-
-        ),
-
-        TextField(
-
-          obscureText: obsecureText,
-
-          decoration: InputDecoration(
-
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-
-            enabledBorder: OutlineInputBorder(
-
-              borderSide: BorderSide(
-
-                color: Colors.grey[400]!
-
-              ),
-
-            ),
-
-            border: OutlineInputBorder(
-
-              borderSide: BorderSide(
-
-                color: Colors.grey[400]!
-                
-              ),
-            )
-          
-          ),
-
-        ),
-
-        //AQUÍ
-
-        SizedBox(
-          
-          height: 30,
-          
-        ),
-
-      ],
-
     );
 
   }
