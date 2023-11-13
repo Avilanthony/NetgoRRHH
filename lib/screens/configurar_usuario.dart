@@ -125,7 +125,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
               
               const SizedBox(height: 25), */
               Padding(
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
 
                               children: <Widget>[
@@ -259,7 +259,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         ),
         const SizedBox(width: 8), // Espacio entre el Checkbox con el label
         const Text('Activo'),
-        const SizedBox(width: 110), // Espacio entre los elementos
+        const SizedBox(width: 8), // Espacio entre los elementos
         Checkbox(
           value: !estadoActivo, // Invertir el valor para el segundo Checkbox
           onChanged: (value) {
