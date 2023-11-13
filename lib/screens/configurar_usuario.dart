@@ -106,22 +106,49 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
 
               
             ),
+
+            const SizedBox(height: 15),
             
+              /* const SizedBox(height: 20),
+             
               const SizedBox(height: 20),
-              itemConfigurar('Contabilidad','Departamento', 'Editar', null, null),
+              
               const SizedBox(height: 20),
-              itemConfigurar('35 días','Vacaciones', 'Editar', null, null),
+              
               const SizedBox(height: 20),
-              itemConfigurar('Boleta de Pago','Adjuntar', 'Adjuntar', _adjuntarBoleta, null),
+              
               const SizedBox(height: 20),
-              itemConfigurar('Activo','Estado del Usuario', 'Editar',null, null),
+              
               const SizedBox(height: 20),
-              itemConfigurar('Administrador','Rol del Usuario', 'Editar',null, null),
+              
               const SizedBox(height: 20),
-              itemNoConfigurar('+504 3315-9876','Teléfono',),
-              const SizedBox(height: 20),
-              itemNoConfigurar('anthony.avila@netgo.com','Correo',),
-              const SizedBox(height: 25),
+              
+              const SizedBox(height: 25), */
+              Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+
+                              children: <Widget>[
+
+                                itemConfigurar('Contabilidad','Departamento', 'Editar', null, null),
+                                const SizedBox(height: 20),
+                                itemConfigurar('35 días','Vacaciones', 'Editar', null, null),
+                                const SizedBox(height: 20),
+                                itemConfigurar('Boleta de Pago','Adjuntar', 'Adjuntar', _adjuntarBoleta, null),
+                                const SizedBox(height: 20),
+                                itemConfigurar('Activo','Estado del Usuario', 'Editar',null, null),
+                                const SizedBox(height: 20),
+                                itemConfigurar('Administrador','Rol del Usuario', 'Editar',null, null),
+                                const SizedBox(height: 20),
+                                itemNoConfigurar('+504 3315-9876','Teléfono',),
+                                const SizedBox(height: 20),
+                                itemNoConfigurar('anthony.avila@netgo.com','Correo',),
+                                const SizedBox(height: 20),
+
+                        
+                              ]
+                            )
+              ),
 
               Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -360,7 +387,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
           left: 20,
           right: 20,
           child: SizedBox(
-            width: 325,
+            width: 300,
             child: contentWidget,
           ),
           
