@@ -63,129 +63,135 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         
-        child: Column(
-          
-          children: [
-            Row(
+        child: Container(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               
-              children: [
-                
-                const CircleAvatar(
-                  radius: 75,
-                  backgroundImage: AssetImage('assets/images/user.png'),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-
-                    mainAxisAlignment: MainAxisAlignment.center, // Centramos horizontalmente
-                    crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget> [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
                     
-                    children: [
-                
-                      Text(
-                        "Anthony Ávila".toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    const CircleAvatar(
+                      radius: 75,
+                      backgroundImage: AssetImage('assets/images/user.png'),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                  
+                        mainAxisAlignment: MainAxisAlignment.center, // Centramos horizontalmente
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        
+                        children: <Widget>[
+                    
+                          Text(
+                            "Anthony Ávila".toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  
+                          
+                        ],
+                        
                       ),
-
                       
-                    ],
+                    ),
                     
-                  ),
+                  ],
+                  
                   
                 ),
-
-               
-
+                  
+                const Column(
+                  children: [
+                    SizedBox(height: 15),
+                  ],
+                ),
                 
-                
-              ],
-
-              
-            ),
-
-            const SizedBox(height: 15),
-            
-              /* const SizedBox(height: 20),
-             
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 20),
-              
-              const SizedBox(height: 25), */
-              Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-
-                              children: <Widget>[
-
-                                itemConfigurar('Contabilidad','Departamento', 'Editar', null, null),
-                                const SizedBox(height: 20),
-                                itemConfigurar('35 días','Vacaciones', 'Editar', null, null),
-                                const SizedBox(height: 20),
-                                itemConfigurar('Boleta de Pago','Adjuntar', 'Adjuntar', _adjuntarBoleta, null),
-                                const SizedBox(height: 20),
-                                itemConfigurar('Activo','Estado del Usuario', 'Editar',null, null),
-                                const SizedBox(height: 20),
-                                itemConfigurar('Administrador','Rol del Usuario', 'Editar',null, null),
-                                const SizedBox(height: 20),
-                                itemNoConfigurar('+504 3315-9876','Teléfono',),
-                                const SizedBox(height: 20),
-                                itemNoConfigurar('anthony.avila@netgo.com','Correo',),
-                                const SizedBox(height: 20),
-
-                        
-                              ]
-                            )
-              ),
-
-              Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Container(
-                          padding: const EdgeInsets.only(top: 1.5, left: 1.5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: const Border(
-                              bottom: BorderSide(color: Colors.black),
-                              top: BorderSide(color: Colors.black),
-                              left: BorderSide(color: Colors.black),
-                              right: BorderSide(color: Colors.black),
-                            )
-                          ),
-                          child: MaterialButton(
-                            minWidth: double.infinity,
-                            height: 60,
-                            onPressed: () {
-                              
-                            },
-                            color: const Color.fromARGB(255, 81, 124, 193),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)),
-                            child: const Text(
-                              "Guardar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18
+                  /* const SizedBox(height: 20),
+                 
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 25), */
+                  Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                  
+                                  children: <Widget>[
+                  
+                                    itemConfigurar('Contabilidad','Departamento', 'Editar', null, null),
+                                    const SizedBox(height: 20),
+                                    itemConfigurar('35 días','Vacaciones', 'Editar', null, null),
+                                    const SizedBox(height: 20),
+                                    itemConfigurar('Boleta de Pago','Adjuntar', 'Adjuntar', _adjuntarBoleta, null),
+                                    const SizedBox(height: 20),
+                                    itemConfigurar('Activo','Estado del Usuario', 'Editar',null, null),
+                                    const SizedBox(height: 20),
+                                    itemConfigurar('Administrador','Rol del Usuario', 'Editar',null, null),
+                                    const SizedBox(height: 20),
+                                    itemNoConfigurar('+504 3315-9876','Teléfono',),
+                                    const SizedBox(height: 20),
+                                    itemNoConfigurar('anthony.avila@netgo.com','Correo',),
+                                    const SizedBox(height: 20),
+                  
+                            
+                                  ]
+                                )
+                  ),
+                  
+                  Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Container(
+                              padding: const EdgeInsets.only(top: 1.5, left: 1.5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                border: const Border(
+                                  bottom: BorderSide(color: Colors.black),
+                                  top: BorderSide(color: Colors.black),
+                                  left: BorderSide(color: Colors.black),
+                                  right: BorderSide(color: Colors.black),
+                                )
+                              ),
+                              child: MaterialButton(
+                                minWidth: double.infinity,
+                                height: 60,
+                                onPressed: () {
+                                  
+                                },
+                                color: const Color.fromARGB(255, 81, 124, 193),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50)),
+                                child: const Text(
+                                  "Guardar",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-          ],
-          
+              ],
+              
+            ),
+          ),
         ),
         
       )
