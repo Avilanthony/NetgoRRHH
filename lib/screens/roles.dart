@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DepartamentViewScreen extends StatefulWidget {
-  const DepartamentViewScreen({Key? key}) : super(key: key);
+class RolesViewScreen extends StatefulWidget {
+  const RolesViewScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _DepartamentViewScreen createState() => _DepartamentViewScreen();
+  _RolesViewScreenState createState() => _RolesViewScreenState();
 }
 
-class _DepartamentViewScreen extends State<DepartamentViewScreen> {
+class _RolesViewScreenState extends State<RolesViewScreen> {
   List<String> departments = [
-    'Recursos Humanos',
-    'Contabilidad',
-    'Infraestructura',
-    'TI',
-    'Ventas',
-    'Mantenimiento',
+    'Administrador',
+    'Gerente',
+    'Supervisor',
+    'Empleado',
+    'Sin rol',
+    'SuperUsuario',
   ];
 
   @override
@@ -47,14 +47,14 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   const Text(
-                    "Departamentos",
+                    "Roles",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      "En este apartado puede agregar o eliminar el departamento que quiera.",
+                      "En este apartado puede agregar o eliminar el rol que quiera.",
                       style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                       textAlign: TextAlign.center,
                     ),
@@ -159,13 +159,13 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Agregar Nuevo Departamento'),
+          title: const Text('Agregar Nuevo Apartado'),
           content: TextField(
             onChanged: (value) {
               newDepartment = value;
             },
             decoration: const InputDecoration(
-                hintText: 'Nombre del Departamento'),
+                hintText: 'Nombre del nuevo apartado'),
           ),
           actions: <Widget>[
             TextButton(

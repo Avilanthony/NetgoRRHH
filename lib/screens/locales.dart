@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DepartamentViewScreen extends StatefulWidget {
-  const DepartamentViewScreen({Key? key}) : super(key: key);
+class LocalViewScreen extends StatefulWidget {
+  const LocalViewScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _DepartamentViewScreen createState() => _DepartamentViewScreen();
+  _LocalViewScreen createState() => _LocalViewScreen();
 }
 
-class _DepartamentViewScreen extends State<DepartamentViewScreen> {
+class _LocalViewScreen extends State<LocalViewScreen> {
   List<String> departments = [
-    'Recursos Humanos',
-    'Contabilidad',
-    'Infraestructura',
-    'TI',
-    'Ventas',
-    'Mantenimiento',
+    'Tegucigalpa',
+    'San Pedro Sula',
+    'Ceiba',
   ];
 
   @override
@@ -47,14 +44,14 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   const Text(
-                    "Departamentos",
+                    "Localidades",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      "En este apartado puede agregar o eliminar el departamento que quiera.",
+                      "En este apartado puede agregar o eliminar la localidad que quiera.",
                       style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                       textAlign: TextAlign.center,
                     ),
@@ -159,13 +156,13 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Agregar Nuevo Departamento'),
+          title: const Text('Agregar Localidad'),
           content: TextField(
             onChanged: (value) {
               newDepartment = value;
             },
             decoration: const InputDecoration(
-                hintText: 'Nombre del Departamento'),
+                hintText: 'Localidad'),
           ),
           actions: <Widget>[
             TextButton(
