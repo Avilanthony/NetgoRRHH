@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:recursos_humanos_netgo/imagen_de_perfil.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 
@@ -11,6 +12,21 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SingUpPageState extends State<SignupPage> {
+
+  _SingUpPageState() {
+    _valorSelec = _departamentosUsuario[0];
+  }
+
+  //String dropdownValue = 'Todos';
+  final _departamentosUsuario = [
+    "Todos",
+    "Marketing",
+    "Administración",
+    "RRHH",
+    "Mantenimiento"
+  ];
+  String? _valorSelec = "";
+
   // Controladores para los campos de entrada
   TextEditingController _nombresController = TextEditingController();
   TextEditingController _apellidosController = TextEditingController();
@@ -149,7 +165,9 @@ class _SingUpPageState extends State<SignupPage> {
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
+                    
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         makeInput(
                           label: "Nombres",
@@ -170,7 +188,7 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) => cambiarFoco(_usuarioFocus, _identidadFocus),
                         ),
                         makeInput(
-                          label: "Número de Identidad",
+                          label: "Número de DNI",
                           controller: _identidadController,
                           focusNode: _identidadFocus,
                           onSubmitted: (value) => cambiarFoco(_identidadFocus, _correoFocus),
@@ -181,6 +199,44 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _correoFocus,
                           onSubmitted: (value) => cambiarFoco(_correoFocus, _contrasenaFocus),
                         ),
+                        Text(
+                          
+                          "Departamento",
+                          style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+                        ),
+                        DropdownButtonFormField(
+                              value: _valorSelec,
+                              items: _departamentosUsuario
+                                  .map((e) => DropdownMenuItem(
+                                        
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                                  .toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  _valorSelec = val as String;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.arrow_drop_down_circle,
+                                color: Color.fromARGB(255, 81, 124, 193),
+                              ),
+                              dropdownColor:
+                                  const Color.fromARGB(255, 231, 241, 246),
+                              decoration: const InputDecoration(
+                                labelText: "Elige un Departamento",
+                                prefixIcon: Icon(
+                                  CupertinoIcons.briefcase_fill,
+                                  color: Color.fromARGB(255, 81, 124, 193),
+                                ),
+                                border: UnderlineInputBorder(),
+                              ),
+                            ),
+                          SizedBox(
+                           height: 30,
+                          ),
                         makeInput(
                             label: "Contraseña",
                             controller: _contrasenaController,
