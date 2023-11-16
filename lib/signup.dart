@@ -111,6 +111,7 @@ class _SingUpPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
@@ -120,7 +121,7 @@ class _SingUpPageState extends State<SignupPage> {
       child: Scaffold(
         /* resizeToAvoidBottomInset: false, */ //PARA QUE CUANDO SE ABRA EL TECLADO NO EXISTA OVERFLOW
 
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 247, 247, 255),
 
         appBar: AppBar(
           elevation: 0,
@@ -199,44 +200,6 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _correoFocus,
                           onSubmitted: (value) => cambiarFoco(_correoFocus, _contrasenaFocus),
                         ),
-                        Text(
-                          
-                          "Departamento",
-                          style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-                        ),
-                        DropdownButtonFormField(
-                              value: _valorSelec,
-                              items: _departamentosUsuario
-                                  .map((e) => DropdownMenuItem(
-                                        
-                                    value: e,
-                                    child: Text(e),
-                                  ))
-                                  .toList(),
-                              onChanged: (val) {
-                                setState(() {
-                                  _valorSelec = val as String;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.arrow_drop_down_circle,
-                                color: Color.fromARGB(255, 81, 124, 193),
-                              ),
-                              dropdownColor:
-                                  const Color.fromARGB(255, 231, 241, 246),
-                              decoration: const InputDecoration(
-                                labelText: "Elige un Departamento",
-                                prefixIcon: Icon(
-                                  CupertinoIcons.briefcase_fill,
-                                  color: Color.fromARGB(255, 81, 124, 193),
-                                ),
-                                border: UnderlineInputBorder(),
-                              ),
-                            ),
-                          SizedBox(
-                           height: 30,
-                          ),
                         makeInput(
                             label: "Contraseña",
                             controller: _contrasenaController,

@@ -68,7 +68,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
         }
       },
       child: Scaffold(
-    
+        backgroundColor: Color.fromARGB(255, 247, 247, 255),
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 81, 124, 193),
           title: Text.rich(
@@ -108,7 +108,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                       const SizedBox(height: 30,),
                       Text('Sube el archivo', style: TextStyle(fontSize: 25, color: Colors.grey.shade800, fontWeight: FontWeight.bold),),
                       const SizedBox(height: 10,),
-                      Text('El archivo debe ser en formato PDF', style: TextStyle(fontSize: 15, color: Colors.grey.shade500),),
+                      Text('El archivo debe ser en formato PDF', style: TextStyle(fontSize: 15, color: Colors.grey.shade600),),
                       const SizedBox(height: 15,),
                       /* GestureDetector( */
                       //onTap: selectFile,
@@ -132,7 +132,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage> with SingleTick
                               children: [
                                 const Icon(Iconsax.folder_open, color: Colors.blue, size: 40,),
                                 const SizedBox(height: 15,),
-                                Text('Selecciona tu archivo', style: TextStyle(fontSize: 15, color: Colors.grey.shade400),),
+                                Text('Selecciona tu archivo', style: TextStyle(fontSize: 15, color: Colors.grey.shade600),),
                               ],
                             ),
                           ),

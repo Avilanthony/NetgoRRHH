@@ -23,6 +23,7 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
   
 
   File? _image;
+  bool _imageSelected = false;
 
   Future _pickImage(ImageSource source) async {
 
@@ -39,6 +40,7 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
       setState(() {
 
         _image = img;
+         _imageSelected = true;
         Navigator.of(context).pop();
 
       });
@@ -92,11 +94,13 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
+      backgroundColor: Color.fromARGB(255, 247, 247, 255),
+
       appBar: AppBar(
 
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 247, 247, 255),
         
         leading: IconButton(
           onPressed: () {
@@ -161,12 +165,12 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
                           width: 200.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey.shade200,
+                            color: Color.fromARGB(255, 229, 229, 244),
                           ),
                           child: Center(
                             child: _image == null 
                               ? const Text(
-                                'No image selected',
+                                'No Seleccionada',
                                 style: TextStyle(fontSize: 20),
                               )
                               : CircleAvatar(
@@ -200,6 +204,58 @@ class _ImagenDePerfilPage extends State<ImagenDePerfilPage> {
                     textColor: Colors.white,
                     textLabel: 'Agregar Foto',
                   ),
+                  if (_imageSelected)
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  if (_imageSelected)
+                  /* CommonButtons(
+                    onTap: () {
+                    
+                    },
+                    backgroundColor: Colors.blue, // Puedes cambiar el color según tu diseño.
+                    textColor: Colors.white,
+                    textLabel: 'Guardar Imagen',
+                  ), */
+                Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 1.5, left: 1.5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: const Border(
+                              bottom: BorderSide(color: Colors.black),
+                              top: BorderSide(color: Colors.black),
+                              left: BorderSide(color: Colors.black),
+                              right: BorderSide(color: Colors.black),
+                            )
+                          ),
+                          child: MaterialButton(
+                            minWidth: double.infinity,
+                            height: 60,
+                            onPressed: () {
+                              // Implementa la lógica para guardar la imagen en la aplicación.
+                              // Puedes agregar aquí la lógica para guardar la imagen.
+                              // Ejemplo: _saveImageToApp();
+                              Navigator.pop(
+                                context
+                              );
+                            },
+                            color: Color.fromARGB(255, 81, 124, 193),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                            child: const Text(
+                              "Guardar Imagen",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                 ],
               ),
             ],

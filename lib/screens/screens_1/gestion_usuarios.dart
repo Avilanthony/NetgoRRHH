@@ -29,12 +29,12 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 247, 247, 255),
       appBar: AppBar(
         elevation: 0,
         systemOverlayStyle:
         const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 247, 247, 255),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
