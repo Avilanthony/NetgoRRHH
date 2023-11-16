@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,17 @@ class TicketsPage extends StatefulWidget {
 }
 
 class _TicketsPage extends State<TicketsPage> {
+
+triggerNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10, 
+        channelKey: 'basic_channel',
+        title: 'Asunto',
+        body: 'Descripcion del asunto',
+        payload: {'screen': 'tickets'},));
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -21,27 +33,15 @@ class _TicketsPage extends State<TicketsPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.blueGrey,
-        /*appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-          title: Text.rich(
-            TextSpan(
-                text: 'Tickets',
-                style: GoogleFonts.josefinSans(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            textAlign: TextAlign.center,
-          ),
-        ),*/
         body: SingleChildScrollView(
           reverse: true,
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(0),
             child: Column(
               children: [
                 const Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     ),
                 const SizedBox(height: 8),
                 Text(
@@ -104,6 +104,7 @@ class _TicketsPage extends State<TicketsPage> {
                                   ],
                                 ),
                                 TextField(
+                                  key: Key('campoAsunto'),
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Asunto',
@@ -129,7 +130,7 @@ class _TicketsPage extends State<TicketsPage> {
                   height: 40,
                   width: 140,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: triggerNotification,
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 139, 194, 68)),
                     child: const Text('Enviar'),
@@ -138,53 +139,7 @@ class _TicketsPage extends State<TicketsPage> {
               ],
             ),
           ),
-        ),
-        /*bottomNavigationBar: GNav(
-          backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-          color: Colors.white,
-          activeColor: const Color.fromARGB(255, 255, 255, 255),
-          tabBackgroundColor: const Color.fromARGB(255, 115, 150, 207),
-          gap: 7,
-          tabs: [
-            GButton(
-                icon: Icons.home,
-                text: 'Inicio',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Dashboard()),
-                  );
-                }),
-            GButton(
-                icon: Icons.airplane_ticket_rounded,
-                text: 'Ticket',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TicketsPage()),
-                  );
-                }),
-            GButton(
-                icon: Icons.picture_as_pdf_rounded,
-                text: 'Documentos',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Documentos()),
-                  );
-                }),
-            GButton(
-                icon: Icons.person,
-                text: 'Perfil',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PerfilUsuario()),
-                  );
-                }),
-          ],
-        ),*/
+        ),        
       ),
     );
   }

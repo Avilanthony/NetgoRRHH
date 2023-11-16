@@ -13,19 +13,7 @@ class SignupPage extends StatefulWidget {
 
 class _SingUpPageState extends State<SignupPage> {
 
-  _SingUpPageState() {
-    _valorSelec = _departamentosUsuario[0];
-  }
-
-  //String dropdownValue = 'Todos';
-  final _departamentosUsuario = [
-    "Todos",
-    "Marketing",
-    "Administración",
-    "RRHH",
-    "Mantenimiento"
-  ];
-  String? _valorSelec = "";
+  _SingUpPageState();
 
   // Controladores para los campos de entrada
   TextEditingController _nombresController = TextEditingController();

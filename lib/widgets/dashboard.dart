@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:recursos_humanos_netgo/screens/ajustes.dart';
+import 'package:recursos_humanos_netgo/screens/notification_view.dart';
 import 'package:recursos_humanos_netgo/widgets/documentos.dart';
 import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/widgets/tickets.dart';
@@ -45,7 +46,11 @@ class _DashboardState extends State<Dashboard> {
               size: 30,
             ),
             onPressed: () {
-              // Agrega la lógica para mostrar las notificaciones aquí
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationView()),
+              );
             },
           ),
         ],
