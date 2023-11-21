@@ -34,9 +34,6 @@ class PerfilUsuario extends StatelessWidget {
             const SizedBox(height: 20),
             itemPerfil('+504 9452-1396', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),
-            itemPerfil(
-                'Tegucigalpa, Honduras', 'Localidad', CupertinoIcons.map),
-            const SizedBox(height: 20),
             itemPerfil('Anthony@Netgo.com', 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 20),
             /* ElevatedButton(

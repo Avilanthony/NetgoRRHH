@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
   file_selector_windows
+  pdfx
+  permission_handler_windows
   syncfusion_pdfviewer_windows
   url_launcher_windows
 )
