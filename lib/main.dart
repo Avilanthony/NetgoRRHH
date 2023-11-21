@@ -74,7 +74,7 @@ class NotificationController {
       final screen = payloadMap['screen'];
       
       if (screen == 'tickets' && MyNavigatorObserver.navigatorContext != null) {
-        // Navegar a la pantalla de tickets
+        // Navegar a la pantalla de Notificaciones
         Navigator.push(
           MyNavigatorObserver.navigatorContext!,
           MaterialPageRoute(builder: (context) => NotificationView()),
@@ -91,6 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
 @override
   void initState() {
 
+    _requestNotificationPermissions();
+
     // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
         onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
@@ -100,6 +102,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     super.initState();
+  }
+  void _requestNotificationPermissions() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
   }
   
   @override

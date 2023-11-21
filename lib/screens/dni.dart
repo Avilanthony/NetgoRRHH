@@ -89,18 +89,6 @@ class _ImagenDniPage extends State<ImagenDniPage> {
                   fontSize: 20, fontWeight: FontWeight.bold)),
           textAlign: TextAlign.center,
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.download,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () {
-              // Agrega la lógica para mostrar las notificaciones aquí
-            },
-          ),
-        ],
       ),
       backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: SafeArea(
@@ -132,7 +120,8 @@ class _ImagenDniPage extends State<ImagenDniPage> {
                     //color: Colors.grey,
                     child: Image.asset(
                       'assets/images/identidad.png',
-                      fit: BoxFit.fitWidth, // Ajusta el tamaño de la imagen al contenedor
+                      fit: BoxFit
+                          .fitWidth, // Ajusta el tamaño de la imagen al contenedor
                     ),
                   )
                 ],

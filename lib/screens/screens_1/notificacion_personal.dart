@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,9 +14,22 @@ class PersonalNotificationScreen extends StatefulWidget {
 
 class _PersonalNotificationScreenState
     extends State<PersonalNotificationScreen> {
-  String dropdownValue = 'Todos';
+  static String? _valorSelecDep;
+  static String? _valorSelecUser;
   bool showDepartmentDropdown = false;
   bool showPersonDropdown = false;
+
+  static final _departamentos = [
+    "Marketing",
+    "Administración",
+    "RRHH",
+    "Mantenimiento"
+  ];
+
+  static final _users = [
+    "Anthony Avila",
+    "Adonnis Ponce",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -66,34 +80,33 @@ class _PersonalNotificationScreenState
                 Column(
                   children: [
                     const SizedBox(height: 5),
-                    DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: const Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style:
-                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      underline: Container(
-                        height: 2,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      ),
-                      onChanged: (String? newValue) {
+                    DropdownButtonFormField(
+                      value: _PersonalNotificationScreenState._valorSelecDep,
+                      items: _PersonalNotificationScreenState._departamentos
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
                         setState(() {
-                          dropdownValue = newValue!;
+                          _PersonalNotificationScreenState._valorSelecDep =
+                              val as String;
                         });
                       },
-                      items: <String>[
-                        'Todos',
-                        'Contabilidad',
-                        'TI',
-                        'Soporte',
-                        'Ventas'
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Color.fromARGB(255, 81, 124, 193),
+                      ),
+                      dropdownColor: const Color.fromARGB(255, 231, 241, 246),
+                      decoration: const InputDecoration(
+                        labelText: "Elige un Departamento",
+                        prefixIcon: Icon(
+                          CupertinoIcons.briefcase_fill,
+                          color: Color.fromARGB(255, 81, 124, 193),
+                        ),
+                        border: UnderlineInputBorder(),
+                      ),
                     ),
                   ],
                 ),
@@ -115,14 +128,60 @@ class _PersonalNotificationScreenState
                 Column(
                   children: [
                     const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      child: const TextField(
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          hintText: 'Nombre de Usuario',
-                          border: OutlineInputBorder(),
+                    DropdownButtonFormField(
+                      value: _PersonalNotificationScreenState._valorSelecDep,
+                      items: _PersonalNotificationScreenState._departamentos
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          _PersonalNotificationScreenState._valorSelecDep =
+                              val as String;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Color.fromARGB(255, 81, 124, 193),
+                      ),
+                      dropdownColor: const Color.fromARGB(255, 231, 241, 246),
+                      decoration: const InputDecoration(
+                        labelText: "Elige un Departamento",
+                        prefixIcon: Icon(
+                          CupertinoIcons.briefcase_fill,
+                          color: Color.fromARGB(255, 81, 124, 193),
                         ),
+                        border: UnderlineInputBorder(),
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      value: _PersonalNotificationScreenState._valorSelecUser,
+                      items: _PersonalNotificationScreenState._users
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          _PersonalNotificationScreenState._valorSelecUser =
+                              val as String;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Color.fromARGB(255, 81, 124, 193),
+                      ),
+                      dropdownColor: const Color.fromARGB(255, 231, 241, 246),
+                      decoration: const InputDecoration(
+                        labelText: "Elige un Usuario",
+                        prefixIcon: Icon(
+                          CupertinoIcons.person_fill,
+                          color: Color.fromARGB(255, 81, 124, 193),
+                        ),
+                        border: UnderlineInputBorder(),
                       ),
                     ),
                   ],
