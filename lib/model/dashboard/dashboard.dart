@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:recursos_humanos_netgo/screens/ajustes.dart';
-import 'package:recursos_humanos_netgo/screens/notification_view.dart';
-import 'package:recursos_humanos_netgo/widgets/documentos.dart';
-import 'package:recursos_humanos_netgo/widgets/perfil_usuario.dart';
-import 'package:recursos_humanos_netgo/widgets/tickets.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes.dart';
+import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/perfil_usuario.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/tickets.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

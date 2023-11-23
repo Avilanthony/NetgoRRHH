@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:recursos_humanos_netgo/imagen_de_perfil.dart';
+import 'package:recursos_humanos_netgo/screens/imagen_de_perfil.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -16,13 +16,14 @@ class _SingUpPageState extends State<SignupPage> {
   _SingUpPageState();
 
   // Controladores para los campos de entrada
-  TextEditingController _nombresController = TextEditingController();
-  TextEditingController _apellidosController = TextEditingController();
-  TextEditingController _usuarioController = TextEditingController();
-  TextEditingController _identidadController = TextEditingController();
-  TextEditingController _correoController = TextEditingController();
-  TextEditingController _contrasenaController = TextEditingController();
-  TextEditingController _confirmarContrasenaController = TextEditingController();
+  final TextEditingController _nombresController = TextEditingController();
+  final TextEditingController _apellidosController = TextEditingController();
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _identidadController = TextEditingController();
+  final TextEditingController _correoController = TextEditingController();
+  final TextEditingController _telefonoController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+  final TextEditingController _confirmarContrasenaController = TextEditingController();
 
   // Define FocusNode para cada campo de entrada
   final _nombresFocus = FocusNode();
@@ -30,14 +31,13 @@ class _SingUpPageState extends State<SignupPage> {
   final _usuarioFocus = FocusNode();
   final _identidadFocus = FocusNode();
   final _correoFocus = FocusNode();
+  final _telefonoFocus = FocusNode();
   final _contrasenaFocus = FocusNode();
   final _confirmarContrasenaFocus = FocusNode();
 
   // Variable para habilitar/deshabilitar el botón de registro
   bool _registroHabilitado = false;
   
- 
-
   @override
   void dispose() {
     // Liberar los controladores y los focus
@@ -53,6 +53,7 @@ class _SingUpPageState extends State<SignupPage> {
     _usuarioFocus.dispose();
     _identidadFocus.dispose();
     _correoFocus.dispose();
+    _telefonoFocus.dispose();
     _contrasenaFocus.dispose();
     _confirmarContrasenaFocus.dispose();
     super.dispose();
@@ -68,6 +69,7 @@ class _SingUpPageState extends State<SignupPage> {
     _usuarioController.addListener(_verificarCampos);
     _identidadController.addListener(_verificarCampos);
     _correoController.addListener(_verificarCampos);
+    _telefonoController.addListener(_verificarCampos);
     _contrasenaController.addListener(_verificarCampos);
     _confirmarContrasenaController.addListener(_verificarCampos);
   }
@@ -86,6 +88,7 @@ class _SingUpPageState extends State<SignupPage> {
           _usuarioController.text.isNotEmpty &&
           _identidadController.text.isNotEmpty &&
           _correoController.text.isNotEmpty &&
+          _telefonoController.text.isNotEmpty &&
           _contrasenaController.text.isNotEmpty &&
           _confirmarContrasenaController.text.isNotEmpty &&
           _contrasenaController.text == _confirmarContrasenaController.text) {
@@ -186,7 +189,13 @@ class _SingUpPageState extends State<SignupPage> {
                           label: "Correo",
                           controller: _correoController,
                           focusNode: _correoFocus,
-                          onSubmitted: (value) => cambiarFoco(_correoFocus, _contrasenaFocus),
+                          onSubmitted: (value) => cambiarFoco(_correoFocus, _telefonoFocus),
+                        ),
+                        makeInput(
+                          label: "Teléfono",
+                          controller: _telefonoController,
+                          focusNode: _telefonoFocus,
+                          onSubmitted: (value) => cambiarFoco(_telefonoFocus, _contrasenaFocus),
                         ),
                         makeInput(
                             label: "Contraseña",

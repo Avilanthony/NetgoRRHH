@@ -11,7 +11,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data'; */
 /* import 'dart:ui' as ui; */
-import 'package:recursos_humanos_netgo/screens/configurar_usuario.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/configurar_usuario.dart';
 
 class AdjuntarBoletaPage extends StatefulWidget {
   @override

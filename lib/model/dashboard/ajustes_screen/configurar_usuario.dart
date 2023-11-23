@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:recursos_humanos_netgo/screens/adjuntar_boleta.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
 
 class ConfiguracionUsuariosPage extends StatefulWidget {
   const ConfiguracionUsuariosPage({Key? key}) : super(key: key);

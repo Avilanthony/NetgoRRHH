@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recursos_humanos_netgo/widgets/editar_perfil.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/editar_perfil.dart';
 
 class PerfilUsuario extends StatelessWidget {
   const PerfilUsuario({Key? key}) : super(key: key);

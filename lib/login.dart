@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
-import 'package:recursos_humanos_netgo/widgets/dashboard.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 
 class LoginPage extends StatelessWidget {
   
@@ -95,7 +95,7 @@ class LoginPage extends StatelessWidget {
               
                         children: <Widget>[
               
-                          makeInput(label: "Correo"),
+                          makeInput(label: "Usuario"),
                           makeInput(label: "Contraseña", obsecureText: true),
                           //makeInput(label: "Confirma tu Contraseña", obsecureText: true),
               

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import '../widgets/common_buttons.dart';
-import '../screens/select_photo_options_screen.dart';
+import '../../../widgets/common_buttons.dart';
+import '../../../screens/select_photo_options_screen.dart';
 
 class EditarPerfilPage extends StatefulWidget {
   const EditarPerfilPage({super.key});

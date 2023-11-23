@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recursos_humanos_netgo/screens/editables.dart';
-import 'package:recursos_humanos_netgo/screens/screens_1/gestion_usuarios.dart';
-import 'package:recursos_humanos_netgo/screens/screens_1/notificacion_personal.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/editables.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/gestion_usuarios.dart';
+import 'package:recursos_humanos_netgo/model/notificaciones/notificacion_personal.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recursos_humanos_netgo/screens/boleta.dart';
-import 'package:recursos_humanos_netgo/screens/constancia.dart';
-import 'package:recursos_humanos_netgo/screens/contrato.dart';
-import 'package:recursos_humanos_netgo/screens/dni.dart';
-import 'package:recursos_humanos_netgo/screens/vacaciones.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/boleta.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/constancia.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/contrato.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaciones.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 

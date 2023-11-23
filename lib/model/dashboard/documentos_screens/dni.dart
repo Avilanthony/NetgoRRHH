@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import '../widgets/common_buttons.dart';
-import '../constants.dart';
-import '../screens/select_photo_options_screen.dart';
+import '../../../widgets/common_buttons.dart';
+import '../../../screens/constants.dart';
+import '../../../screens/select_photo_options_screen.dart';
 
 // ignore: must_be_immutable
 class ImagenDniPage extends StatefulWidget {

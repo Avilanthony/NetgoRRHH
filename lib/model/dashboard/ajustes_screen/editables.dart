@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:recursos_humanos_netgo/screens/departamentos.dart';
-import 'package:recursos_humanos_netgo/screens/locales.dart';
-import 'package:recursos_humanos_netgo/screens/roles.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/departamentos.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/locales.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/roles.dart';
 
 class EditsViewScreen extends StatefulWidget {
   const EditsViewScreen({super.key});

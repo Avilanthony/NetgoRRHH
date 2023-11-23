@@ -3,7 +3,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:recursos_humanos_netgo/login.dart';
-import 'package:recursos_humanos_netgo/screens/notification_view.dart';
+import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 
 void main() {

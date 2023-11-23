@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:recursos_humanos_netgo/screens/configurar_usuario.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
 
-
-class GestionUsuariosPage extends StatefulWidget {
-  const GestionUsuariosPage({super.key});
+class GestionarBoletaPage extends StatefulWidget {
+  const GestionarBoletaPage({super.key});
   @override
-  _GestionUsuariosPageState createState() => _GestionUsuariosPageState();
+  _GestionarBoletaPageState createState() => _GestionarBoletaPageState();
 }
 
-class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
+class _GestionarBoletaPageState extends State<GestionarBoletaPage> {
+  //const _GestionarBoletaPageState({Key? key}) : super(key: key);
 
-  _GestionUsuariosPageState() {
+  _GestionarBoletaPageState() {
     _valorSelec = _departamentosUsuario[0];
   }
 
   //String dropdownValue = 'Todos';
   final _departamentosUsuario = [
-    "Todos",
+    "All",
     "Marketing",
-    "Administración",
+    "Administrración",
     "RRHH",
     "Mantenimiento"
   ];
@@ -29,21 +29,20 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 247, 255),
-      appBar: AppBar(
-        elevation: 0,
-        systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        backgroundColor: const Color.fromARGB(255, 247, 247, 255),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+          ),
         ),
-      ),
-
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
             child: Container(
                 width: double.infinity,
                 child: SingleChildScrollView(
@@ -107,7 +106,7 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: Text(
-                              "Selecciona el usuario al que quieras gestionar",
+                              "Selecciona el usuario al que le quieras adjuntar su boleta de pago",
                               style: TextStyle(
                                   fontSize: 15, color: Colors.grey[700]),
                               textAlign: TextAlign.center,
@@ -146,10 +145,8 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
                 )
               )
             )
-
-    );
+          );
   }
- 
 }
 
 itemUsuarios(String nombreComp, String depart, context) {
@@ -171,11 +168,10 @@ itemUsuarios(String nombreComp, String depart, context) {
         child: Stack(
           children: [
             ListTile(
+              title: Text(nombreComp),
               subtitle: Text(depart,
               style: TextStyle(
                 fontSize: 15, color: Colors.grey[700])),
-              title: Text(nombreComp),
-              
               
               textColor: const Color.fromARGB(255, 0, 0, 0),
             ),
@@ -190,7 +186,7 @@ itemUsuarios(String nombreComp, String depart, context) {
                           //height: 0,
                           onPressed: () {
                              Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => const ConfiguracionUsuariosPage()));
+                              context, MaterialPageRoute(builder: (context) => AdjuntarBoletaPage()));
                               
                           },
                           style: ElevatedButton.styleFrom(
@@ -202,7 +198,7 @@ itemUsuarios(String nombreComp, String depart, context) {
                           //: Color.fromARGB(255, 81, 124, 193),
                           //elevation: 0,
                           child: const Text(
-                            "Gestionar",
+                            "Adjuntar",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -223,4 +219,3 @@ itemUsuarios(String nombreComp, String depart, context) {
   );
   
 }
-
