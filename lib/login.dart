@@ -1,14 +1,74 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
+import 'package:http/http.dart' as http;
+import 'config.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   
   @override
-  Widget build(BuildContext context) {
+   _LoginPageSate createState() => _LoginPageSate();
+  
+}
+
+class _LoginPageSate extends State<LoginPage>{
+
+  // Controladores para los campos de entrada
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+
+  // Define FocusNode para cada campo de entrada
+  final _usuarioFocus = FocusNode();
+  final _contrasenaFocus = FocusNode();
+
+  // Variable para habilitar/deshabilitar el botón de registro
+  bool _accesoHabilitado = false;
+
+  @override
+  void dispose() {
+    // Liberar los controladores y los focus
+    _usuarioController.dispose();
+    _contrasenaController.dispose();
+    _usuarioFocus.dispose();
+    _contrasenaFocus.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Vincular onChanged a cada campo de entrada
+    _usuarioController.addListener(_verificarCampos);
+    _contrasenaController.addListener(_verificarCampos);
+  }
+
+  void cambiarFoco(FocusNode nodoActual, FocusNode proximoNodo) {
+    nodoActual.unfocus();
+    FocusScope.of(context).requestFocus(proximoNodo);
+  }
+
+  // Función para verificar si todos los campos contienen información válida
+  void _verificarCampos() {
+    setState(() {
+      if (
+          _usuarioController.text.isNotEmpty &&
+          _contrasenaController.text.isNotEmpty) {
+        _accesoHabilitado = true; // Utiliza = en lugar de ==
+      } else {
+        _accesoHabilitado = false; // Utiliza = en lugar de ==
+      }
+    });
+  }
+
+  _LoginPageSate();
+
+@override
+Widget build(BuildContext context) {
 
     return GestureDetector(
       onTap: () {
@@ -95,8 +155,15 @@ class LoginPage extends StatelessWidget {
               
                         children: <Widget>[
               
-                          makeInput(label: "Usuario"),
-                          makeInput(label: "Contraseña", obsecureText: true),
+                          makeInput(label: "Usuario",
+                          controller: _usuarioController,
+                          focusNode: _usuarioFocus,
+                          onSubmitted: (value) => cambiarFoco(_usuarioFocus, _contrasenaFocus)),
+                          makeInput(label: "Contraseña", 
+                          controller: _contrasenaController,
+                          focusNode: _contrasenaFocus,
+                          onSubmitted: (value) => {},
+                          obsecureText: true),
                           //makeInput(label: "Confirma tu Contraseña", obsecureText: true),
               
                         ],
@@ -138,7 +205,7 @@ class LoginPage extends StatelessWidget {
     
                           onPressed: (){
     
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+                            _accesoHabilitado ? _ingresar() : null;
     
                           },
     
@@ -233,12 +300,48 @@ class LoginPage extends StatelessWidget {
     
       ),
     );
+  }
 
+  void _ingresar() async{
+
+/*     bool _esValido = false; */
+    // Lógica para realizar el registro
+    if(_accesoHabilitado){
+
+      var ingBody = {
+        "usuario": _usuarioController.text,
+        "contrasena": _contrasenaController.text,
+      };
+
+      print("Hola");
+
+      var response = await http.post(Uri.parse(ingreso),
+
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody)
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+
+      print(jsonResponse);
+
+       /* Navigator.push(
+        /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
+        context, MaterialPageRoute(builder: (context) => Dashboard())); */
+
+    }else{
+      setState(() {
+        print("Adiós");
+      });
+    }
+
+
+   
   }
 
   //CLASES
 
-  Widget makeInput({label, obsecureText = false}){
+  Widget makeInput({label, controller, focusNode, onSubmitted, obsecureText = false}){
 
     return Column(
 
@@ -263,7 +366,9 @@ class LoginPage extends StatelessWidget {
         ),
 
         TextField(
-
+          controller: controller,
+          focusNode: focusNode,
+          onSubmitted: onSubmitted,
           obscureText: obsecureText,
 
           decoration: InputDecoration(
@@ -306,5 +411,6 @@ class LoginPage extends StatelessWidget {
     );
 
   }
+
 
 }
