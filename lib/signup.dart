@@ -12,22 +12,26 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SingUpPageState extends State<SignupPage> {
-
   _SingUpPageState();
 
   // Controladores para los campos de entrada
-  final TextEditingController _nombresController = TextEditingController();
-  final TextEditingController _apellidosController = TextEditingController();
+  final TextEditingController _pNombresController = TextEditingController();
+  final TextEditingController _sNombresController = TextEditingController();
+  final TextEditingController _pApellidosController = TextEditingController();
+  final TextEditingController _sApellidosController = TextEditingController();
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _identidadController = TextEditingController();
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _telefonoController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
-  final TextEditingController _confirmarContrasenaController = TextEditingController();
+  final TextEditingController _confirmarContrasenaController =
+      TextEditingController();
 
   // Define FocusNode para cada campo de entrada
-  final _nombresFocus = FocusNode();
-  final _apellidosFocus = FocusNode();
+  final _pNombresFocus = FocusNode();
+  final _sNombresFocus = FocusNode();
+  final _pApellidosFocus = FocusNode();
+  final _sApellidosFocus = FocusNode();
   final _usuarioFocus = FocusNode();
   final _identidadFocus = FocusNode();
   final _correoFocus = FocusNode();
@@ -37,19 +41,23 @@ class _SingUpPageState extends State<SignupPage> {
 
   // Variable para habilitar/deshabilitar el botón de registro
   bool _registroHabilitado = false;
-  
+
   @override
   void dispose() {
     // Liberar los controladores y los focus
-    _nombresController.dispose();
-    _apellidosController.dispose();
+    _pNombresController.dispose();
+    _sNombresController.dispose();
+    _pApellidosController.dispose();
+    _sApellidosController.dispose();
     _usuarioController.dispose();
     _identidadController.dispose();
     _correoController.dispose();
     _contrasenaController.dispose();
     _confirmarContrasenaController.dispose();
-    _nombresFocus.dispose();
-    _apellidosFocus.dispose();
+    _pNombresFocus.dispose();
+    _sNombresFocus.dispose();
+    _pApellidosFocus.dispose();
+    _sApellidosFocus.dispose();
     _usuarioFocus.dispose();
     _identidadFocus.dispose();
     _correoFocus.dispose();
@@ -59,13 +67,15 @@ class _SingUpPageState extends State<SignupPage> {
     super.dispose();
   }
 
-   @override
+  @override
   void initState() {
     super.initState();
 
     // Vincular onChanged a cada campo de entrada
-    _nombresController.addListener(_verificarCampos);
-    _apellidosController.addListener(_verificarCampos);
+    _pNombresController.addListener(_verificarCampos);
+    _sNombresController.addListener(_verificarCampos);
+    _pApellidosController.addListener(_verificarCampos);
+    _sApellidosController.addListener(_verificarCampos);
     _usuarioController.addListener(_verificarCampos);
     _identidadController.addListener(_verificarCampos);
     _correoController.addListener(_verificarCampos);
@@ -79,12 +89,13 @@ class _SingUpPageState extends State<SignupPage> {
     FocusScope.of(context).requestFocus(proximoNodo);
   }
 
-
   // Función para verificar si todos los campos contienen información válida
   void _verificarCampos() {
     setState(() {
-      if (_nombresController.text.isNotEmpty &&
-          _apellidosController.text.isNotEmpty &&
+      if (_pNombresController.text.isNotEmpty &&
+          _sNombresController.text.isNotEmpty &&
+          _pApellidosController.text.isNotEmpty &&
+          _sApellidosController.text.isNotEmpty &&
           _usuarioController.text.isNotEmpty &&
           _identidadController.text.isNotEmpty &&
           _correoController.text.isNotEmpty &&
@@ -102,7 +113,6 @@ class _SingUpPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
@@ -126,7 +136,6 @@ class _SingUpPageState extends State<SignupPage> {
             icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
           ),
         ),
-        
 
         body: SingleChildScrollView(
           child: Container(
@@ -157,58 +166,77 @@ class _SingUpPageState extends State<SignupPage> {
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
-                    
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         makeInput(
-                          label: "Nombres",
-                          controller: _nombresController,
-                          focusNode: _nombresFocus,
-                          onSubmitted: (value) => cambiarFoco(_nombresFocus, _apellidosFocus),
+                          label: "Primer Nombre",
+                          controller: _pNombresController,
+                          focusNode: _pNombresFocus,
+                          onSubmitted: (value) =>
+                              cambiarFoco(_pNombresFocus, _sNombresFocus),
                         ),
                         makeInput(
-                          label: "Apellidos",
-                          controller: _apellidosController,
-                          focusNode: _apellidosFocus,
-                          onSubmitted: (value) => cambiarFoco(_apellidosFocus, _usuarioFocus),
+                          label: "Segundo Nombre",
+                          controller: _sNombresController,
+                          focusNode: _sNombresFocus,
+                          onSubmitted: (value) =>
+                              cambiarFoco(_sNombresFocus, _pApellidosFocus),
+                        ),
+                        makeInput(
+                          label: "Primer Apellido",
+                          controller: _pApellidosController,
+                          focusNode: _pApellidosFocus,
+                          onSubmitted: (value) =>
+                              cambiarFoco(_pApellidosFocus, _sApellidosFocus),
+                        ),
+                        makeInput(
+                          label: "Segundo Apellido",
+                          controller: _sApellidosController,
+                          focusNode: _sApellidosFocus,
+                          onSubmitted: (value) =>
+                              cambiarFoco(_sApellidosFocus, _usuarioFocus),
                         ),
                         makeInput(
                           label: "Nombre de Usuario",
                           controller: _usuarioController,
                           focusNode: _usuarioFocus,
-                          onSubmitted: (value) => cambiarFoco(_usuarioFocus, _identidadFocus),
+                          onSubmitted: (value) =>
+                              cambiarFoco(_usuarioFocus, _identidadFocus),
                         ),
                         makeInput(
                           label: "Número de DNI",
                           controller: _identidadController,
                           focusNode: _identidadFocus,
-                          onSubmitted: (value) => cambiarFoco(_identidadFocus, _correoFocus),
+                          onSubmitted: (value) =>
+                              cambiarFoco(_identidadFocus, _correoFocus),
                         ),
                         makeInput(
                           label: "Correo",
                           controller: _correoController,
                           focusNode: _correoFocus,
-                          onSubmitted: (value) => cambiarFoco(_correoFocus, _telefonoFocus),
+                          onSubmitted: (value) =>
+                              cambiarFoco(_correoFocus, _telefonoFocus),
                         ),
                         makeInput(
                           label: "Teléfono",
                           controller: _telefonoController,
                           focusNode: _telefonoFocus,
-                          onSubmitted: (value) => cambiarFoco(_telefonoFocus, _contrasenaFocus),
+                          onSubmitted: (value) =>
+                              cambiarFoco(_telefonoFocus, _contrasenaFocus),
                         ),
                         makeInput(
                             label: "Contraseña",
                             controller: _contrasenaController,
                             focusNode: _contrasenaFocus,
-                            onSubmitted: (value) => cambiarFoco(_contrasenaFocus, _confirmarContrasenaFocus),
+                            onSubmitted: (value) => cambiarFoco(
+                                _contrasenaFocus, _confirmarContrasenaFocus),
                             obsecureText: true),
                         makeInput(
                             label: "Confirma tu Contraseña",
                             controller: _confirmarContrasenaController,
                             focusNode: _confirmarContrasenaFocus,
                             onSubmitted: (value) {
-                              
                               _confirmarContrasenaFocus.unfocus();
                             },
                             obsecureText: true),
@@ -322,7 +350,8 @@ class _SingUpPageState extends State<SignupPage> {
 
   //CLASES
 
-  Widget makeInput({label, controller, focusNode, onSubmitted, obsecureText = false}) {
+  Widget makeInput(
+      {label, controller, focusNode, onSubmitted, obsecureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
