@@ -1,9 +1,13 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/screens/imagen_de_perfil.dart';
+import 'package:http/http.dart' as http;
 import 'package:recursos_humanos_netgo/login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -93,9 +97,9 @@ class _SingUpPageState extends State<SignupPage> {
   void _verificarCampos() {
     setState(() {
       if (_pNombresController.text.isNotEmpty &&
-          _sNombresController.text.isNotEmpty &&
+          /* _sNombresController.text.isNotEmpty && */
           _pApellidosController.text.isNotEmpty &&
-          _sApellidosController.text.isNotEmpty &&
+         /*  _sApellidosController.text.isNotEmpty && */
           _usuarioController.text.isNotEmpty &&
           _identidadController.text.isNotEmpty &&
           _correoController.text.isNotEmpty &&
@@ -107,6 +111,7 @@ class _SingUpPageState extends State<SignupPage> {
       } else {
         _registroHabilitado = false; // Utiliza = en lugar de ==
       }
+      print(_registroHabilitado);
     });
   }
 
@@ -342,10 +347,42 @@ class _SingUpPageState extends State<SignupPage> {
     );
   }
 
-  void _registrarse() {
+  void _registrarse() async{
     // Lógica para realizar el registro
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+    if(_registroHabilitado){
+
+      var ingBody = {
+        "nombre": _pNombresController.text,
+        "apellido": _pApellidosController.text,
+        "usuario": _usuarioController.text,
+        "dni": _identidadController.text,
+        "correo": _correoController.text,
+        "contrasena": _contrasenaController.text,
+        "confcontrasena": _confirmarContrasenaController.text,
+        "telefono": _telefonoController.text
+      };
+
+      print("Hola");
+
+      var response = await http.post(Uri.parse(registro),
+
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody)
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+
+      print(jsonResponse);
+
+      /* Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage())); */
+
+    }else{
+
+      print("Adiós");
+
+    }
+    
   }
 
   //CLASES
