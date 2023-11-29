@@ -8,8 +8,11 @@ import 'package:recursos_humanos_netgo/model/dashboard/documentos.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/tickets.dart';
 
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  final token;
+  const Dashboard({@required this.token, Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -19,6 +22,16 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
+
+  late String usuario = '';
+
+  @override
+  void initState(){
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+  }
 
   @override
   void dispose() {
@@ -83,7 +96,7 @@ class _DashboardState extends State<Dashboard> {
                         const SizedBox(height: 10),
                         ListTile(
                           title: Text(
-                            '¡Hola Anthony!',
+                            '¡Hola ${usuario ?? 'Usuario'}!',
                             style: GoogleFonts.josefinSans(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

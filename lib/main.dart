@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   runAppWithObserver();
   AwesomeNotifications().initialize(
   null, // Reemplaza con la ruta correcta a tu icono de la aplicación
@@ -22,29 +25,41 @@ void main() {
   
 );
   runApp(MaterialApp(
+    
     debugShowCheckedModeBanner: false,
     home: MyHomePage(
       title: '',
+      token: prefs.getString('token'),
     ),
   ));
 }
 
-void runAppWithObserver() {
+void runAppWithObserver() async {
   final myObserver = MyNavigatorObserver();
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   
   runApp(MaterialApp(
     navigatorObservers: [myObserver],
     debugShowCheckedModeBanner: false,
     home: MyHomePage(
       title: '',
+      token: prefs.getString('token'),
     ),
   ));
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+  
+  final token;
   final String title;
+  const MyHomePage({
+    
+    @required this.token,
+    required this.title,
+    Key? key,
+
+  }):super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

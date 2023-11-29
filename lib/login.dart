@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'config.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,6 +30,8 @@ class _LoginPageSate extends State<LoginPage>{
   // Variable para habilitar/deshabilitar el botón de registro
   bool _accesoHabilitado = false;
 
+  late SharedPreferences prefs;
+
   @override
   void dispose() {
     // Liberar los controladores y los focus
@@ -45,6 +48,7 @@ class _LoginPageSate extends State<LoginPage>{
     // Vincular onChanged a cada campo de entrada
     _usuarioController.addListener(_verificarCampos);
     _contrasenaController.addListener(_verificarCampos);
+    initSharedPref();
   }
 
   void cambiarFoco(FocusNode nodoActual, FocusNode proximoNodo) {
@@ -63,6 +67,12 @@ class _LoginPageSate extends State<LoginPage>{
         _accesoHabilitado = false; // Utiliza = en lugar de ==
       }
     });
+  }
+
+  void initSharedPref() async {
+
+    prefs = await SharedPreferences.getInstance();
+
   }
 
   _LoginPageSate();
@@ -325,9 +335,20 @@ Widget build(BuildContext context) {
 
       print(jsonResponse);
 
-       /* Navigator.push(
+      if (jsonResponse['status']) {
+        var myToken = jsonResponse['token'];
+        prefs.setString('token', myToken);
+        print(myToken);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(token: myToken,))); 
         /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
-        context, MaterialPageRoute(builder: (context) => Dashboard())); */
+      }else{
+        print("Algo anda mal");
+      }
+
+      /* print(jsonResponse); */
+      print(jsonResponse['status']);
+
+       
 
     }else{
       setState(() {
