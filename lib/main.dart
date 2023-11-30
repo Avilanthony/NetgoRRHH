@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final storedToken = prefs.getString('token');
+  //SharedPreferences prefs = await SharedPreferences.getInstance();
+  //final storedToken = prefs.getString('token');
   runAppWithObserver();
   AwesomeNotifications().initialize(
   null, // Reemplaza con la ruta correcta a tu icono de la aplicación
@@ -30,42 +30,42 @@ void main() async {
   runApp(MaterialApp(
     
     debugShowCheckedModeBanner: false,
-    home: (JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
+    home: //(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
 
-    MyHomePage(
-      title: '',
-      token: prefs.getString('token'),
-    ),
+     MyHomePage(
+      //title: '',
+      //token: prefs.getString('token'),
+    ), 
   ));
 }
 
 void runAppWithObserver() async {
   final myObserver = MyNavigatorObserver();
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final storedToken = prefs.getString('token');
+  //SharedPreferences prefs = await SharedPreferences.getInstance();
+  //final storedToken = prefs.getString('token');
   
   runApp(MaterialApp(
     navigatorObservers: [myObserver],
     debugShowCheckedModeBanner: false,
-    home:(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): MyHomePage(
-       title: '',
-      token: prefs.getString('token'), 
+     home://(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): 
+     MyHomePage(
+       //title: '',
+      //token: prefs.getString('token'), 
     ),
   ));
 }
 
 class MyHomePage extends StatefulWidget {
-  
-  final token;
-  final String title;
-  const MyHomePage({
+  //final token;
+  //final String title;
+  /* const MyHomePage({
     
-    @required this.token,
+    //@required this.token,
     required this.title,
     Key? key,
 
-  }):super(key: key);
+  }):super(key: key); */
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

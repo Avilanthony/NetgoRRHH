@@ -352,8 +352,10 @@ class _SingUpPageState extends State<SignupPage> {
     if(_registroHabilitado){
 
       var ingBody = {
-        "nombre": _pNombresController.text,
-        "apellido": _pApellidosController.text,
+        "primer_nombre": _pNombresController.text,
+        "segundo_nombre": _sNombresController.text,
+        "primer_apellido": _pApellidosController.text,
+        "segundo_apellido": _sApellidosController.text,
         "usuario": _usuarioController.text,
         "dni": _identidadController.text,
         "correo": _correoController.text,

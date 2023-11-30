@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/tickets.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -24,19 +28,57 @@ class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
 
   late String usuario = '';
+  String usuarioNombre = '';
+  String usuarioDepartamento = '';
+  String usuarioRol = '';
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
 
     usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$dashboard/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioNombre = myUsuario['USUARIO'];
+          usuarioRol = myUsuario['ROL'];
+          usuarioDepartamento = myUsuario['DEPARTAMENTO'];
+          print(usuarioNombre);
+          print(usuarioRol);
+          print(usuarioDepartamento);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
   }
 
   @override
@@ -107,7 +149,7 @@ class _DashboardState extends State<Dashboard> {
                         const SizedBox(height: 10),
                         ListTile(
                           title: Text(
-                            '¡Hola $usuario!',
+                            '¡Hola $usuarioNombre!',
                             style: GoogleFonts.josefinSans(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -179,27 +221,28 @@ class _DashboardState extends State<Dashboard> {
                   curve: Curves.ease);
             });
           },
-          tabs: const [
-            GButton(
+          tabs: [
+            const GButton(
               icon: Icons.home,
               text: 'Inicio',
             ),
-            GButton(
+            const GButton(
               icon: Icons.airplane_ticket_rounded,
               text: 'Ticket',
             ),
-            GButton(
+            const GButton(
               icon: LineAwesomeIcons.file,
               text: 'Archivos',
             ),
-            GButton(
+            const GButton(
               icon: Icons.person,
               text: 'Perfil',
             ),
-            GButton(
-              icon: LineAwesomeIcons.cog,
-              text: 'Ajustes',
-            ),
+            if (usuarioRol == "ADMIN" && usuarioDepartamento == "RRHH")
+              const GButton(
+                icon: LineAwesomeIcons.cog,
+                text: 'Ajustes',
+              ),
           ],
         ),
       ),
