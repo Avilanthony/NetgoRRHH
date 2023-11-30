@@ -2,7 +2,9 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:recursos_humanos_netgo/login.dart';
+import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  final storedToken = prefs.getString('token');
   runAppWithObserver();
   AwesomeNotifications().initialize(
   null, // Reemplaza con la ruta correcta a tu icono de la aplicación
@@ -27,7 +30,9 @@ void main() async {
   runApp(MaterialApp(
     
     debugShowCheckedModeBanner: false,
-    home: MyHomePage(
+    home: (JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
+
+    MyHomePage(
       title: '',
       token: prefs.getString('token'),
     ),
@@ -38,13 +43,14 @@ void runAppWithObserver() async {
   final myObserver = MyNavigatorObserver();
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  final storedToken = prefs.getString('token');
   
   runApp(MaterialApp(
     navigatorObservers: [myObserver],
     debugShowCheckedModeBanner: false,
-    home: MyHomePage(
-      title: '',
-      token: prefs.getString('token'),
+    home:(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): MyHomePage(
+       title: '',
+      token: prefs.getString('token'), 
     ),
   ));
 }

@@ -54,6 +54,17 @@ class _DashboardState extends State<Dashboard> {
         actions: [
           IconButton(
             icon: const Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () {
+              // Lógica para cerrar sesión aquí
+              // Puedes navegar a la pantalla de inicio de sesión o realizar otras acciones necesarias.
+            },
+          ),
+          IconButton(
+            icon: const Icon(
               Icons.notifications,
               color: Colors.white,
               size: 30,
@@ -96,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
                         const SizedBox(height: 10),
                         ListTile(
                           title: Text(
-                            '¡Hola ${usuario ?? 'Usuario'}!',
+                            '¡Hola $usuario!',
                             style: GoogleFonts.josefinSans(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
