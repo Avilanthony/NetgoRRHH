@@ -195,7 +195,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           const TicketsPage(),
           const Documentos(),
-          const PerfilUsuario(),
+          PerfilUsuario(token: widget.token),
           const Settings(),
         ],
       ),

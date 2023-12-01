@@ -1,14 +1,91 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/editar_perfil.dart';
+import 'package:http/http.dart' as http;
 
-class PerfilUsuario extends StatelessWidget {
-  const PerfilUsuario({Key? key}) : super(key: key);
+class PerfilUsuario extends StatefulWidget {
+  
+  final token;
+  const PerfilUsuario({@required this.token, Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
+  _PerfilUsuarioState createState() => _PerfilUsuarioState();
+}
+
+class _PerfilUsuarioState extends State<PerfilUsuario> {
+  final PageController _pageController = PageController(initialPage: 0);
+  /* int _currentIndex = 0; */
+  /* const _PerfilUsuarioState({Key? key}) : super(key: key); */
+  late String usuario = '';
+  String usuarioPrimerNombre = '';
+  String usuarioPrimerApellido = '';
+  String usuarioCorreo = '';
+  String usuarioTelefono = '';
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$perfilUsuario/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
+          usuarioCorreo = myUsuario['CORREO'];
+          usuarioTelefono = myUsuario['TELEFONO'];
+          //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
+          print(usuarioPrimerNombre);
+          print(usuarioPrimerApellido);
+          print(usuarioCorreo);
+          print(usuarioTelefono);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
+
+  
+  
+  @override
+  
   Widget build(BuildContext context) {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
@@ -30,11 +107,11 @@ class PerfilUsuario extends StatelessWidget {
               backgroundImage: AssetImage('assets/images/user.png'),
             ),
             const SizedBox(height: 20),
-            itemPerfil('Anthony Avila', 'Nombre', CupertinoIcons.person),
+            itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre', CupertinoIcons.person),
             const SizedBox(height: 20),
-            itemPerfil('+504 9452-1396', 'Telefono', CupertinoIcons.phone),
+            itemPerfil('+504 $usuarioTelefono', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),
-            itemPerfil('Anthony@Netgo.com', 'Correo', CupertinoIcons.mail),
+            itemPerfil(usuarioCorreo, 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 20),
             /* ElevatedButton(
                 onPressed: () {},
