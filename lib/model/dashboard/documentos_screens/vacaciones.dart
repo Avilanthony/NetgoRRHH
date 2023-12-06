@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
+import 'package:recursos_humanos_netgo/config.dart';
 // ignore: depend_on_referenced_packages
 //import 'package:intl/intl.dart';
 
 class VacationRequestScreen extends StatefulWidget {
-  const VacationRequestScreen({super.key});
+  final token;
+  const VacationRequestScreen({required this.token, Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -12,41 +18,54 @@ class VacationRequestScreen extends StatefulWidget {
 }
 
 class _VacationRequestScreenState extends State<VacationRequestScreen> {
-  /* late DateTime _startDate;
-  late DateTime _endDate;
+  late String usuario = '';
+  String usuarioPrimerNombre = '';
+  String usuarioPrimerApellido = '';
+  String usuarioVacaciones = '';
 
-  Future<void> _selectStartDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: _startDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != _startDate) {
-      setState(() {
-        _startDate = picked;
-      });
-    }
-  }
- */
-  /*  Future<void> _selectEndDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: _endDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != _endDate)
-      // ignore: curly_braces_in_flow_control_structures
-      setState(() {
-        _endDate = picked;
-      });
-  } */
-
-  /* @override
+  @override
   void initState() {
     super.initState();
-    _startDate = DateTime.now();
-    _endDate = DateTime.now().add(const Duration(days: 7));
-  } */
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$perfilUsuario/vacaciones/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
+          usuarioVacaciones = myUsuario['VACACIONES'].toString();
+          //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
+          print(usuarioPrimerNombre);
+          print(usuarioPrimerApellido);
+          print(usuarioVacaciones);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +97,12 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                           height: 50,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
-                          "Hola, Anthony Ávila",
+                          "Hola, $usuarioPrimerNombre $usuarioPrimerApellido",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
                           ),
@@ -96,7 +115,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
                           "Tus vacaciones disponibles son:",
                           textAlign: TextAlign.center,
@@ -109,25 +128,25 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
-                          height: 60,
+                          height: 30,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
-                          "34 días",
+                          usuarioVacaciones,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color:  Color.fromARGB(255, 81, 124, 193),
-                            fontSize: 50,
+                            color: Color.fromARGB(255, 81, 124, 193),
+                            fontSize: 90,
                           ),
                         ),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: SizedBox(
-                          height: 60,
+                          height: 30,
                         ),
                       ),
                       Padding(

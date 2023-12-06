@@ -1,16 +1,71 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class TicketsPage extends StatefulWidget {
-  const TicketsPage({super.key});
+  final token;
+  const TicketsPage({@required this.token, Key? key}) : super(key: key);
 
   @override
   State<TicketsPage> createState() => _TicketsPage();
 }
 
 class _TicketsPage extends State<TicketsPage> {
+
+  late String usuario = '';
+  String usuarioPrimerNombre = '';
+  String usuarioPrimerApellido = '';
+  String usuarioDepto = '';
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$ticket/ticket_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
+          usuarioDepto = myUsuario['DEPARTAMENTO'];
+          //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
+          print(usuarioPrimerNombre);
+          print(usuarioPrimerApellido);
+          print(usuarioDepto);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
 
 triggerNotification() {
     AwesomeNotifications().createNotification(
@@ -60,7 +115,7 @@ triggerNotification() {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
-                const TicketWidget(
+                TicketWidget(
                   width: 300,
                   height: 500,
                   isCornerRounded: true,
@@ -71,7 +126,7 @@ triggerNotification() {
                           child: Center(
                             child: Column(
                               children: [
-                                CircleAvatar(
+                                const CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   radius: 60,
                                   child: CircleAvatar(
@@ -82,36 +137,36 @@ triggerNotification() {
                                   ),
                                 ),
                                 Text(
-                                  "Anthony Avila",
-                                  style: TextStyle(
+                                  "$usuarioPrimerNombre $usuarioPrimerApellido",
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w700,
                                       fontStyle: FontStyle.italic),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.archive,
+                                    const Icon(Icons.archive,
                                         color: Colors.blueGrey, size: 18),
                                     Text(
-                                      'Dep. TI',
-                                      style: TextStyle(
+                                      "Dep. $usuarioDepto",
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.w700,
                                           color: Colors.blueGrey),
                                     )
                                   ],
                                 ),
-                                TextField(
+                                const TextField(
                                   key: Key('campoAsunto'),
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Asunto',
                                       hintStyle: TextStyle(color: Colors.grey)),
                                 ),
-                                SizedBox(height: 20),
-                                TextField(
+                                const SizedBox(height: 20),
+                                const TextField(
                                   maxLines: 10,
                                   decoration: InputDecoration(
                                       
