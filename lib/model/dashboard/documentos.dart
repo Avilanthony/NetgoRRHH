@@ -28,7 +28,7 @@ class Documentos extends StatelessWidget {
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             const SizedBox(height: 20),
-            itemPerfilUrl('Pagina Web', '', CupertinoIcons.macwindow, 'https://netgogroup.com/'),
+            itemPerfilUrl('Pagina Web', '', CupertinoIcons.macwindow, 'https://sites.google.com/view/loginrrhh/acceso?authuser=0'),
             const SizedBox(height: 25),
             itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, context),
             const SizedBox(height: 20),

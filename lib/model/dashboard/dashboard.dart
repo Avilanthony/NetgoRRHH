@@ -124,6 +124,7 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: PageView(
         controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(), // Deshabilitar deslizamiento
         onPageChanged: (index) {
           setState(() {
             _currentIndex = index;
