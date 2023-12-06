@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 class PerfilUsuario extends StatefulWidget {
   
+  // ignore: prefer_typing_uninitialized_variables
   final token;
   const PerfilUsuario({@required this.token, Key? key}) : super(key: key);
 
@@ -49,7 +50,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     try {
       final response = await http.get(
         Uri.parse(
-            '$perfilUsuario/$usuario'), // Reemplaza con la URL correcta de tu backend
+            '$perfilUsuario/perfil_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
       );
 
       if (response.statusCode == 200) {

@@ -8,4 +8,6 @@ final registro = url + "auth/registro";
 
 final dashboard = url + "dash";
 
-final perfilUsuario = url + "perfil/perfil_usuario";
+final perfilUsuario = url + "perfil";
+
+final ticket = url + "ticket";

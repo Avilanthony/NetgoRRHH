@@ -1,16 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/boleta.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/constancia.dart';
-import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/contrato.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaciones.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class Documentos extends StatefulWidget {
+  
+  // ignore: prefer_typing_uninitialized_variables
+  final token;
+  const Documentos({@required this.token, Key? key}) : super(key: key);
 
-class Documentos extends StatelessWidget {
-  const Documentos({Key? key}) : super(key: key);
+  @override
+  // ignore: library_private_types_in_public_api
+  _Documentos createState() => _Documentos();
+}
+
+late String _token; // Variable para almacenar el token
+
+class _Documentos extends State<Documentos> {
+  /* int _currentIndex = 0; */
+  /* const _PerfilUsuarioState({Key? key}) : super(key: key); */
+  late String usuario = '';
+  
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    _token = widget.token; // Almacenar el token en la variable _token
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +59,6 @@ class Documentos extends StatelessWidget {
             itemPerfil('Contancia', '', CupertinoIcons.doc, context),
             const SizedBox(height: 20),
             itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, context),
-            //const SizedBox(height: 20),
-            //itemPerfil('Contrato', '', CupertinoIcons.doc_person, context),
             const SizedBox(height: 20),
             itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, context),
           ],
@@ -65,13 +87,7 @@ itemPerfil(String title, String subtitle, IconData iconData, BuildContext contex
           case 'Vacaciones':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const VacationRequestScreen()),
-          );
-          break;
-          case 'Contrato':
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ContratoPdfViewerScreen()),
+            MaterialPageRoute(builder: (context) => VacationRequestScreen(token: _token)),
           );
           break;
           case 'Boleta de pago':
