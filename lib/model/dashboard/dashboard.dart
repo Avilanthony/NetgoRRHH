@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:recursos_humanos_netgo/config.dart';
+import 'package:recursos_humanos_netgo/main.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos.dart';
@@ -13,6 +14,7 @@ import 'package:recursos_humanos_netgo/model/dashboard/tickets.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   final token;
@@ -31,20 +33,48 @@ class _DashboardState extends State<Dashboard> {
   String usuarioNombre = '';
   String usuarioDepartamento = '';
   String usuarioRol = '';
+  late SharedPreferences prefs;
+
 
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-
+    /* Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
     usuario = jwtDecodedToken['uid'].toString();
-    obtenerInformacionUsuario();
+    obtenerInformacionUsuario(); */
+    initSharedPreferences();
+    verificarToken();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> verificarToken() async {
+    try {
+      bool tokenValido = !JwtDecoder.isExpired(widget.token);
+
+      if (tokenValido) {
+        Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+        usuario = jwtDecodedToken['uid'].toString();
+        obtenerInformacionUsuario();
+      } else {
+        // Token vencido, navegar a la pantalla principal (MyHomePage)
+        prefs.remove('token');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+      }
+    } catch (error) {
+      print('Error al verificar el token: $error');
+    }
+  }
+
+   Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> obtenerInformacionUsuario() async {
@@ -100,9 +130,16 @@ class _DashboardState extends State<Dashboard> {
               color: Colors.white,
               size: 30,
             ),
-            onPressed: () {
-              // Lógica para cerrar sesión aquí
-              // Puedes navegar a la pantalla de inicio de sesión o realizar otras acciones necesarias.
+            onPressed: () async {
+               // Eliminar el token al cerrar sesión
+              final prefs = await SharedPreferences.getInstance();
+              prefs.clear();
+              // Navegar a la pantalla principal
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+                (route) => false, // Elimina todas las rutas del historial de navegación
+              );
             },
           ),
           IconButton(
