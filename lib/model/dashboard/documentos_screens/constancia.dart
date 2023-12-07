@@ -1,10 +1,16 @@
 // ignore_for_file: unused_field, library_private_types_in_public_api, prefer_const_constructors, unnecessary_string_interpolations, prefer_final_fields
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 
 class ConstanciaPdfViewerScreen extends StatefulWidget {
-  const ConstanciaPdfViewerScreen({Key? key}) : super(key: key);
+  final token;
+  const ConstanciaPdfViewerScreen({required this.token, Key? key}) : super(key: key);
 
   @override
   _ConstanciaSolicitudScreenState createState() =>
@@ -16,6 +22,61 @@ class _ConstanciaSolicitudScreenState extends State<ConstanciaPdfViewerScreen> {
   String _selectedLocationOption = 'Local A';
   String _requesterName = '';
   String _description = '';
+
+  late String usuario = '';
+  String usuarioPrimerNombre = '';
+  String usuarioSegundoNombre = '';
+  String usuarioPrimerApellido = '';
+  String usuarioSegundoApellido = '';
+  String usuarioDepartamento = '';
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$ticket/ticket_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioSegundoNombre = myUsuario['SEGUNDO_NOMBRE'];
+          usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
+          usuarioSegundoApellido = myUsuario['APELLIDO_MATERNO'];
+          usuarioDepartamento = myUsuario['DEPARTAMENTO'];
+          //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
+          print(usuarioPrimerNombre);
+          print(usuarioSegundoNombre);
+          print(usuarioPrimerApellido);
+          print(usuarioSegundoApellido);
+          print(usuarioDepartamento);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
 
   final List<String> deliveryOptions = [
     'Correo Electrónico',
@@ -49,8 +110,8 @@ class _ConstanciaSolicitudScreenState extends State<ConstanciaPdfViewerScreen> {
               'Nombre del Solicitante:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            const Text(
-              'Anthony Joshua Avila Laguna',
+            Text(
+              '$usuarioPrimerNombre $usuarioSegundoNombre $usuarioPrimerApellido $usuarioSegundoApellido',
               style: TextStyle( fontSize: 18),
             ),
             const SizedBox(height: 20),
@@ -58,8 +119,8 @@ class _ConstanciaSolicitudScreenState extends State<ConstanciaPdfViewerScreen> {
               'Departamento del Solicitante:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            const Text(
-              'IT',
+            Text(
+              '$usuarioDepartamento',
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),

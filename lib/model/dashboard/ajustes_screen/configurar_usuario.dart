@@ -14,6 +14,7 @@ class ConfiguracionUsuariosPage extends StatefulWidget {
 class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   static String? _valorSelecLocal;
   static String? _valorSelecDep;
+  static String? _valorSelecEstado;
   static String? _valorSelecRol;
   static final _localesEmpresa=[
     "Tegucigalpa",
@@ -24,6 +25,11 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     "Administración",
     "RRHH",
     "Mantenimiento"
+  ];
+  static final _estadoUsuario = [
+    "Activo",
+    "Inactivo",
+    "Nuevo",
   ];
   static final _rolesUsuario = [
     "Administrador",
@@ -206,50 +212,31 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         ),
       );
     } else if (subtitle == 'Estado del Usuario') {
-      bool estadoActivo = true;
-
-      return StatefulBuilder(
-        builder: (context, setState) => Row(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Checkbox(
-                    value: estadoActivo,
-                    onChanged: (value) {
-                      setState(() {
-                        estadoActivo = value!;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 8), // Espacio entre el Checkbox con el label
-                  const Text('Activo'),
-                  
-                ],
-              ),
-            ),
-              const SizedBox(width: 60),
-             // Espacio entre los elementos
-            Expanded(
-              child: Row(
-                children: [
-                  Checkbox(
-                    value:
-                        !estadoActivo, // Invertir el valor para el segundo Checkbox
-                    onChanged: (value) {
-                      setState(() {
-                        estadoActivo = !value!;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Inactivo'),
-                ],
-              ),
-            ),
-            
-            
-          ],
+      return DropdownButtonFormField(
+        value: _ConfiguracionUsuariosPageState._valorSelecEstado,
+        items: _ConfiguracionUsuariosPageState._estadoUsuario
+            .map((e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e),
+                ))
+            .toList(),
+        onChanged: (val) {
+          setState(() {
+            _ConfiguracionUsuariosPageState._valorSelecEstado = val as String;
+          });
+        },
+        icon: const Icon(
+          Icons.arrow_drop_down_circle,
+          color: Color.fromARGB(255, 81, 124, 193),
+        ),
+        dropdownColor: const Color.fromARGB(255, 231, 241, 246),
+        decoration: const InputDecoration(
+          labelText: "Elige un estado de usuario",
+          prefixIcon: Icon(
+            CupertinoIcons.briefcase_fill,
+            color: Color.fromARGB(255, 81, 124, 193),
+          ),
+          border: UnderlineInputBorder(),
         ),
       );
     } else if (subtitle == 'Rol del Usuario') {

@@ -9,7 +9,6 @@ import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaci
 import 'package:url_launcher/url_launcher.dart';
 
 class Documentos extends StatefulWidget {
-  
   // ignore: prefer_typing_uninitialized_variables
   final token;
   const Documentos({@required this.token, Key? key}) : super(key: key);
@@ -20,12 +19,11 @@ class Documentos extends StatefulWidget {
 }
 
 late String _token; // Variable para almacenar el token
+final websiteUrl =
+      Uri.parse('https://sites.google.com/view/loginrrhh/acceso?authuser=0');
 
 class _Documentos extends State<Documentos> {
-  /* int _currentIndex = 0; */
-  /* const _PerfilUsuarioState({Key? key}) : super(key: key); */
   late String usuario = '';
-  
 
   @override
   void initState() {
@@ -36,6 +34,7 @@ class _Documentos extends State<Documentos> {
     _token = widget.token; // Almacenar el token en la variable _token
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +51,11 @@ class _Documentos extends State<Documentos> {
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             const SizedBox(height: 20),
-            itemPerfilUrl('Pagina Web', '', CupertinoIcons.macwindow, 'https://sites.google.com/view/loginrrhh/acceso?authuser=0'),
+            itemPerfilUrl(
+              'Pagina Web',
+              '',
+              CupertinoIcons.macwindow,""
+            ),
             const SizedBox(height: 25),
             itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, context),
             const SizedBox(height: 20),
@@ -68,7 +71,8 @@ class _Documentos extends State<Documentos> {
   }
 }
 
-itemPerfil(String title, String subtitle, IconData iconData, BuildContext context) {
+itemPerfil(
+    String title, String subtitle, IconData iconData, BuildContext context) {
   return GestureDetector(
     onTap: () {
       switch (title) {
@@ -81,19 +85,22 @@ itemPerfil(String title, String subtitle, IconData iconData, BuildContext contex
         case 'Contancia':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ConstanciaPdfViewerScreen()),
+            MaterialPageRoute(
+                builder: (context) => ConstanciaPdfViewerScreen(token: _token)),
           );
           break;
-          case 'Vacaciones':
+        case 'Vacaciones':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => VacationRequestScreen(token: _token)),
+            MaterialPageRoute(
+                builder: (context) => VacationRequestScreen(token: _token)),
           );
           break;
-          case 'Boleta de pago':
+        case 'Boleta de pago':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const BoletaPdfViewerScreen()),
+            MaterialPageRoute(
+                builder: (context) => const BoletaPdfViewerScreen()),
           );
           break;
         default:
@@ -125,16 +132,14 @@ itemPerfil(String title, String subtitle, IconData iconData, BuildContext contex
   );
 }
 
-Widget itemPerfilUrl(String title, String subtitle, IconData iconData, String url) {
+Widget itemPerfilUrl(
+  String title, String subtitle, IconData iconData, String url) {
   return GestureDetector(
-    onTap: () async {
-      // ignore: deprecated_member_use
-      if (await canLaunch(url)) {
-        // ignore: deprecated_member_use
-        await launch(url);
-      } else {
-        throw 'No se pudo abrir la URL: $url';
-      }
+    onTap: () {
+      launchUrl(
+        websiteUrl,
+        mode: LaunchMode.externalApplication,
+      );
     },
     child: Container(
       decoration: BoxDecoration(
@@ -160,3 +165,4 @@ Widget itemPerfilUrl(String title, String subtitle, IconData iconData, String ur
     ),
   );
 }
+
