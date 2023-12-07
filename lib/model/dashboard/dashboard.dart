@@ -39,11 +39,11 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    /* Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
     usuario = jwtDecodedToken['uid'].toString();
-    obtenerInformacionUsuario(); */
+    obtenerInformacionUsuario();
     initSharedPreferences();
-    verificarToken();
+    obtenerInformacionUsuario();
   }
 
   @override
@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  Future<void> verificarToken() async {
+  /* Future<void> verificarToken() async {
     try {
       bool tokenValido = !JwtDecoder.isExpired(widget.token);
 
@@ -71,11 +71,11 @@ class _DashboardState extends State<Dashboard> {
     } catch (error) {
       print('Error al verificar el token: $error');
     }
-  }
+  }*/
 
    Future<void> initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
-  }
+  } 
 
   Future<void> obtenerInformacionUsuario() async {
     try {

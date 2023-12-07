@@ -13,11 +13,11 @@ import 'config.dart';
 class LoginPage extends StatefulWidget {
   
   @override
-   _LoginPageSate createState() => _LoginPageSate();
+   _LoginPageState createState() => _LoginPageState();
   
 }
 
-class _LoginPageSate extends State<LoginPage>{
+class _LoginPageState extends State<LoginPage>{
 
   // Controladores para los campos de entrada
   final TextEditingController _usuarioController = TextEditingController();
@@ -75,7 +75,7 @@ class _LoginPageSate extends State<LoginPage>{
 
   }
 
-  _LoginPageSate();
+  _LoginPageState();
 
 @override
 Widget build(BuildContext context) {
@@ -318,37 +318,55 @@ Widget build(BuildContext context) {
     // Lógica para realizar el registro
     if(_accesoHabilitado){
 
-      var ingBody = {
-        "usuario": _usuarioController.text,
-        "contrasena": _contrasenaController.text,
-      };
+      FocusScope.of(context).unfocus();
+      try {
+        var ingBody = {
+          "usuario": _usuarioController.text,
+          "contrasena": _contrasenaController.text,
+        };
+        print("Hola");
 
-      print("Hola");
+        var response = await http.post(Uri.parse(ingreso),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(ingBody)
+        );
 
-      var response = await http.post(Uri.parse(ingreso),
+        var jsonResponse = jsonDecode(response.body);
 
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(ingBody)
-      );
+        print(jsonResponse);
 
-      var jsonResponse = jsonDecode(response.body);
-
-      print(jsonResponse);
-
-      if (jsonResponse['status']) {
-        var myToken = jsonResponse['token'];
-        prefs.setString('token', myToken);
-        print(myToken);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(token: myToken,))); 
+        if (jsonResponse['status']) {
+          var myToken = jsonResponse['token'];
+          prefs.setString('token', myToken);
+          print(myToken);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(token: myToken,))); 
         /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
-      }else{
-        print("Algo anda mal");
+        }else{
+          print("Algo anda mal");
+        }
+
+        /* print(jsonResponse); */
+        print(jsonResponse['status']);
+
+      } catch (e) {
+        // Manejar errores de red o excepciones (PODEMOS MODIFICARLO)
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error de conexión'),
+            content: Text('Hubo un problema al intentar iniciar sesión. Por favor, verifica tu conexión a Internet.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
-
-      /* print(jsonResponse); */
-      print(jsonResponse['status']);
-
-       
+     
 
     }else{
       setState(() {

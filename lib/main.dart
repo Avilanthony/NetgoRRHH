@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
+  /* SharedPreferences prefs = await SharedPreferences.getInstance(); */
   //final storedToken = prefs.getString('token');
   runAppWithObserver();
   AwesomeNotifications().initialize(
@@ -29,17 +29,18 @@ void main() async {
 );
   runApp(MaterialApp(
     
+    
     debugShowCheckedModeBanner: false,
-    home: //(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
+    /* home: (JwtDecoder.isExpired(token)==false)?Dashboard(token: token):MyHomePage(),
 
      MyHomePage(
       //title: '',
-      //token: prefs.getString('token'),
-    ), 
+      token: prefs.getString('token'),
+    ),  */
   ));
 }
 
-void runAppWithObserver() async {
+void runAppWithObserver() async { //NI IDEA PA QUE
   final myObserver = MyNavigatorObserver();
   WidgetsFlutterBinding.ensureInitialized();
   //SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,24 +49,35 @@ void runAppWithObserver() async {
   runApp(MaterialApp(
     navigatorObservers: [myObserver],
     debugShowCheckedModeBanner: false,
-     home://(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): 
-     MyHomePage(
+     home: await determineHomeScreen(),//(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): 
+     /* MyHomePage(
        //title: '',
       //token: prefs.getString('token'), 
-    ),
+    ), */
   ));
 }
 
+Future<Widget> determineHomeScreen() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+
+  if (token != null && !JwtDecoder.isExpired(token)) {
+    return Dashboard(token: token);
+  } else {
+    return MyHomePage(token: token);
+  }
+}
+
 class MyHomePage extends StatefulWidget {
-  //final token;
-  //final String title;
-  /* const MyHomePage({
+  final String? token;
+  /* final String title; */
+  const MyHomePage({
     
-    //@required this.token,
-    required this.title,
+    this.token,
+    /* required this.title, */
     Key? key,
 
-  }):super(key: key); */
+  }):super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -108,6 +120,11 @@ class NotificationController {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+final String? token;
+
+_MyHomePageState({
+  @required this.token,
+});
   
 @override
   void initState() {
