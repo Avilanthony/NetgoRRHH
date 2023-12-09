@@ -214,7 +214,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                                     //decoration: const InputDecoration(),
                                   ), */
                                   makeInput(label: "Telefono",),
-                                  makeInput(label: "Localidad"),
+                                  /* makeInput(label: "Localidad"), */
                                   makeInput(label: "Correo"),
     
                                   //makeInput(label: "Confirma tu Contraseña", obsecureText: true),
