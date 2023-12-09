@@ -138,7 +138,7 @@ Widget itemPerfilUrl(
     onTap: () {
       launchUrl(
         websiteUrl,
-        mode: LaunchMode.externalApplication,
+        mode: LaunchMode.inAppWebView,
       );
     },
     child: Container(
