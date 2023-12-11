@@ -8,6 +8,7 @@ import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'config.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,8 +62,13 @@ class _LoginPageState extends State<LoginPage>{
     setState(() {
       if (
           _usuarioController.text.isNotEmpty &&
-          _contrasenaController.text.isNotEmpty) {
-        _accesoHabilitado = true; // Utiliza = en lugar de ==
+          _contrasenaController.text.isNotEmpty &&
+          _usuarioController.text.length <= 15 &&
+          _contrasenaController.text.length >= 8 &&
+          _usuarioController.text == _usuarioController.text.toUpperCase() &&
+          !_usuarioController.text.contains(' ') &&
+          !_contrasenaController.text.contains(' ')) {
+          _accesoHabilitado = true; // Utiliza = en lugar de ==
       } else {
         _accesoHabilitado = false; // Utiliza = en lugar de ==
       }
@@ -74,6 +80,20 @@ class _LoginPageState extends State<LoginPage>{
     prefs = await SharedPreferences.getInstance();
 
   }
+
+  // Función para mostrar toasts con FlutterToast
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
 
   _LoginPageState();
 
@@ -342,6 +362,7 @@ Widget build(BuildContext context) {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard(token: myToken,))); 
         /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
         }else{
+          showToast(jsonResponse['msg']);
           print("Algo anda mal");
         }
 
@@ -349,27 +370,15 @@ Widget build(BuildContext context) {
         print(jsonResponse['status']);
 
       } catch (e) {
-        // Manejar errores de red o excepciones (PODEMOS MODIFICARLO)
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error de conexión'),
-            content: Text('Hubo un problema al intentar iniciar sesión. Por favor, verifica tu conexión a Internet.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+        // Manejar errores de red o excepciones
+        showToast('Hubo un problema al intentar iniciar sesión.');
       }
      
 
     }else{
       setState(() {
+        // Mostrar alerta porque las validaciones no se cumplen
+        showToast('Por favor, completa todos los campos correctamente.');
         print("Adiós");
       });
     }
