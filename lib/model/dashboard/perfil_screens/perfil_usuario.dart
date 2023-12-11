@@ -141,7 +141,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditarPerfilPage()));
+                            builder: (context) => EditarPerfilPage(token: widget.token)));
                   },
                   color: Color.fromARGB(255, 81, 124, 193),
                   elevation: 0,

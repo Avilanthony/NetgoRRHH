@@ -99,7 +99,7 @@ class _SingUpPageState extends State<SignupPage> {
       if (_pNombresController.text.isNotEmpty &&
           /* _sNombresController.text.isNotEmpty && */
           _pApellidosController.text.isNotEmpty &&
-         /*  _sApellidosController.text.isNotEmpty && */
+          /*  _sApellidosController.text.isNotEmpty && */
           _usuarioController.text.isNotEmpty &&
           _identidadController.text.isNotEmpty &&
           _correoController.text.isNotEmpty &&
@@ -347,10 +347,9 @@ class _SingUpPageState extends State<SignupPage> {
     );
   }
 
-  void _registrarse() async{
+  void _registrarse() async {
     // Lógica para realizar el registro
-    if(_registroHabilitado){
-
+    if (_registroHabilitado) {
       var ingBody = {
         "primer_nombre": _pNombresController.text,
         "segundo_nombre": _sNombresController.text,
@@ -367,10 +366,8 @@ class _SingUpPageState extends State<SignupPage> {
       print("Hola");
 
       var response = await http.post(Uri.parse(registro),
-
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(ingBody)
-      );
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(ingBody));
 
       var jsonResponse = jsonDecode(response.body);
 
@@ -378,13 +375,9 @@ class _SingUpPageState extends State<SignupPage> {
 
       /* Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage())); */
-
-    }else{
-
+    } else {
       print("Adiós");
-
     }
-    
   }
 
   //CLASES
