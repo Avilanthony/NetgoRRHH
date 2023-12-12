@@ -11,7 +11,6 @@ import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/editar_per
 import 'package:http/http.dart' as http;
 
 class PerfilUsuario extends StatefulWidget {
-  
   // ignore: prefer_typing_uninitialized_variables
   final token;
   const PerfilUsuario({@required this.token, Key? key}) : super(key: key);
@@ -83,10 +82,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     }
   }
 
-  
-  
   @override
-  
   Widget build(BuildContext context) {
     //var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
@@ -108,9 +104,11 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
               backgroundImage: AssetImage('assets/images/user.png'),
             ),
             const SizedBox(height: 20),
-            itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre', CupertinoIcons.person),
+            itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre',
+                CupertinoIcons.person),
             const SizedBox(height: 20),
-            itemPerfil('+504 $usuarioTelefono', 'Telefono', CupertinoIcons.phone),
+            itemPerfil(
+                '+504 $usuarioTelefono', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),
             itemPerfil(usuarioCorreo, 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 20),
@@ -139,9 +137,17 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   height: 60,
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditarPerfilPage(token: widget.token)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditarPerfilPage(token: widget.token),
+                      ),
+                    ).then((actualizado) {
+                      if (actualizado == true) {
+                        // Si se actualizó la información, vuelve a cargar los datos en la pantalla de perfil
+                        obtenerInformacionUsuario();
+                      }
+                    });
                   },
                   color: Color.fromARGB(255, 81, 124, 193),
                   elevation: 0,

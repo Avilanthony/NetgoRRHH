@@ -1,23 +1,53 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:recursos_humanos_netgo/config.dart';
 
 class DepartamentViewScreen extends StatefulWidget {
   const DepartamentViewScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _DepartamentViewScreen createState() => _DepartamentViewScreen();
 }
 
 class _DepartamentViewScreen extends State<DepartamentViewScreen> {
-  List<String> departments = [
-    'Recursos Humanos',
-    'Contabilidad',
-    'Infraestructura',
-    'TI',
-    'Ventas',
-    'Mantenimiento',
-  ];
+  List<Map<String, dynamic>> departments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Llama a la función para obtener los departamentos al iniciar la pantalla
+    _fetchDepartments();
+  }
+
+  _fetchDepartments() async {
+    try {
+      final response =
+          await http.get(Uri.parse('$selec_deptos/departamentos'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['departamento'] != null) {
+          final List<dynamic> departamentosData = data['departamento'];
+
+          setState(() {
+            departments = departamentosData.cast<Map<String, dynamic>>();
+          });
+        } else {
+          print(
+              'Error: El campo "departamento" es nulo o no existe en la respuesta del servidor');
+        }
+      } else {
+        print(
+            'Error al obtener la lista de departamentos. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +67,6 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        // ignore: sized_box_for_whitespace
         child: Container(
           width: double.infinity,
           child: Column(
@@ -52,7 +81,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
                   ),
                   const SizedBox(height: 8),
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(10),
                     child: Text(
                       "En este apartado puede agregar o eliminar el departamento que quiera.",
                       style: TextStyle(fontSize: 15, color: Colors.grey[700]),
@@ -95,7 +124,48 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
     );
   }
 
-  itemUsuarios(String nombreComp, context) {
+  _removeDepartment(int departmentId) async {
+    try {
+      final response = await http.delete(Uri.parse('$editables/delete_dep/$departmentId'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          departments.removeWhere((dep) => dep['ID_DEPARTAMENTO'] == departmentId);
+        });
+        print('Departamento eliminado con éxito');
+      } else {
+        print(
+            'Error al eliminar el departamento. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  _createDepartment(String newDepartment) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$editables/create_dep/'),
+        body: {'departamento': newDepartment, 'id_local': '1'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        setState(() {
+          departments.add(responseData);
+        });
+        print('Departamento creado con éxito');
+      } else {
+        print(
+            'Error al crear el departamento. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  itemUsuarios(Map<String, dynamic> department, context) {
     return Column(
       children: <Widget>[
         Container(
@@ -114,7 +184,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
           child: Stack(
             children: [
               ListTile(
-                title: Text(nombreComp),
+                title: Text(department['DEPARTAMENTO'] as String),
                 textColor: const Color.fromARGB(255, 0, 0, 0),
               ),
               Positioned(
@@ -125,7 +195,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
                   width: 130,
                   child: ElevatedButton(
                     onPressed: () {
-                      _removeDepartment(nombreComp);
+                      _removeDepartment(department['ID_DEPARTAMENTO'] as int);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 211, 48, 48),
@@ -164,8 +234,8 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
             onChanged: (value) {
               newDepartment = value;
             },
-            decoration: const InputDecoration(
-                hintText: 'Nombre del Departamento'),
+            decoration:
+                const InputDecoration(hintText: 'Nombre del Departamento'),
           ),
           actions: <Widget>[
             TextButton(
@@ -176,24 +246,16 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
             ),
             ElevatedButton(
               child: const Text('Agregar'),
-              onPressed: () {
+              onPressed: () async {
                 if (newDepartment.isNotEmpty) {
-                  setState(() {
-                    departments.add(newDepartment);
-                  });
+                  await _createDepartment(newDepartment);
+                  Navigator.of(context).pop();
                 }
-                Navigator.of(context).pop();
               },
             ),
           ],
         );
       },
     );
-  }
-
-  _removeDepartment(String department) {
-    setState(() {
-      departments.remove(department);
-    });
   }
 }

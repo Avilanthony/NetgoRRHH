@@ -12,3 +12,7 @@ final dashboard = url + "dash";
 final perfilUsuario = url + "perfil";
 
 final ticket = url + "ticket";
+
+final selec_deptos = url + "depto_users";
+
+final editables = url + "editar";

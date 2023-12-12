@@ -335,8 +335,6 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
   }
 
   void editar() async {
-    // Lógica para realizar el registro
-
     var ingBody = {
       "correo": _correoController.text,
       "telefono": _telefonoController.text
@@ -345,16 +343,28 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
     print("Hola");
 
     var response = await http.put(
-        Uri.parse('$perfilUsuario/editar_usuario/$usuario'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(ingBody));
+      Uri.parse('$perfilUsuario/editar_usuario/$usuario'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(ingBody),
+    );
 
-    var jsonResponse = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
 
-    print(jsonResponse);
+      print(jsonResponse);
 
-    /* Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage())); */
+      // Después de editar, actualiza los datos de la pantalla de perfil
+      await obtenerInformacionUsuario();
+
+      // Cierra la pantalla de edición y devuelve true como resultado
+      Navigator.pop(context, true);
+    } else {
+      // Maneja el error si la solicitud no fue exitosa
+      print('Error en la solicitud: ${response.statusCode}');
+
+      // Cierra la pantalla de edición y devuelve false como resultado
+      Navigator.pop(context, false);
+    }
   }
 
   Widget makeInput({label, controller, obsecureText = false}) {
