@@ -31,6 +31,8 @@ class _LoginPageState extends State<LoginPage>{
   // Variable para habilitar/deshabilitar el botón de registro
   bool _accesoHabilitado = false;
 
+  bool _mostrarContrasena = false;
+
   late SharedPreferences prefs;
 
   @override
@@ -63,7 +65,7 @@ class _LoginPageState extends State<LoginPage>{
       if (
           _usuarioController.text.isNotEmpty &&
           _contrasenaController.text.isNotEmpty &&
-          _usuarioController.text.length <= 15 &&
+          _contrasenaController.text.length <= 12 &&
           _contrasenaController.text.length >= 8 &&
           _usuarioController.text == _usuarioController.text.toUpperCase() &&
           !_usuarioController.text.contains(' ') &&
@@ -73,6 +75,7 @@ class _LoginPageState extends State<LoginPage>{
         _accesoHabilitado = false; // Utiliza = en lugar de ==
       }
     });
+    print(_accesoHabilitado);
   }
 
   void initSharedPref() async {
@@ -92,6 +95,15 @@ class _LoginPageState extends State<LoginPage>{
       textColor: Colors.white,
       fontSize: 16.0,
     );
+  }
+
+  void mostrarValidaciones(){
+    _usuarioController.text.isEmpty ? showToast("El campo del usuario no puede estar vacío") : null;
+    _contrasenaController.text.isEmpty ? showToast("El campo de la contraseña no puede estar vacío") : null;
+    _contrasenaController.text.length > 12 ? showToast("El campo de la contraseña debe tener 12 caracteres máximo") : null;
+    _contrasenaController.text.length < 8 ? showToast("El campo de la contraseña debe tener 8 caracteres mínimo") : null;
+    _usuarioController.text.contains(' ') ? showToast("El campo del usuario no puede contener espacios") : null;
+    _contrasenaController.text.contains(' ') ? showToast("El campo de la contraseña no puede contener espacios") : null;
   }
 
 
@@ -188,13 +200,34 @@ Widget build(BuildContext context) {
                           makeInput(label: "Usuario",
                           controller: _usuarioController,
                           focusNode: _usuarioFocus,
-                          onSubmitted: (value) => cambiarFoco(_usuarioFocus, _contrasenaFocus)),
+                          onSubmitted: (value) => cambiarFoco(_usuarioFocus, _contrasenaFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _usuarioController.text = text.toUpperCase();
+                              _usuarioController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _usuarioController.text.length),
+                              );
+                             });
+                          }),
                           makeInput(label: "Contraseña", 
                           controller: _contrasenaController,
                           focusNode: _contrasenaFocus,
                           onSubmitted: (value) => {},
-                          obsecureText: true),
-                          //makeInput(label: "Confirma tu Contraseña", obsecureText: true),
+                          obsecureText: !_mostrarContrasena,
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                              _mostrarContrasena ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _mostrarContrasena = !_mostrarContrasena;
+                              });
+                            },
+                          ),
+                          ),
+
+                          
               
                         ],
               
@@ -236,6 +269,7 @@ Widget build(BuildContext context) {
                           onPressed: (){
     
                             _accesoHabilitado ? _ingresar() : null;
+                            mostrarValidaciones();
     
                           },
     
@@ -333,9 +367,8 @@ Widget build(BuildContext context) {
   }
 
   void _ingresar() async{
-
-/*     bool _esValido = false; */
     // Lógica para realizar el registro
+    print(_accesoHabilitado);
     if(_accesoHabilitado){
 
       FocusScope.of(context).unfocus();
@@ -373,14 +406,13 @@ Widget build(BuildContext context) {
         // Manejar errores de red o excepciones
         showToast('Hubo un problema al intentar iniciar sesión.');
       }
-     
-
+    
     }else{
-      setState(() {
-        // Mostrar alerta porque las validaciones no se cumplen
-        showToast('Por favor, completa todos los campos correctamente.');
-        print("Adiós");
-      });
+      
+      // Mostrar alerta porque las validaciones no se cumplen
+      showToast('Por favor, completa todos los campos correctamente.');
+      print("Adiós");
+      
     }
 
 
@@ -389,7 +421,7 @@ Widget build(BuildContext context) {
 
   //CLASES
 
-  Widget makeInput({label, controller, focusNode, onSubmitted, obsecureText = false}){
+  Widget makeInput({label, controller, focusNode, onSubmitted, obsecureText = false, IconButton? suffixIcon, onChanged}){
 
     return Column(
 
@@ -418,6 +450,7 @@ Widget build(BuildContext context) {
           focusNode: focusNode,
           onSubmitted: onSubmitted,
           obscureText: obsecureText,
+          onChanged: onChanged,
 
           decoration: InputDecoration(
 
@@ -440,7 +473,9 @@ Widget build(BuildContext context) {
                 color: Colors.grey[400]!
                 
               ),
-            )
+            ),
+
+            suffixIcon: suffixIcon, // <-- Utilizando el parámetro suffixIcon
           
           ),
 
