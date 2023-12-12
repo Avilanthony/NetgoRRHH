@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:recursos_humanos_netgo/config.dart';
-import 'package:recursos_humanos_netgo/screens/imagen_de_perfil.dart';
+import 'package:recursos_humanos_netgo/screens/imagen_de_perfil.dart'; //YA NO 
 import 'package:http/http.dart' as http;
 import 'package:recursos_humanos_netgo/login.dart';
+import 'package:shared_preferences/shared_preferences.dart'; //YA NO
 
 class SignupPage extends StatefulWidget {
   @override
@@ -45,6 +47,8 @@ class _SingUpPageState extends State<SignupPage> {
 
   // Variable para habilitar/deshabilitar el botón de registro
   bool _registroHabilitado = false;
+
+  bool _mostrarContrasena = false;
 
   @override
   void dispose() {
@@ -97,15 +101,38 @@ class _SingUpPageState extends State<SignupPage> {
   void _verificarCampos() {
     setState(() {
       if (_pNombresController.text.isNotEmpty &&
+          !_pNombresController.text.contains(' ') &&
+          RegExp(r'[0-9]').hasMatch(_pNombresController.text) &&
           /* _sNombresController.text.isNotEmpty && */
+          !_sNombresController.text.contains(' ') &&
+          RegExp(r'[0-9]').hasMatch(_sNombresController.text) &&
           _pApellidosController.text.isNotEmpty &&
-          /*  _sApellidosController.text.isNotEmpty && */
+          !_pApellidosController.text.contains(' ') &&
+          RegExp(r'[0-9]').hasMatch(_pApellidosController.text) &&
+           /* _sApellidosController.text.isNotEmpty && */
+          !_sApellidosController.text.contains(' ') &&
+          RegExp(r'[0-9]').hasMatch(_sApellidosController.text) &&
           _usuarioController.text.isNotEmpty &&
+          !_usuarioController.text.contains(' ') &&
+          RegExp(r'[0-9]').hasMatch(_usuarioController.text) &&
           _identidadController.text.isNotEmpty &&
+          !_identidadController.text.contains(' ') &&
+          RegExp(r'[^\d_-]').hasMatch(_identidadController.text) &&
+          _identidadController.text.length != 13 &&
           _correoController.text.isNotEmpty &&
+          !_correoController.text.contains(' ') &&
           _telefonoController.text.isNotEmpty &&
+          !_telefonoController.text.contains(' ') &&
+          RegExp(r'[^\d_-]').hasMatch(_telefonoController.text) &&
+          _telefonoController.text.length != 8 &&
           _contrasenaController.text.isNotEmpty &&
+          !_contrasenaController.text.contains(' ') &&
+          _contrasenaController.text.length <= 12 &&
+          _contrasenaController.text.length >= 8 &&
           _confirmarContrasenaController.text.isNotEmpty &&
+          !_confirmarContrasenaController.text.contains(' ') &&
+          _confirmarContrasenaController.text.length <= 12 &&
+          _confirmarContrasenaController.text.length >= 8 &&
           _contrasenaController.text == _confirmarContrasenaController.text) {
         _registroHabilitado = true; // Utiliza = en lugar de ==
       } else {
@@ -113,6 +140,54 @@ class _SingUpPageState extends State<SignupPage> {
       }
       print(_registroHabilitado);
     });
+  }
+
+  void mostrarValidaciones(){
+    _pNombresController.text.isEmpty ? showToast("El campo del primer nombre no puede estar vacío") : null;
+    _pNombresController.text.contains(' ') ? showToast("El campo del primer nombre no puede contener espacios") : null;
+    RegExp(r'[0-9]').hasMatch(_pNombresController.text) ? showToast("El campo del primer nombre no puede contener números"): null;
+    _sNombresController.text.contains(' ') ? showToast("El campo del segundo nombre no puede contener espacios") : null;
+    RegExp(r'[0-9]').hasMatch(_sNombresController.text) ? showToast("El campo del segundo nombre no puede contener números"): null;
+    _pApellidosController.text.isEmpty ? showToast("El campo del primer apellido no puede estar vacío") : null;
+    _pApellidosController.text.contains(' ') ? showToast("El campo del primer apellido no puede contener espacios") : null;
+    RegExp(r'[0-9]').hasMatch(_pApellidosController.text) ? showToast("El campo del primer apellido no puede contener números"): null;
+    _sApellidosController.text.contains(' ') ? showToast("El campo del segundo apellido no puede contener espacios") : null;
+    RegExp(r'[0-9]').hasMatch(_sApellidosController.text) ? showToast("El campo del segundo apellido no puede contener números"): null;
+    _usuarioController.text.isEmpty ? showToast("El campo del usuario no puede estar vacío") : null;
+    _usuarioController.text.contains(' ') ? showToast("El campo del usuario no puede contener espacios") : null;
+    RegExp(r'[0-9]').hasMatch(_usuarioController.text) ? showToast("El campo del usuario no puede contener números"): null;
+    _identidadController.text.isEmpty ? showToast("El campo del DNI no puede estar vacío") : null;
+    _identidadController.text.contains(' ') ? showToast("El campo del DNI no puede contener espacios") : null;
+    RegExp(r'[^\d_-]').hasMatch(_identidadController.text) ? showToast("El campo del DNI no puede contener letras"): null;
+    _identidadController.text.length != 13 ? showToast("El campo del DNI debe tener exactamente 13 números"):null;
+    _correoController.text.isEmpty ? showToast("El campo del correo no puede estar vacío") : null;
+    _correoController.text.contains(' ') ? showToast("El campo del correo no puede contener espacios") : null;
+    _telefonoController.text.isEmpty ? showToast("El campo del teléfono no puede estar vacío") : null;
+    _telefonoController.text.contains(' ') ? showToast("El campo del teléfono no puede contener espacios") : null;
+    RegExp(r'[^\d_-]').hasMatch(_telefonoController.text) ? showToast("El campo del teléfono no puede contener letras"): null;
+    _telefonoController.text.length != 8 ? showToast("El campo del télefono debe tener exactamente 8 números"):null;
+    _contrasenaController.text.isEmpty ? showToast("El campo de la contraseña no puede estar vacío") : null;
+    _contrasenaController.text.length > 12 ? showToast("El campo de la contraseña debe tener 12 caracteres máximo") : null;
+    _contrasenaController.text.length < 8 ? showToast("El campo de la contraseña debe tener 8 caracteres mínimo") : null;
+    _contrasenaController.text.contains(' ') ? showToast("El campo para la contraseña no puede contener espacios") : null;
+    _confirmarContrasenaController.text.isEmpty ? showToast("El campo para confirmar la contraseña no puede estar vacío") : null;
+    _confirmarContrasenaController.text.length > 12 ? showToast("El campo para confirmar la contraseña debe tener 12 caracteres máximo") : null;
+    _confirmarContrasenaController.text.length < 8 ? showToast("El campo para confirmar la contraseña debe tener 8 caracteres mínimo") : null;
+    _confirmarContrasenaController.text.contains(' ') ? showToast("El campo para confirmar la contraseña no puede contener espacios") : null;
+    _contrasenaController.text != _confirmarContrasenaController.text ? showToast("Los espacios correspondientes a las contraseñas no coinciden") : null;
+  }
+
+  // Función para mostrar toasts con FlutterToast
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override
@@ -180,6 +255,14 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _pNombresFocus,
                           onSubmitted: (value) =>
                               cambiarFoco(_pNombresFocus, _sNombresFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _pNombresController.text = text.toUpperCase();
+                              _pNombresController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _pNombresController.text.length),
+                              );
+                             });
+                          }
                         ),
                         makeInput(
                           label: "Segundo Nombre",
@@ -187,6 +270,14 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _sNombresFocus,
                           onSubmitted: (value) =>
                               cambiarFoco(_sNombresFocus, _pApellidosFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _sNombresController.text = text.toUpperCase();
+                              _sNombresController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _sNombresController.text.length),
+                              );
+                             });
+                          }
                         ),
                         makeInput(
                           label: "Primer Apellido",
@@ -194,6 +285,14 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _pApellidosFocus,
                           onSubmitted: (value) =>
                               cambiarFoco(_pApellidosFocus, _sApellidosFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _pApellidosController.text = text.toUpperCase();
+                              _pApellidosController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _pApellidosController.text.length),
+                              );
+                             });
+                          }
                         ),
                         makeInput(
                           label: "Segundo Apellido",
@@ -201,6 +300,14 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _sApellidosFocus,
                           onSubmitted: (value) =>
                               cambiarFoco(_sApellidosFocus, _usuarioFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _sApellidosController.text = text.toUpperCase();
+                              _sApellidosController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _sApellidosController.text.length),
+                              );
+                             });
+                          }
                         ),
                         makeInput(
                           label: "Nombre de Usuario",
@@ -208,6 +315,14 @@ class _SingUpPageState extends State<SignupPage> {
                           focusNode: _usuarioFocus,
                           onSubmitted: (value) =>
                               cambiarFoco(_usuarioFocus, _identidadFocus),
+                          onChanged: (text) {
+                             setState(() {
+                              _usuarioController.text = text.toUpperCase();
+                              _usuarioController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _usuarioController.text.length),
+                              );
+                             });
+                          }
                         ),
                         makeInput(
                           label: "Número de DNI",
@@ -236,7 +351,18 @@ class _SingUpPageState extends State<SignupPage> {
                             focusNode: _contrasenaFocus,
                             onSubmitted: (value) => cambiarFoco(
                                 _contrasenaFocus, _confirmarContrasenaFocus),
-                            obsecureText: true),
+                            obsecureText: !_mostrarContrasena,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                              _mostrarContrasena ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _mostrarContrasena = !_mostrarContrasena;
+                              });
+                            },
+                          ),),
                         makeInput(
                             label: "Confirma tu Contraseña",
                             controller: _confirmarContrasenaController,
@@ -244,13 +370,24 @@ class _SingUpPageState extends State<SignupPage> {
                             onSubmitted: (value) {
                               _confirmarContrasenaFocus.unfocus();
                             },
-                            obsecureText: true),
+                            obsecureText: !_mostrarContrasena,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                              _mostrarContrasena ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _mostrarContrasena = !_mostrarContrasena;
+                              });
+                            },
+                          ),),
                       ],
                     ),
                   ),
 
-                  //AQUÍ
-                  Padding(
+                  //AQUÍ ESTABA EL BOTÓN DE LA IMAGEN DE PERFIL
+                  /* Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: MaterialButton(
                       minWidth: double.infinity,
@@ -270,7 +407,7 @@ class _SingUpPageState extends State<SignupPage> {
                             fontWeight: FontWeight.w600, fontSize: 18),
                       ),
                     ),
-                  ),
+                  ), */
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
@@ -296,6 +433,7 @@ class _SingUpPageState extends State<SignupPage> {
                         height: 60,
                         onPressed: () {
                           _registroHabilitado ? _registrarse() : null;
+                          mostrarValidaciones();
                         },
                         color: Color.fromARGB(255, 81, 124, 193),
                         elevation: 0,
@@ -350,7 +488,9 @@ class _SingUpPageState extends State<SignupPage> {
   void _registrarse() async {
     // Lógica para realizar el registro
     if (_registroHabilitado) {
-      var ingBody = {
+      FocusScope.of(context).unfocus();
+      try {
+        var ingBody = {
         "primer_nombre": _pNombresController.text,
         "segundo_nombre": _sNombresController.text,
         "primer_apellido": _pApellidosController.text,
@@ -373,17 +513,34 @@ class _SingUpPageState extends State<SignupPage> {
 
       print(jsonResponse);
 
+      if (jsonResponse['status']) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())); 
+        /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
+        }else{
+          showToast(jsonResponse['msg']);
+          print("Algo anda mal");
+        }
+
       /* Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage())); */
+      } catch (e) {
+        // Manejar errores de red o excepciones
+        showToast('Hubo un problema al intentar registrar al usuario.');
+      }
+      
     } else {
+      
+      // Mostrar alerta porque las validaciones no se cumplen
+      showToast('Por favor, completa todos los campos correctamente.');
       print("Adiós");
+      
     }
   }
 
   //CLASES
 
   Widget makeInput(
-      {label, controller, focusNode, onSubmitted, obsecureText = false}) {
+      {label, controller, focusNode, onSubmitted, obsecureText = false, IconButton? suffixIcon, onChanged}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -402,14 +559,18 @@ class _SingUpPageState extends State<SignupPage> {
           focusNode: focusNode,
           onSubmitted: onSubmitted,
           obscureText: obsecureText,
+          onChanged: onChanged,
           decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400]!),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400]!),
-              )),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400]!),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400]!),
+            ),
+            suffixIcon: suffixIcon,
+          ),
+            
         ),
 
         //AQUÍ

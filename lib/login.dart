@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage>{
       if (
           _usuarioController.text.isNotEmpty &&
           _contrasenaController.text.isNotEmpty &&
-          _usuarioController.text.length <= 12 &&
+          _contrasenaController.text.length <= 12 &&
           _contrasenaController.text.length >= 8 &&
           _usuarioController.text == _usuarioController.text.toUpperCase() &&
           !_usuarioController.text.contains(' ') &&
@@ -224,7 +224,8 @@ Widget build(BuildContext context) {
                                 _mostrarContrasena = !_mostrarContrasena;
                               });
                             },
-                          ),),
+                          ),
+                          ),
 
                           
               
@@ -269,8 +270,6 @@ Widget build(BuildContext context) {
     
                             _accesoHabilitado ? _ingresar() : null;
                             mostrarValidaciones();
-                            
-
     
                           },
     
@@ -409,11 +408,11 @@ Widget build(BuildContext context) {
       }
     
     }else{
-      setState(() {
-        // Mostrar alerta porque las validaciones no se cumplen
-        showToast('Por favor, completa todos los campos correctamente.');
-        print("Adiós");
-      });
+      
+      // Mostrar alerta porque las validaciones no se cumplen
+      showToast('Por favor, completa todos los campos correctamente.');
+      print("Adiós");
+      
     }
 
 
