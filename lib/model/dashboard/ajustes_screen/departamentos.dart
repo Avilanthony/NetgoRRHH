@@ -24,8 +24,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
 
   _fetchDepartments() async {
     try {
-      final response =
-          await http.get(Uri.parse('$selec_deptos/departamentos'));
+      final response = await http.get(Uri.parse('$selec_deptos/departamentos'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -126,11 +125,13 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
 
   _removeDepartment(int departmentId) async {
     try {
-      final response = await http.delete(Uri.parse('$editables/delete_dep/$departmentId'));
+      final response =
+          await http.delete(Uri.parse('$editables/delete_dep/$departmentId'));
 
       if (response.statusCode == 200) {
         setState(() {
-          departments.removeWhere((dep) => dep['ID_DEPARTAMENTO'] == departmentId);
+          departments
+              .removeWhere((dep) => dep['ID_DEPARTAMENTO'] == departmentId);
         });
         print('Departamento eliminado con éxito');
       } else {
@@ -146,7 +147,9 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
     try {
       final response = await http.post(
         Uri.parse('$editables/create_dep/'),
-        body: {'departamento': newDepartment, 'id_local': '1'},
+        headers: {'Content-Type': 'application/json'},
+        body:
+            jsonEncode({'departamento': newDepartment.trim(), 'id_local': '1'}),
       );
 
       if (response.statusCode == 200) {
@@ -159,6 +162,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
       } else {
         print(
             'Error al crear el departamento. Código de estado: ${response.statusCode}');
+        print('Respuesta del servidor: ${response.body}');
       }
     } catch (e) {
       print('Error en la solicitud HTTP: $e');
@@ -232,7 +236,8 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
           title: const Text('Agregar Nuevo Departamento'),
           content: TextField(
             onChanged: (value) {
-              newDepartment = value;
+              newDepartment = value.toUpperCase();
+              print('Valor de newDepartment en onChanged: $newDepartment');
             },
             decoration:
                 const InputDecoration(hintText: 'Nombre del Departamento'),
@@ -245,14 +250,16 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
               },
             ),
             ElevatedButton(
-              child: const Text('Agregar'),
-              onPressed: () async {
-                if (newDepartment.isNotEmpty) {
-                  await _createDepartment(newDepartment);
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
+                child: const Text('Agregar'),
+                onPressed: () async {
+                  print(
+                      'Valor de newDepartment antes de _createDepartment: $newDepartment');
+                  if (newDepartment.isNotEmpty) {
+                    await _createDepartment(newDepartment);
+                    Navigator.of(context).pop();
+                    _fetchDepartments();
+                  }
+                }),
           ],
         );
       },
