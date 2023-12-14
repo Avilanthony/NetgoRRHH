@@ -149,7 +149,7 @@ class _DepartamentViewScreen extends State<DepartamentViewScreen> {
         Uri.parse('$editables/create_dep/'),
         headers: {'Content-Type': 'application/json'},
         body:
-            jsonEncode({'departamento': newDepartment.trim(), 'id_local': '1'}),
+            jsonEncode({'departamento': newDepartment.trim()}),
       );
 
       if (response.statusCode == 200) {
