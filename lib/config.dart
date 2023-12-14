@@ -20,3 +20,5 @@ final editables = url + "editar";
 final llenar_select_deptos = url + "depto_users/departamentos";
 
 final traer_usuario_cada_depto = url + "depto_users/deptosUsuarios";
+
+final datos_cada_usuario_gestionar = url + "admin/admin_user";

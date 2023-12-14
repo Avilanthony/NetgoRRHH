@@ -1,14 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
 
-class ConfiguracionUsuariosPage extends StatefulWidget {
+import 'package:http/http.dart' as http;
+
+/* class ConfiguracionUsuariosPage extends StatefulWidget {
   const ConfiguracionUsuariosPage({Key? key}) : super(key: key);
 
   @override
   _ConfiguracionUsuariosPageState createState() =>
       _ConfiguracionUsuariosPageState();
+} */
+
+class ConfiguracionUsuariosPage extends StatefulWidget {
+  final int usuarioId;
+
+  const ConfiguracionUsuariosPage({Key? key, required this.usuarioId}) : super(key: key);
+
+  @override
+  _ConfiguracionUsuariosPageState createState() => _ConfiguracionUsuariosPageState();
 }
 
 class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
@@ -36,8 +50,38 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     "General",
   ];
 
+  Future<void> obtenerDetallesUsuario(int idUsuario) async {
+    try {
+      final response = await http.get(Uri.parse('$datos_cada_usuario_gestionar/${widget.usuarioId}'));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        // La solicitud fue exitosa
+        final Map<String, dynamic> data = json.decode(response.body);
+        // Ahora, puedes utilizar los datos en 'data' para mostrarlos en tu aplicación
+        print('Detalles del usuario: $data');
+      } else {
+        // La solicitud falló con un código de estado diferente de 200
+        print('Error al obtener detalles del usuario: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Manejar errores de red u otros
+      print('Error al obtener detalles del usuario: $error');
+    }
+  } 
+
+  @override
+  void initState() {
+    super.initState();
+    // Puedes establecer el valor de _userId según tus necesidades
+     // Por ejemplo, asumiendo que el ID del usuario es "1"
+    obtenerDetallesUsuario(widget.usuarioId);
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("El ID traído es el siguiente: ${widget.usuarioId}");
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 247, 247, 255),
