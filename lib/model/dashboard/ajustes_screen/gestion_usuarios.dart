@@ -19,7 +19,7 @@ class GestionUsuariosPage extends StatefulWidget {
 class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
   List<String> _departamentosUsuario = [];
-  List<String> _usuariosPorDepartamento = [];
+  List<Map<String, dynamic>> _usuariosPorDepartamento = [];
   /* var idDepto; */
 
   @override
@@ -76,11 +76,19 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
       if (jsonResponse['status']) {
         final data = json.decode(response.body);
-        final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO']));
+        /* final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO'])); */
+        final usuarios = List<Map<String, dynamic>>.from(data['usuario'].map((dep) => {
+          'id': dep['ID'],
+          'nombreCompleto': dep['NOMBRE'] + ' ' + dep['APELLIDO'],
+        }));
+        /* final idsUsuarios = List<int>.from(data['usuario'].map((dep) => dep['ID'])); */
         setState(() {
           _usuariosPorDepartamento = usuarios;
+          /* _idsUsuariosPorDepartamento = idsUsuarios; */
         });
         print("El id debe ser este: $idDepartamento");
+        print('Detalles de los usuarios: $data');
+        /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
         print("Usuarios del departamento $departamento: $usuarios");
         print(usuarios);
         
@@ -250,7 +258,7 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
  
 }
 
-itemUsuarios(String nombreComp, String? depart, context) {
+itemUsuarios(Map<String, dynamic> usuario, String? depart, context) {
 
   String capitalize(String input) {
     if (input.isEmpty) {
@@ -265,7 +273,7 @@ itemUsuarios(String nombreComp, String? depart, context) {
     return capitalizedParts.join(' ');
   }
 
-  String capitalizedNombre = capitalizeFullName(nombreComp);
+  String capitalizedNombre = capitalizeFullName(usuario['nombreCompleto']);
   // Convierte la primera letra de nombreComp a mayúscula
   /* String formattedNombreComp = nombreComp.isNotEmpty
       ? nombreComp[0].toUpperCase() + nombreComp.substring(1)
@@ -311,7 +319,7 @@ itemUsuarios(String nombreComp, String? depart, context) {
                           //height: 0,
                           onPressed: () {
                              Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => const ConfiguracionUsuariosPage()));
+                              context, MaterialPageRoute(builder: (context) => ConfiguracionUsuariosPage(usuarioId: usuario['id'])));
                               
                           },
                           style: ElevatedButton.styleFrom(
