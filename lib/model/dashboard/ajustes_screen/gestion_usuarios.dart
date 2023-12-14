@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/configurar_usuario.dart';
+
+import 'package:http/http.dart' as http;
 
 
 class GestionUsuariosPage extends StatefulWidget {
@@ -12,18 +18,102 @@ class GestionUsuariosPage extends StatefulWidget {
 
 class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
-  _GestionUsuariosPageState() {
-    _valorSelec = _departamentosUsuario[0];
+  List<String> _departamentosUsuario = [];
+  List<String> _usuariosPorDepartamento = [];
+  /* var idDepto; */
+
+  @override
+  void initState() {
+    super.initState();
+    // Llamar a la función para obtener la lista de departamentos al inicio
+    _getDepartamentos();
   }
 
-  //String dropdownValue = 'Todos';
-  final _departamentosUsuario = [
-    "Todos",
-    "Marketing",
-    "Administración",
-    "RRHH",
-    "Mantenimiento"
-  ];
+  Future<void> _getDepartamentos() async { //LAMAR LA SOLICITUD DEL BACKEND
+    try {
+      final response = await http.get(Uri.parse(llenar_select_deptos));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final departamentos = List<String>.from(data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+        /* final idDepartamento = data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']); */ //LANZA VACÍO
+        /* final idDepartamento = data['departamento'].first['ID_DEPARTAMENTO']; */  //FUNCIONA SÓLO RRHH Usar el primer ID
+        /* final idDepartamento = data['departamento'].map((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; */
+        /* final idDepartamento = data['departamento'].firstWhere((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; //NO FUNCIONA */
+        /* final index = departamentos.indexOf(_valorSelec);
+        final idDepartamento = data['departamento'][index]['ID_DEPARTAMENTO']; */
+        setState(() {
+          _departamentosUsuario = departamentos;
+          /* idDepto = idDepartamento; */
+          /* idDepto = data['departamento'].firstWhere((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; */
+          // Puedes agregar más lógica aquí según tus necesidades
+        });
+        
+        
+        print("Hola");
+      } else {
+        
+        // Manejar errores aquí
+        showToast(jsonResponse['msg']);
+          print("Algo anda mal");
+      }
+    } catch (error) {
+      // Manejar errores de red o cualquier otra excepción
+      print(error);
+      showToast('Hubo un problema al traer los departamentos.');
+    }
+  }
+
+  Future<void> _getUsuariosPorDepartamento(String departamento) async {
+    try {
+      final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1;
+
+      final response = await http.get(Uri.parse('$traer_usuario_cada_depto/$idDepartamento'));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO']));
+        setState(() {
+          _usuariosPorDepartamento = usuarios;
+        });
+        print("El id debe ser este: $idDepartamento");
+        print("Usuarios del departamento $departamento: $usuarios");
+        print(usuarios);
+        
+        // Puedes continuar con la lógica para mostrar los usuarios en tu aplicación.
+
+      } else {
+        showToast(jsonResponse['msg']);
+        print("Algo anda mal al obtener usuarios");
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al obtener los usuarios.');
+    }
+  }
+
+  _GestionUsuariosPageState() {
+    // Asegúrate de que _departamentosUsuario no esté vacío antes de asignar el valor
+    _valorSelec = _departamentosUsuario.isNotEmpty ? _departamentosUsuario[0] : null;
+  }
+
+  // Función para mostrar toasts con FlutterToast
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   String? _valorSelec = "";
 
   @override
@@ -83,9 +173,15 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
                                   ))
                                   .toList(),
                               onChanged: (val) {
+                                
                                 setState(() {
                                   _valorSelec = val as String;
+                                  
                                 });
+
+                                print("Seleccionaste: $_valorSelec");
+                                _getUsuariosPorDepartamento(_valorSelec!);
+                                
                               },
                               icon: const Icon(
                                 Icons.arrow_drop_down_circle,
@@ -122,9 +218,11 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
                               children: <Widget>[
 
-                                itemUsuarios('Anthony Avila', 'Contabilidad', context),
+                                /* itemUsuarios('Anthony Avila', 'Contabilidad', context),
                                 itemUsuarios('Adoniss Ponce', 'Contabilidad', context),
-                                itemUsuarios('Henry Cabrera', 'Contabilidad', context),
+                                itemUsuarios('Henry Cabrera', 'Contabilidad', context), */
+                                for (var usuario in _usuariosPorDepartamento)
+                                itemUsuarios(usuario, _valorSelec, context),
 
                               ]
 
@@ -152,7 +250,30 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
  
 }
 
-itemUsuarios(String nombreComp, String depart, context) {
+itemUsuarios(String nombreComp, String? depart, context) {
+
+  String capitalize(String input) {
+    if (input.isEmpty) {
+      return input;
+    }
+    return input[0].toUpperCase() + input.substring(1).toLowerCase();
+  } 
+
+  String capitalizeFullName(String fullName) {
+    List<String> nameParts = fullName.split(' ');
+    List<String> capitalizedParts = nameParts.map((part) => capitalize(part)).toList();
+    return capitalizedParts.join(' ');
+  }
+
+  String capitalizedNombre = capitalizeFullName(nombreComp);
+  // Convierte la primera letra de nombreComp a mayúscula
+  /* String formattedNombreComp = nombreComp.isNotEmpty
+      ? nombreComp[0].toUpperCase() + nombreComp.substring(1)
+      : nombreComp; */
+
+
+  /* String capitalizedDepart = depart != null ? capitalize(depart) : ''; */
+
   return Column(
     children: <Widget>[
       Container(
@@ -171,10 +292,10 @@ itemUsuarios(String nombreComp, String depart, context) {
         child: Stack(
           children: [
             ListTile(
-              subtitle: Text(depart,
+              subtitle: Text(depart!,
               style: TextStyle(
                 fontSize: 15, color: Colors.grey[700])),
-              title: Text(nombreComp),
+              title: Text(capitalizedNombre),
               
               
               textColor: const Color.fromARGB(255, 0, 0, 0),
