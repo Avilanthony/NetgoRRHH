@@ -87,6 +87,7 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
           /* _idsUsuariosPorDepartamento = idsUsuarios; */
         });
         print("El id debe ser este: $idDepartamento");
+        print('Detalles de los usuarios: $data');
         /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
         print("Usuarios del departamento $departamento: $usuarios");
         print(usuarios);

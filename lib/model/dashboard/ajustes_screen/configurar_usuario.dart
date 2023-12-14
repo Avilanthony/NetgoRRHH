@@ -26,6 +26,7 @@ class ConfiguracionUsuariosPage extends StatefulWidget {
 }
 
 class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
+  Map<String, dynamic> _datosUsuario = {}; // Cambiado a Map
   static String? _valorSelecLocal;
   static String? _valorSelecDep;
   static String? _valorSelecEstado;
@@ -58,9 +59,37 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
 
       if (jsonResponse['status']) {
         // La solicitud fue exitosa
-        final Map<String, dynamic> data = json.decode(response.body);
+        /* final Map<String, dynamic> data = json.decode(response.body);
+        print('Tipo de data: ${data['usuario'].runtimeType}'); */
+        final data = json.decode(response.body);
+        final detallesUsuario = data['usuario']; // Acceder directamente al mapa
+
+        setState(() {
+          _datosUsuario = detallesUsuario;
+        });
         // Ahora, puedes utilizar los datos en 'data' para mostrarlos en tu aplicación
+        /* final detallesUsuario = Map<String, dynamic>.from(data['usuario'].map((dep) => {
+          'id': dep['ID'],
+          'nombreCompleto': dep['P_NOMBRE'] + ' ' + dep['P_APELLIDO'],
+          'localUbicacion': dep['LOCAL'],
+          'deptoUsuario' : dep['DEPARTAMENTO'],
+          'vacacUsuario': dep['VACACIONES'],
+          'estadoUsuario' : dep['ESTADO'],
+          'rolUsuario' : dep['ROL'],
+          'telefonoUsuario': dep['TELEFONO'],
+          'correoUsuario': dep['CORREO']
+        })); */
+        
+        /* setState(() {
+          /* _datosUsuario = detallesUsuario; */
+          /* _idsUsuariosPorDepartamento = idsUsuarios; */
+        }); */
+        /* setState(() {
+          _datosUsuario = data;
+        }); */
         print('Detalles del usuario: $data');
+        print("Esto es una prueba: $_datosUsuario");
+        print(_datosUsuario['LOCAL']);
       } else {
         // La solicitud falló con un código de estado diferente de 200
         print('Error al obtener detalles del usuario: ${response.statusCode}');
@@ -114,7 +143,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 ),
                 SizedBox(width: screenWidth * 0.05),
                 Text(
-                  "Anthony Ávila".toUpperCase(),
+                  ((_datosUsuario['P_NOMBRE'] ?? '') + ' ' + (_datosUsuario['P_APELLIDO'] ?? '')).toUpperCase(),
                   style: TextStyle(
                     fontSize: screenWidth * 0.05,
                     fontWeight: FontWeight.bold,
@@ -129,20 +158,24 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
               child: Column(
                 children: <Widget>[
                   itemConfigurar(
-                    'Tegucigalpa',
+                    estiloTextos(_datosUsuario['LOCAL'] ?? ''),
                     'Local',
                     'Actualizar',
                     null,
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
-                    'Contabilidad',
+                    _datosUsuario['DEPARTAMENTO'] ?? '',
                     'Departamento',
                     'Actualizar',
                     null,
                   ),
                   const SizedBox(height: 20),
-                  itemConfigurar('35 días', 'Vacaciones', 'Actualizar', null),
+                  itemConfigurar(
+                    '${_datosUsuario['VACACIONES']} días',
+                    'Vacaciones', 
+                    'Actualizar', 
+                    null),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     'Boleta de Pago',
@@ -152,26 +185,26 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
-                    'Activo',
+                    estiloTextos(_datosUsuario['ESTADO'] ?? ''),
                     'Estado del Usuario',
                     'Actualizar',
                     null,
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
-                    'Administrador',
+                    estiloTextos(_datosUsuario['ROL'] ?? ''),
                     'Rol del Usuario',
                     'Actualizar',
                     null,
                   ),
                   const SizedBox(height: 20),
                   itemNoConfigurar(
-                    '+504 3315-9876',
+                    '+504 ${_datosUsuario['TELEFONO'] ?? ''}',
                     'Teléfono',
                   ),
                   const SizedBox(height: 20),
                   itemNoConfigurar(
-                    'anthony.avila@netgo.com',
+                    (_datosUsuario['CORREO'] ?? '').toLowerCase(),
                     'Correo',
                   ),
                   const SizedBox(height: 20),
@@ -440,4 +473,22 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       ),
     );
   }
+}
+
+estiloTextos(String texto){
+  String capitalize(String input) {
+    if (input.isEmpty) {
+      return input;
+    }
+    return input[0].toUpperCase() + input.substring(1).toLowerCase();
+  } 
+
+  String capitalizeFullName(String fullName) {
+    List<String> nameParts = fullName.split(' ');
+    List<String> capitalizedParts = nameParts.map((part) => capitalize(part)).toList();
+    return capitalizedParts.join(' ');
+  }
+
+  String capitalizedNombre = capitalizeFullName(texto);
+  return capitalizedNombre;
 }
