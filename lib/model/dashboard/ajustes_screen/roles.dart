@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:recursos_humanos_netgo/config.dart';
 
 class RolesViewScreen extends StatefulWidget {
   const RolesViewScreen({Key? key}) : super(key: key);
@@ -10,14 +14,40 @@ class RolesViewScreen extends StatefulWidget {
 }
 
 class _RolesViewScreenState extends State<RolesViewScreen> {
-  List<String> departments = [
-    'Administrador',
-    'Gerente',
-    'Supervisor',
-    'Empleado',
-    'Sin rol',
-    'SuperUsuario',
-  ];
+  List<Map<String, dynamic>> roles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Llama a la función para obtener los departamentos al iniciar la pantalla
+    _fetchDepartments();
+  }
+
+  _fetchDepartments() async {
+    try {
+      final response = await http.get(Uri.parse('$selec_roles/roles'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['roles'] != null) {
+          final List<dynamic> rolData = data['roles'];
+
+          setState(() {
+            roles = rolData.cast<Map<String, dynamic>>();
+          });
+        } else {
+          print(
+              'Error: El campo "rol" es nulo o no existe en la respuesta del servidor');
+        }
+      } else {
+        print(
+            'Error al obtener la lista de roles. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +93,8 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        for (var department in departments)
-                          itemUsuarios(department, context),
+                        for (var rols in roles)
+                          itemUsuarios(rols, context),
                       ],
                     ),
                   ),
@@ -95,7 +125,54 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
     );
   }
 
-  itemUsuarios(String nombreComp, context) {
+  _removeRol(int rolId) async {
+    try {
+      final response =
+          await http.delete(Uri.parse('$editables/delete_rol/$rolId'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          roles
+              .removeWhere((ro) => ro['ID_ROL'] == rolId);
+        });
+        print('Rol eliminado con éxito');
+      } else {
+        print(
+            'Error al eliminar el rol. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  _createRol(String newrol) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$editables/create_rol/'),
+        headers: {'Content-Type': 'application/json'},
+        body:
+            jsonEncode({'rol': newrol.trim()}),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        setState(() {
+          roles.add(responseData);
+        });
+        print('Rol creado con éxito');
+      } else {
+        print(
+            'Error al crear el rol. Código de estado: ${response.statusCode}');
+        print('Respuesta del servidor: ${response.body}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+
+  itemUsuarios(Map<String, dynamic> rol, context) {
     return Column(
       children: <Widget>[
         Container(
@@ -114,7 +191,7 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
           child: Stack(
             children: [
               ListTile(
-                title: Text(nombreComp),
+                title: Text(rol['ROL'] as String),
                 textColor: const Color.fromARGB(255, 0, 0, 0),
               ),
               Positioned(
@@ -125,7 +202,7 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
                   width: 130,
                   child: ElevatedButton(
                     onPressed: () {
-                      _removeDepartment(nombreComp);
+                      _removeRol(rol['ID_ROL'] as int);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 211, 48, 48),
@@ -154,18 +231,19 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
   }
 
   _displayDialog(BuildContext context) async {
-    String newDepartment = '';
+    String newRol = '';
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Agregar Nuevo Apartado'),
+          title: const Text('Agregar Nuevo Rol'),
           content: TextField(
             onChanged: (value) {
-              newDepartment = value;
+              newRol = value.toUpperCase();
+              print('Valor de newRol en onChanged: $newRol');
             },
-            decoration: const InputDecoration(
-                hintText: 'Nombre del nuevo apartado'),
+            decoration:
+                const InputDecoration(hintText: 'Nombre del Rol'),
           ),
           actions: <Widget>[
             TextButton(
@@ -175,25 +253,19 @@ class _RolesViewScreenState extends State<RolesViewScreen> {
               },
             ),
             ElevatedButton(
-              child: const Text('Agregar'),
-              onPressed: () {
-                if (newDepartment.isNotEmpty) {
-                  setState(() {
-                    departments.add(newDepartment);
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-            ),
+                child: const Text('Agregar'),
+                onPressed: () async {
+                  print(
+                      'Valor de newRol antes de _createRol: $newRol');
+                  if (newRol.isNotEmpty) {
+                    await _createRol(newRol);
+                    Navigator.of(context).pop();
+                    _fetchDepartments();
+                  }
+                }),
           ],
         );
       },
     );
-  }
-
-  _removeDepartment(String department) {
-    setState(() {
-      departments.remove(department);
-    });
   }
 }

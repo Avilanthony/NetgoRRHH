@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:recursos_humanos_netgo/config.dart';
 
 class LocalViewScreen extends StatefulWidget {
   const LocalViewScreen({Key? key}) : super(key: key);
@@ -10,11 +14,40 @@ class LocalViewScreen extends StatefulWidget {
 }
 
 class _LocalViewScreen extends State<LocalViewScreen> {
-  List<String> departments = [
-    'Tegucigalpa',
-    'San Pedro Sula',
-    'Ceiba',
-  ];
+  List<Map<String, dynamic>> locales = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Llama a la función para obtener los departamentos al iniciar la pantalla
+    _fetchDepartments();
+  }
+
+  _fetchDepartments() async {
+    try {
+      final response = await http.get(Uri.parse('$selec_locales/locales'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['locales'] != null) {
+          final List<dynamic> localData = data['locales'];
+
+          setState(() {
+            locales = localData.cast<Map<String, dynamic>>();
+          });
+        } else {
+          print(
+              'Error: El campo "local" es nulo o no existe en la respuesta del servidor');
+        }
+      } else {
+        print(
+            'Error al obtener la lista de locales. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +67,6 @@ class _LocalViewScreen extends State<LocalViewScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        // ignore: sized_box_for_whitespace
         child: Container(
           width: double.infinity,
           child: Column(
@@ -44,14 +76,14 @@ class _LocalViewScreen extends State<LocalViewScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   const Text(
-                    "Localidades",
+                    "Locales",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(10),
                     child: Text(
-                      "En este apartado puede agregar o eliminar la localidad que quiera.",
+                      "En este apartado puede agregar o eliminar los locales que quiera.",
                       style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                       textAlign: TextAlign.center,
                     ),
@@ -60,8 +92,8 @@ class _LocalViewScreen extends State<LocalViewScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        for (var department in departments)
-                          itemUsuarios(department, context),
+                        for (var locals in locales)
+                          itemUsuarios(locals, context),
                       ],
                     ),
                   ),
@@ -92,7 +124,53 @@ class _LocalViewScreen extends State<LocalViewScreen> {
     );
   }
 
-  itemUsuarios(String nombreComp, context) {
+  _removeLocal(int localId) async {
+    try {
+      final response =
+          await http.delete(Uri.parse('$editables/delete_local/$localId'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          locales
+              .removeWhere((loc) => loc['ID_LOCAL'] == localId);
+        });
+        print('Local eliminado con éxito');
+      } else {
+        print(
+            'Error al eliminar el local. Código de estado: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  _createLocal(String newLocal) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$editables/create_local/'),
+        headers: {'Content-Type': 'application/json'},
+        body:
+            jsonEncode({'local': newLocal.trim()}),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        setState(() {
+          locales.add(responseData);
+        });
+        print('Local creado con éxito');
+      } else {
+        print(
+            'Error al crear el local. Código de estado: ${response.statusCode}');
+        print('Respuesta del servidor: ${response.body}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  itemUsuarios(Map<String, dynamic> local, context) {
     return Column(
       children: <Widget>[
         Container(
@@ -111,7 +189,7 @@ class _LocalViewScreen extends State<LocalViewScreen> {
           child: Stack(
             children: [
               ListTile(
-                title: Text(nombreComp),
+                title: Text(local['UBICACION'] as String),
                 textColor: const Color.fromARGB(255, 0, 0, 0),
               ),
               Positioned(
@@ -122,7 +200,7 @@ class _LocalViewScreen extends State<LocalViewScreen> {
                   width: 130,
                   child: ElevatedButton(
                     onPressed: () {
-                      _removeDepartment(nombreComp);
+                      _removeLocal(local['ID_LOCAL'] as int);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 211, 48, 48),
@@ -151,18 +229,19 @@ class _LocalViewScreen extends State<LocalViewScreen> {
   }
 
   _displayDialog(BuildContext context) async {
-    String newDepartment = '';
+    String newLocal = '';
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Agregar Localidad'),
+          title: const Text('Agregar Nuevo Local'),
           content: TextField(
             onChanged: (value) {
-              newDepartment = value;
+              newLocal = value.toUpperCase();
+              print('Valor de newLocal en onChanged: $newLocal');
             },
-            decoration: const InputDecoration(
-                hintText: 'Localidad'),
+            decoration:
+                const InputDecoration(hintText: 'Nombre del Local'),
           ),
           actions: <Widget>[
             TextButton(
@@ -172,25 +251,19 @@ class _LocalViewScreen extends State<LocalViewScreen> {
               },
             ),
             ElevatedButton(
-              child: const Text('Agregar'),
-              onPressed: () {
-                if (newDepartment.isNotEmpty) {
-                  setState(() {
-                    departments.add(newDepartment);
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-            ),
+                child: const Text('Agregar'),
+                onPressed: () async {
+                  print(
+                      'Valor de newLocal antes de _createLocal: $newLocal');
+                  if (newLocal.isNotEmpty) {
+                    await _createLocal(newLocal);
+                    Navigator.of(context).pop();
+                    _fetchDepartments();
+                  }
+                }),
           ],
         );
       },
     );
-  }
-
-  _removeDepartment(String department) {
-    setState(() {
-      departments.remove(department);
-    });
   }
 }

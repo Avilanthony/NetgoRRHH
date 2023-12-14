@@ -15,6 +15,10 @@ final ticket = url + "ticket";
 
 final selec_deptos = url + "depto_users";
 
+final selec_locales = url + "local_users";
+
+final selec_roles = url + "rol_users";
+
 final editables = url + "editar";
 
 final llenar_select_deptos = url + "depto_users/departamentos";
