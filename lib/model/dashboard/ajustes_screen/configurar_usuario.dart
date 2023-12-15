@@ -23,10 +23,12 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   List<String> _departamentosEmpresa = [];
   List<String> _localesEmpresa = [];
   List<String> _rolesUsuario = [];
+  List<int> _idDepartamentosEmpresa = [];
   static String? _valorSelecLocal;
   static String? _valorSelecDep;
   static String? _valorSelecEstado;
   static String? _valorSelecRol;
+  int? _idDepSeleccionado;
   /* static final _localesEmpresa=[
     "Tegucigalpa",
     "San Pedro Sula"
@@ -86,11 +88,15 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       if (jsonResponse['status']) {
         final data = json.decode(response.body);
         final departamentos = List<String>.from(data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+        final ids = List<int>.from(data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
         setState(() {
           _departamentosEmpresa = departamentos;
+          _idDepartamentosEmpresa = ids;
         });
   
         print("Hola desde Configurar Usuarios en _getDepartamentos()");
+        print("Los departamentos: $departamentos");
+        print("Los IDs: $ids");
       } else {
         showToast(jsonResponse['msg']);
         print("Algo anda mal");
@@ -146,6 +152,28 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     } catch (error) {
       print(error);
       showToast('Hubo un problema al traer los roles.');
+    }
+  }
+
+  Future<void> _actualizarDepartamento(String idDepto) async {
+    // Lógica para actualizar el departamento
+    try {
+      final response = await http.put(
+        Uri.parse('$gestionar/gest_depto_usuario/${widget.usuarioId}'),
+        body: {'idDepto': idDepto},
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      print("El ID que se va a colocar es: $idDepto");
+      if (jsonResponse['ok']) {
+        showToast('Departamento actualizado con éxito');
+      } else {
+        showToast(jsonResponse['msg']);
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al actualizar el departamento.');
     }
   }
 
@@ -241,7 +269,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                     _datosUsuario['DEPARTAMENTO'] ?? '',
                     'Departamento',
                     'Actualizar',
-                    null,
+                    () => _actualizarDepartamento(_idDepSeleccionado.toString()),
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
@@ -336,12 +364,14 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 ))
             .toList(),
         onChanged: (val) {
+           final index = _departamentosEmpresa.indexOf(val as String);
           setState(() {
             _valorSelecDep = val as String;
-                                  
+            _idDepSeleccionado = _idDepartamentosEmpresa[index];                      
           });
 
           print("El depto que seleccionaste para editar es: $_valorSelecDep");
+          print("El depto que seleccionaste para editar tiene el ID: $_idDepSeleccionado");
         },
         icon: const Icon(
           Icons.arrow_drop_down_circle,
@@ -467,11 +497,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 child: SizedBox(
                   width: 130,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (onPressedFunction != null) {
-                        onPressedFunction();
-                      }
-                    },
+                    onPressed: onPressedFunction,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(
                           255, 81, 124, 193), // Cambia el color del botón a rojo

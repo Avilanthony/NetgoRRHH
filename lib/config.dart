@@ -30,3 +30,5 @@ final datos_cada_usuario_gestionar = url + "admin/admin_user";
 final llenar_select_locales = url + "local_users/locales";
 
 final llenar_select_roles = url + "rol_users/roles";
+
+final gestionar = url+ "gestion_user";
