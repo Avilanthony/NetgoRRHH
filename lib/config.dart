@@ -1,6 +1,6 @@
-final url = 'http://192.168.0.2:8081/';
+final url = 'http://192.168.0.13:8081/';
 // ip Pepetoño: 192.168.0.2
-// ip Donita: 192.168.0.3
+// ip Donita: 192.168.0.13
 // ip AWS: 3.143.83.212
 
 final ingreso = url + "auth/login";
@@ -26,3 +26,7 @@ final llenar_select_deptos = url + "depto_users/departamentos";
 final traer_usuario_cada_depto = url + "depto_users/deptosUsuarios";
 
 final datos_cada_usuario_gestionar = url + "admin/admin_user";
+
+final llenar_select_locales = url + "local_users/locales";
+
+final llenar_select_roles = url + "rol_users/roles";

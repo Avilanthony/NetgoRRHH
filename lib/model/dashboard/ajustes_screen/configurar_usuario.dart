@@ -3,18 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
 
 import 'package:http/http.dart' as http;
-
-/* class ConfiguracionUsuariosPage extends StatefulWidget {
-  const ConfiguracionUsuariosPage({Key? key}) : super(key: key);
-
-  @override
-  _ConfiguracionUsuariosPageState createState() =>
-      _ConfiguracionUsuariosPageState();
-} */
 
 class ConfiguracionUsuariosPage extends StatefulWidget {
   final int usuarioId;
@@ -27,29 +20,32 @@ class ConfiguracionUsuariosPage extends StatefulWidget {
 
 class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   Map<String, dynamic> _datosUsuario = {}; // Cambiado a Map
+  List<String> _departamentosEmpresa = [];
+  List<String> _localesEmpresa = [];
+  List<String> _rolesUsuario = [];
   static String? _valorSelecLocal;
   static String? _valorSelecDep;
   static String? _valorSelecEstado;
   static String? _valorSelecRol;
-  static final _localesEmpresa=[
+  /* static final _localesEmpresa=[
     "Tegucigalpa",
     "San Pedro Sula"
-  ];
-  static final _departamentosUsuario = [
+  ]; */
+  /* static final _departamentosUsuario = [
     "Marketing",
     "Administración",
     "RRHH",
     "Mantenimiento"
-  ];
+  ]; */
   static final _estadoUsuario = [
-    "Activo",
-    "Inactivo",
-    "Nuevo",
+    "NUEVO",
+    "ACTIVO",
+    "BLOQUEADO"
   ];
-  static final _rolesUsuario = [
+  /* static final _rolesUsuario = [
     "Administrador",
     "General",
-  ];
+  ]; */
 
   Future<void> obtenerDetallesUsuario(int idUsuario) async {
     try {
@@ -67,26 +63,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         setState(() {
           _datosUsuario = detallesUsuario;
         });
-        // Ahora, puedes utilizar los datos en 'data' para mostrarlos en tu aplicación
-        /* final detallesUsuario = Map<String, dynamic>.from(data['usuario'].map((dep) => {
-          'id': dep['ID'],
-          'nombreCompleto': dep['P_NOMBRE'] + ' ' + dep['P_APELLIDO'],
-          'localUbicacion': dep['LOCAL'],
-          'deptoUsuario' : dep['DEPARTAMENTO'],
-          'vacacUsuario': dep['VACACIONES'],
-          'estadoUsuario' : dep['ESTADO'],
-          'rolUsuario' : dep['ROL'],
-          'telefonoUsuario': dep['TELEFONO'],
-          'correoUsuario': dep['CORREO']
-        })); */
         
-        /* setState(() {
-          /* _datosUsuario = detallesUsuario; */
-          /* _idsUsuariosPorDepartamento = idsUsuarios; */
-        }); */
-        /* setState(() {
-          _datosUsuario = data;
-        }); */
         print('Detalles del usuario: $data');
         print("Esto es una prueba: $_datosUsuario");
         print(_datosUsuario['LOCAL']);
@@ -100,12 +77,108 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     }
   } 
 
+  Future<void> _getDepartamentos() async {
+    try {
+      final response = await http.get(Uri.parse(llenar_select_deptos));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+  
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final departamentos = List<String>.from(data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+        setState(() {
+          _departamentosEmpresa = departamentos;
+        });
+  
+        print("Hola desde Configurar Usuarios en _getDepartamentos()");
+      } else {
+        showToast(jsonResponse['msg']);
+        print("Algo anda mal");
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al traer los departamentos en NuevaPantalla.');
+    }
+  } 
+
+  Future<void> _getLocales() async {
+    try {
+      final response = await http.get(Uri.parse(llenar_select_locales));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final locales = List<String>.from(data['locales'].map((loc) => loc['UBICACION']));
+        setState(() {
+          _localesEmpresa = locales;
+        });
+
+        print("Locales obtenidos correctamente");
+      } else {
+        showToast(jsonResponse['msg']);
+        print("Algo anda mal al obtener locales");
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al traer los locales.');
+    }
+  }
+  
+    Future<void> _getRoles() async {
+    try {
+      final response = await http.get(Uri.parse(llenar_select_roles));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final roles = List<String>.from(data['roles'].map((rol) => rol['ROL']));
+        setState(() {
+          _rolesUsuario = roles;
+        });
+
+        print("Roles obtenidos con éxito");
+      } else {
+        showToast(jsonResponse['msg']);
+        print("Algo anda mal");
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al traer los roles.');
+    }
+  }
+
+  // Función para mostrar toasts con FlutterToast
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
+  _ConfiguracionUsuariosPageState() {
+    // Asegúrate de que _departamentosUsuario no esté vacío antes de asignar el valor
+    _valorSelecDep = _departamentosEmpresa.isNotEmpty ? _departamentosEmpresa[0] : null;
+    _valorSelecLocal = _localesEmpresa.isNotEmpty ? _localesEmpresa[0] : null;
+    _valorSelecRol = _rolesUsuario.isNotEmpty ? _rolesUsuario[0] : null;
+  }
+
+
   @override
   void initState() {
     super.initState();
     // Puedes establecer el valor de _userId según tus necesidades
      // Por ejemplo, asumiendo que el ID del usuario es "1"
     obtenerDetallesUsuario(widget.usuarioId);
+    _getDepartamentos();
+    _getLocales();
+    _getRoles();
   }
 
   @override
@@ -227,8 +300,8 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   Widget _buildAdditionalWidget(String subtitle) {
     if (subtitle == 'Local') {
       return DropdownButtonFormField(
-        value: _ConfiguracionUsuariosPageState._valorSelecLocal,
-        items: _ConfiguracionUsuariosPageState._localesEmpresa
+        value: _valorSelecLocal,
+        items: _localesEmpresa
             .map((e) => DropdownMenuItem(
                   value: e,
                   child: Text(e),
@@ -255,8 +328,8 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       );
     }else if (subtitle == 'Departamento') {
       return DropdownButtonFormField(
-        value: _ConfiguracionUsuariosPageState._valorSelecDep,
-        items: _ConfiguracionUsuariosPageState._departamentosUsuario
+        value: _valorSelecDep,
+        items: _departamentosEmpresa
             .map((e) => DropdownMenuItem(
                   value: e,
                   child: Text(e),
@@ -264,8 +337,11 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            _ConfiguracionUsuariosPageState._valorSelecDep = val as String;
+            _valorSelecDep = val as String;
+                                  
           });
+
+          print("El depto que seleccionaste para editar es: $_valorSelecDep");
         },
         icon: const Icon(
           Icons.arrow_drop_down_circle,
