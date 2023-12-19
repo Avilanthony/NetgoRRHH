@@ -8,11 +8,13 @@ import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/gestion_usuarios.dart';
 
 class ConfiguracionUsuariosPage extends StatefulWidget {
   final int usuarioId;
+  final Function() onUpdateUsuariosList;
 
-  const ConfiguracionUsuariosPage({Key? key, required this.usuarioId}) : super(key: key);
+  const ConfiguracionUsuariosPage({Key? key, required this.usuarioId, required this.onUpdateUsuariosList}) : super(key: key);
 
   @override
   _ConfiguracionUsuariosPageState createState() => _ConfiguracionUsuariosPageState();
@@ -22,32 +24,32 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   Map<String, dynamic> _datosUsuario = {}; // Cambiado a Map
   List<String> _departamentosEmpresa = [];
   List<String> _localesEmpresa = [];
-  List<String> _rolesUsuario = [];
-  List<int> _idDepartamentosEmpresa = [];
-  static String? _valorSelecLocal;
-  static String? _valorSelecDep;
-  static String? _valorSelecEstado;
-  static String? _valorSelecRol;
-  int? _idDepSeleccionado;
-  /* static final _localesEmpresa=[
-    "Tegucigalpa",
-    "San Pedro Sula"
-  ]; */
-  /* static final _departamentosUsuario = [
-    "Marketing",
-    "Administración",
-    "RRHH",
-    "Mantenimiento"
-  ]; */
-  static final _estadoUsuario = [
+  final List<String> _estadosUsuario = [
     "NUEVO",
     "ACTIVO",
     "BLOQUEADO"
   ];
-  /* static final _rolesUsuario = [
-    "Administrador",
-    "General",
-  ]; */
+  List<String> _rolesUsuario = [];
+  List<int> _idLocalesEmpresa = [];
+  List<int> _idDepartamentosEmpresa = [];
+  List<int> _idRolesUsuario = [];
+  static String? _valorSelecLocal;
+  static String? _valorSelecDep;
+  static String? _valorSelecEstado;
+  static String? _valorSelecRol;
+  int? _idLocalSeleccionado;
+  int? _idDepSeleccionado;
+  int? _idRolSeleccionado;
+
+  final TextEditingController _vacacionesController = TextEditingController();
+  
+  
+
+  void dispose() {
+    // Liberar los controladores y los focus
+    _vacacionesController.dispose();
+    super.dispose();
+  }
 
   Future<void> obtenerDetallesUsuario(int idUsuario) async {
     try {
@@ -79,6 +81,34 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     }
   } 
 
+    Future<void> _getLocales() async {
+    try {
+      final response = await http.get(Uri.parse(llenar_select_locales));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        final data = json.decode(response.body);
+        final locales = List<String>.from(data['locales'].map((loc) => loc['UBICACION']));
+        final ids = List<int>.from(data['locales'].map((dep) => dep['ID_LOCAL']));
+        setState(() {
+          _localesEmpresa = locales;
+          _idLocalesEmpresa = ids;
+        });
+
+        print("Locales obtenidos correctamente en _getLocales()");
+        print("Los locales: $locales");
+        print("Los IDs: $ids");
+      } else {
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
+        print("Algo anda mal al obtener locales");
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al traer los locales.', backgroundColor: Colors.red);
+    }
+  }
+
   Future<void> _getDepartamentos() async {
     try {
       final response = await http.get(Uri.parse(llenar_select_deptos));
@@ -98,36 +128,12 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         print("Los departamentos: $departamentos");
         print("Los IDs: $ids");
       } else {
-        showToast(jsonResponse['msg']);
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
         print("Algo anda mal");
       }
     } catch (error) {
       print(error);
-      showToast('Hubo un problema al traer los departamentos en NuevaPantalla.');
-    }
-  } 
-
-  Future<void> _getLocales() async {
-    try {
-      final response = await http.get(Uri.parse(llenar_select_locales));
-      var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
-
-      if (jsonResponse['status']) {
-        final data = json.decode(response.body);
-        final locales = List<String>.from(data['locales'].map((loc) => loc['UBICACION']));
-        setState(() {
-          _localesEmpresa = locales;
-        });
-
-        print("Locales obtenidos correctamente");
-      } else {
-        showToast(jsonResponse['msg']);
-        print("Algo anda mal al obtener locales");
-      }
-    } catch (error) {
-      print(error);
-      showToast('Hubo un problema al traer los locales.');
+      showToast('Hubo un problema al traer los departamentos en NuevaPantalla.', backgroundColor: Colors.red);
     }
   }
   
@@ -140,51 +146,223 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       if (jsonResponse['status']) {
         final data = json.decode(response.body);
         final roles = List<String>.from(data['roles'].map((rol) => rol['ROL']));
+        final ids = List<int>.from(data['roles'].map((rol) => rol['ID_ROL']));
         setState(() {
           _rolesUsuario = roles;
+          _idRolesUsuario = ids;
         });
 
         print("Roles obtenidos con éxito");
       } else {
-        showToast(jsonResponse['msg']);
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
         print("Algo anda mal");
       }
     } catch (error) {
       print(error);
-      showToast('Hubo un problema al traer los roles.');
+      showToast('Hubo un problema al traer los roles.', backgroundColor: Colors.red);
     }
   }
 
-  Future<void> _actualizarDepartamento(String idDepto) async {
-    // Lógica para actualizar el departamento
+    Future<void> _actualizarLocal() async {
+    // Lógica para actualizar el local
+
+    var ingBody = {
+      "idLocal": _idLocalSeleccionado.toString(),
+    };
+
     try {
-      final response = await http.put(
-        Uri.parse('$gestionar/gest_depto_usuario/${widget.usuarioId}'),
-        body: {'idDepto': idDepto},
+      var response = await http.put(
+        Uri.parse('$gestionar/gest_local_usuario/${widget.usuarioId}'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody),
       );
 
       var jsonResponse = jsonDecode(response.body);
+      print(response.body);
       print(jsonResponse);
-      print("El ID que se va a colocar es: $idDepto");
-      if (jsonResponse['ok']) {
-        showToast('Departamento actualizado con éxito');
+      print("El ID de local que se va a colocar es: $_idLocalSeleccionado");
+      if (jsonResponse['status']) {
+        print("El response con body exitoso${response.body}");
+        print("El response exitoso $jsonResponse");
+        await obtenerDetallesUsuario(widget.usuarioId);
+        // Pasar un indicador de actualización a la página anterior
+        widget.onUpdateUsuariosList();
+        showToast('Local actualizado con éxito', backgroundColor: Colors.green);
       } else {
-        showToast(jsonResponse['msg']);
+        print("El response con body no exitoso${response.body}");
+        print("El response no exitoso $jsonResponse");
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
       }
     } catch (error) {
       print(error);
-      showToast('Hubo un problema al actualizar el departamento.');
+      showToast('Hubo un problema al actualizar el local.', backgroundColor: Colors.red);
+    }
+  }
+
+  Future<void> _actualizarDepartamento() async {
+    // Lógica para actualizar el departamento
+
+    var ingBody = {
+      "idDepto": _idDepSeleccionado.toString()
+    };
+
+    try {
+      var response = await http.put(
+        Uri.parse('$gestionar/gest_depto_usuario/${widget.usuarioId}'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody),
+        /* body: {"idDepto": "1"} */
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      print(jsonResponse);
+      print("El ID que se va a colocar es: $_idDepSeleccionado");
+      if (jsonResponse['status']) {
+        print("El response con body exitoso${response.body}");
+        print("El response exitoso $jsonResponse");
+        await obtenerDetallesUsuario(widget.usuarioId);
+        // Pasar un indicador de actualización a la página anterior
+        widget.onUpdateUsuariosList();
+        showToast('Departamento actualizado con éxito', backgroundColor: Colors.green);
+      } else {
+        print("El response con body no exitoso${response.body}");
+        print("El response no exitoso $jsonResponse");
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al actualizar el departamento.', backgroundColor: Colors.red);
+    }
+  }
+  
+  Future<void> _actualizarVacaciones() async {
+    // Lógica para gestionar las vacaciones del usuario
+
+    // Construye el cuerpo de la solicitud
+    var ingBody = {
+      // Agrega los campos necesarios según los requisitos de tu backend
+      "vacaciones" : _vacacionesController.text
+    };
+
+    print("Hola");
+
+    try {
+      // Realiza la solicitud HTTP
+      var response = await http.put(
+        Uri.parse('$gestionar/gest_vacaciones_usuario/${widget.usuarioId}'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody),
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      print(jsonResponse);
+
+      // Verifica el código de estado de la respuesta
+      if (jsonResponse['status']) {
+        FocusScope.of(context).unfocus();
+        print("El response con body exitoso${response.body}");
+        print("El response exitoso $jsonResponse");
+
+        // Después de gestionar las vacaciones, actualiza los datos de la pantalla de perfil
+        await obtenerDetallesUsuario(widget.usuarioId);
+        // Pasar un indicador de actualización a la página anterior
+        widget.onUpdateUsuariosList();
+        // Muestra una notificación o realiza otras acciones según sea necesario
+        showToast('Vacaciones gestionadas con éxito', backgroundColor: Colors.green);
+      } else {
+        // Muestra una notificación o realiza otras acciones en caso de error
+        showToast('Error al gestionar vacaciones: ${response.statusCode}', backgroundColor: Colors.red);
+      }
+    } catch (error) {
+      // Muestra una notificación o realiza otras acciones en caso de error
+      showToast('Hubo un problema al gestionar vacaciones: $error', backgroundColor: Colors.red);
+    }
+  }
+
+  
+  Future<void> _actualizarEstado() async {
+    // Lógica para actualizar el rol
+
+    var ingBody = {
+      "estadoUser": _valorSelecEstado,
+    };
+
+    try {
+      var response = await http.put(
+        Uri.parse('$gestionar/gest_estado_usuario/${widget.usuarioId}'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody),
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      print(jsonResponse);
+      print("El estado que se va a colocar es: $_valorSelecEstado");
+      if (jsonResponse['status']) {
+        print("El response con body exitoso${response.body}");
+        print("El response exitoso $jsonResponse");
+        await obtenerDetallesUsuario(widget.usuarioId);
+        // Pasar un indicador de actualización a la página anterior
+        widget.onUpdateUsuariosList();
+        showToast('Rol actualizado con éxito', backgroundColor: Colors.green);
+      } else {
+        print("El response con body no exitoso${response.body}");
+        print("El response no exitoso $jsonResponse");
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al actualizar el rol.', backgroundColor: Colors.red);
+    }
+  }
+
+
+  Future<void> _actualizarRol() async {
+    // Lógica para actualizar el rol
+
+    var ingBody = {
+      "idRol": _idRolSeleccionado.toString(),
+    };
+
+    try {
+      var response = await http.put(
+        Uri.parse('$gestionar/gest_rol_usuario/${widget.usuarioId}'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ingBody),
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      print(jsonResponse);
+      print("El ID de rol que se va a colocar es: $_idRolSeleccionado");
+      if (jsonResponse['status']) {
+        print("El response con body exitoso${response.body}");
+        print("El response exitoso $jsonResponse");
+        await obtenerDetallesUsuario(widget.usuarioId);
+        // Pasar un indicador de actualización a la página anterior
+        widget.onUpdateUsuariosList();
+        showToast('Rol actualizado con éxito', backgroundColor: Colors.green);
+      } else {
+        print("El response con body no exitoso${response.body}");
+        print("El response no exitoso $jsonResponse");
+        showToast(jsonResponse['msg'], backgroundColor: Colors.red);
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al actualizar el rol.', backgroundColor: Colors.red);
     }
   }
 
   // Función para mostrar toasts con FlutterToast
-  void showToast(String message) {
+  void showToast(String message,{Color? backgroundColor}) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
+      backgroundColor: backgroundColor,
       textColor: Colors.white,
       fontSize: 16.0,
     );
@@ -194,6 +372,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     // Asegúrate de que _departamentosUsuario no esté vacío antes de asignar el valor
     _valorSelecDep = _departamentosEmpresa.isNotEmpty ? _departamentosEmpresa[0] : null;
     _valorSelecLocal = _localesEmpresa.isNotEmpty ? _localesEmpresa[0] : null;
+    _valorSelecEstado = _estadosUsuario.isNotEmpty ? _estadosUsuario[0] : null;
     _valorSelecRol = _rolesUsuario.isNotEmpty ? _rolesUsuario[0] : null;
   }
 
@@ -207,6 +386,8 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     _getDepartamentos();
     _getLocales();
     _getRoles();
+    //En caso de querer que el Input de vacaciones tenga puesto el valor de la BD
+    /* _vacacionesController.text = _datosUsuario['VACACIONES'] ?? ''; */
   }
 
   @override
@@ -222,7 +403,14 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         ),
         backgroundColor: const Color.fromARGB(255, 247, 247, 255),
         leading: IconButton(
+          /* onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GestionUsuariosPage()),
+            );
+          }, */
           onPressed: () {
+            widget.onUpdateUsuariosList();
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
@@ -262,21 +450,22 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                     estiloTextos(_datosUsuario['LOCAL'] ?? ''),
                     'Local',
                     'Actualizar',
-                    null,
+                    () => _actualizarLocal(),
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     _datosUsuario['DEPARTAMENTO'] ?? '',
                     'Departamento',
                     'Actualizar',
-                    () => _actualizarDepartamento(_idDepSeleccionado.toString()),
+                    () => _actualizarDepartamento(),
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     '${_datosUsuario['VACACIONES']} días',
                     'Vacaciones', 
                     'Actualizar', 
-                    null),
+                    () => _actualizarVacaciones(),
+                  ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     'Boleta de Pago',
@@ -289,14 +478,14 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                     estiloTextos(_datosUsuario['ESTADO'] ?? ''),
                     'Estado del Usuario',
                     'Actualizar',
-                    null,
+                    () => _actualizarEstado(),
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     estiloTextos(_datosUsuario['ROL'] ?? ''),
                     'Rol del Usuario',
                     'Actualizar',
-                    null,
+                    () => _actualizarRol(),
                   ),
                   const SizedBox(height: 20),
                   itemNoConfigurar(
@@ -336,9 +525,15 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 ))
             .toList(),
         onChanged: (val) {
+          final index = _localesEmpresa.indexOf(val as String);
           setState(() {
-            _ConfiguracionUsuariosPageState._valorSelecLocal = val as String;
+            /* _ConfiguracionUsuariosPageState._valorSelecLocal = val as String; */
+            _valorSelecLocal = val;
+            _idLocalSeleccionado = _idLocalesEmpresa[index];   
           });
+
+          print("El local que seleccionaste para editar es: $_valorSelecLocal");
+          print("El local que seleccionaste para editar tiene el ID: $_idLocalSeleccionado");
         },
         icon: const Icon(
           Icons.arrow_drop_down_circle,
@@ -366,7 +561,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         onChanged: (val) {
            final index = _departamentosEmpresa.indexOf(val as String);
           setState(() {
-            _valorSelecDep = val as String;
+            _valorSelecDep = val;
             _idDepSeleccionado = _idDepartamentosEmpresa[index];                      
           });
 
@@ -388,16 +583,17 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         ),
       );
     } else if (subtitle == 'Vacaciones') {
-      return const TextField(
-        decoration: InputDecoration(          
+      return TextField(
+        controller: _vacacionesController,
+        decoration: const InputDecoration(          
           labelText: 'Ingrese el valor',
           //border: OutlineInputBorder(),
         ),
       );
     } else if (subtitle == 'Estado del Usuario') {
       return DropdownButtonFormField(
-        value: _ConfiguracionUsuariosPageState._valorSelecEstado,
-        items: _ConfiguracionUsuariosPageState._estadoUsuario
+        value: _valorSelecEstado,
+        items: _estadosUsuario
             .map((e) => DropdownMenuItem(
                   value: e,
                   child: Text(e),
@@ -405,8 +601,9 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
             .toList(),
         onChanged: (val) {
           setState(() {
-            _ConfiguracionUsuariosPageState._valorSelecEstado = val as String;
+            _valorSelecEstado = val as String;
           });
+          print("El estado que seleccionaste para editar es: $_valorSelecEstado");
         },
         icon: const Icon(
           Icons.arrow_drop_down_circle,
@@ -432,9 +629,14 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 ))
             .toList(),
         onChanged: (val) {
+          final index = _rolesUsuario.indexOf(val as String);
           setState(() {
             _valorSelecRol = val;
+            _idRolSeleccionado = _idRolesUsuario[index];
           });
+
+          print("El rol que seleccionaste para editar es: $_valorSelecRol");
+          print("El rol que seleccionaste para editar tiene el ID: $_idRolSeleccionado");
         },
         icon: const Icon(
           Icons.arrow_drop_down_circle,

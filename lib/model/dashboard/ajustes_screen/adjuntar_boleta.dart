@@ -309,10 +309,11 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
                           onPressed: () {
                             /* _registroHabilitado ? _registrarse() : null; */
                             /* Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ConfiguracionUsuariosPage())); */
+                              context, 
+                              MaterialPageRoute(
+                              builder: (context) => 
+                              ConfiguracionUsuariosPage())
+                            ); */
                           },
                           color: const Color.fromARGB(255, 81, 124, 193),
                           elevation: 0,
