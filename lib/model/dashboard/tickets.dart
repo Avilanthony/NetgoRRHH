@@ -9,8 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class TicketsPage extends StatefulWidget {
-  final token;
-  const TicketsPage({@required this.token, Key? key}) : super(key: key);
+  dynamic token;
+  TicketsPage({@required this.token, Key? key}) : super(key: key);
 
   @override
   State<TicketsPage> createState() => _TicketsPage();
@@ -40,8 +40,11 @@ class _TicketsPage extends State<TicketsPage> {
             '$ticket/ticket_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
       );
 
+      print("Esta es la respuesta $response");
+
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
+        
 
         var myUsuario = jsonResponse['usuario'];
 

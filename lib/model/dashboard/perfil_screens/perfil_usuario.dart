@@ -30,6 +30,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   String usuarioCorreo = '';
   String usuarioTelefono = '';
   String imagenUsuario = '';
+  Map<String, dynamic> _datosUsuario = {}; 
 
   @override
   void initState() {
@@ -53,26 +54,39 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             '$perfilUsuario/perfil_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
       );
 
+       print(response);
+
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
+        final detallesUsuario = jsonResponse['usuario'];
+        print("Hola JD: $detallesUsuario");
+        print("Hola USUARIO: ${detallesUsuario['PRIMER_NOMBRE']}");
+        print("Hola IMG: ${detallesUsuario['IMAGEN']}");
 
-        var myUsuario = jsonResponse['usuario'];
+        /* var myUsuario = jsonResponse['usuario'];
 
-        print(myUsuario);
+        print(myUsuario); */
 
         setState(() {
           // Actualiza el estado con la información del usuario
-          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          /* usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
           usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
           usuarioCorreo = myUsuario['CORREO'];
           usuarioTelefono = myUsuario['TELEFONO'];
-          imagenUsuario = myUsuario['IMAGEN'];
+          imagenUsuario = myUsuario['IMAGEN']; */
+          _datosUsuario = detallesUsuario;
+          print(_datosUsuario['ID']);
+          print(_datosUsuario['PRIMER_NOMBRE']);
+          print(_datosUsuario['APELLIDO_PATERNO']);
+          print(_datosUsuario['CORREO']);
+          print(_datosUsuario['TELEFONO']);
+          print(_datosUsuario['IMAGEN']);
           //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
-          print(usuarioPrimerNombre);
+          /* print(usuarioPrimerNombre);
           print(usuarioPrimerApellido);
           print(usuarioCorreo);
           print(usuarioTelefono);
-          print(imagenUsuario);
+          print(imagenUsuario); */
           // Otros campos del usuario...
         });
       } else {
@@ -102,7 +116,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
-            imagenUsuario == ''  || imagenUsuario.isEmpty?
+            _datosUsuario['IMAGEN'] == null || _datosUsuario['IMAGEN'].toString() == '' ?
             CircleAvatar(
               
               radius: 90,
@@ -114,18 +128,18 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
               
               radius: 90,
               
-              backgroundImage: NetworkImage(imagenUsuario),
+              backgroundImage: NetworkImage(_datosUsuario['IMAGEN']),
               
             )
             ,
             const SizedBox(height: 20),
-            itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre',
+            itemPerfil('${_datosUsuario['PRIMER_NOMBRE']} ${_datosUsuario['APELLIDO_PATERNO']}', 'Nombre',
                 CupertinoIcons.person),
             const SizedBox(height: 20),
             itemPerfil(
-                '+504 $usuarioTelefono', 'Telefono', CupertinoIcons.phone),
+                '+504 ${_datosUsuario['TELEFONO']}', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),
-            itemPerfil(usuarioCorreo, 'Correo', CupertinoIcons.mail),
+            itemPerfil(_datosUsuario['CORREO'], 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 20),
             /* ElevatedButton(
                 onPressed: () {},
