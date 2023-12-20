@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -5,14 +6,19 @@ import 'package:dio/dio.dart';
 /* import 'package:downloads_path_provider_28/downloads_path_provider_28.dart'; */
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/services/notificacion_pdf_service.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 
 class BoletaPdfViewerScreen extends StatefulWidget {
-  const BoletaPdfViewerScreen({Key? key}) : super(key: key);
+  final int usuarioId;
+  final token;
+  const BoletaPdfViewerScreen({Key? key, required this.usuarioId, required this.token}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -20,13 +26,54 @@ class BoletaPdfViewerScreen extends StatefulWidget {
 }
 
 class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
+  late String usuarioBoleta = '';
+  late String usuario = '';
+  String pdfurl =  '';
+
   @override
   void initState() {
     super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    usuario = jwtDecodedToken['uid'].toString();
     NotificationService().initNotification();
+    obtenerInformacionUsuario();
     
   }
-  String pdfurl = 'https://www.unah.edu.hn/assets/Admisiones/plan-de-estudios/Licenciatura-en-Mercadotecnia-2022.pdf';
+
+    Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$dashboard/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        print(jsonResponse);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        print("MyUsuario Dash: $myUsuario");
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioBoleta = myUsuario['BOLETA'];
+          print(usuarioBoleta);
+          pdfurl = usuarioBoleta;
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
+  
   
   @override
   Widget build(BuildContext context) {
@@ -102,7 +149,7 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
                     } */
                     appFolder = directory.path;
                     await Directory(appFolder).create(recursive: true);
-                    String guardaComo = "boletica.pdf";
+                    String guardaComo = "boleta.pdf";
                     String savePath = "$appFolder/$guardaComo";
                     print(savePath);
 
@@ -152,7 +199,18 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
               const Color.fromRGBO(216,212,212,1), // Establece el color de fondo del segundo Container
           child: Container(
             padding: const EdgeInsets.all(20),
-            child: SfPdfViewer.asset('assets/pdf/boleta.pdf'),
+            child: /* SfPdfViewer.network(usuarioBoleta), */
+             usuarioBoleta == ''  || usuarioBoleta.isEmpty?
+             const Text(
+
+              "No se ha brindado una boleta de pago"
+
+            ):
+            SfPdfViewer.network(
+              /* usuarioBoleta */
+              usuarioBoleta
+            )
+            ,
           ),
         ),
       ),

@@ -97,6 +97,9 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
       img = await _cropImage(imageFile: img);
 
+      // Envía la imagen al backend
+      await _uploadImage(img!);
+
       setState(() {
         _image = img;
         Navigator.of(context).pop();
@@ -115,6 +118,27 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
     return File(croppedImage.path);
   }
+
+  Future<void> _uploadImage(File image) async {
+  // Construye la solicitud para subir la imagen al backend
+  var request = http.MultipartRequest(
+    'PUT', // o 'PUT' según tu API
+    Uri.parse('$perfilUsuario/subir_imagen/$usuario'), // Reemplaza con la URL correcta de tu endpoint de carga
+  );
+
+  // Agrega la imagen al formulario multipart
+  request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+  // Envía la solicitud al backend
+  var response = await request.send();
+
+  // Maneja la respuesta del servidor
+  if (response.statusCode == 200) {
+    print('Imagen cargada con éxito');
+  } else {
+    print('Error al cargar la imagen: ${response.statusCode}');
+  }
+}
 
   void _showSelectPhotoOptions(BuildContext context) {
     showModalBottomSheet(

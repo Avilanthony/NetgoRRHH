@@ -100,31 +100,71 @@ class _SingUpPageState extends State<SignupPage> {
   // Función para verificar si todos los campos contienen información válida
   void _verificarCampos() {
     setState(() {
-      if (_pNombresController.text.isNotEmpty &&
+      print("Primer nombre: ${_pNombresController.text}");
+      print("Condición 1.1: ${_pNombresController.text.isNotEmpty}");
+      print("Condición 1.2: ${!_pNombresController.text.contains(' ')}");
+      print("Condición 1.3: ${!(RegExp(r'[0-9]').hasMatch(_pNombresController.text))}");
+      print("Segundo nombre: ${_sNombresController.text}");
+      print("Condición 2.1: ${!_sNombresController.text.contains(' ')}");
+      print("Condición 2.2: ${!(RegExp(r'[0-9]').hasMatch(_sNombresController.text))}");
+      print("Primer apellido: ${_pApellidosController.text}");
+      print("Condición 3.1: ${_pApellidosController.text.isNotEmpty}");
+      print("Condición 3.2: ${!_pApellidosController.text.contains(' ')}");
+      print("Condición 3.3: ${!(RegExp(r'[0-9]').hasMatch(_pApellidosController.text))}");
+      print("Segundo apellido: ${_sApellidosController.text}");
+      print("Condición 4.1: ${!_sApellidosController.text.contains(' ')}");
+      print("Condición 4.2: ${!(RegExp(r'[0-9]').hasMatch(_sApellidosController.text))}");
+      print("Usuario: ${_usuarioController.text}");
+      print("Condición 5.1: ${_usuarioController.text.isNotEmpty}");
+      print("Condición 5.2: ${!_usuarioController.text.contains(' ')}");
+      print("Condición 5.3: ${!(RegExp(r'[0-9]').hasMatch(_usuarioController.text))}");
+      print("Identidad: ${_identidadController.text}");
+      print("Condición 6.1: ${_identidadController.text.isNotEmpty}");
+      print("Condición 6.2: ${!_identidadController.text.contains(' ')}");
+      print("Condición 6.3: ${!(RegExp(r'[^\d_-]').hasMatch(_identidadController.text))}");
+      print("Correo: ${_correoController.text}");
+      print("Condición 7.1: ${_correoController.text.isNotEmpty}");
+      print("Condición 7.2: ${!_correoController.text.contains(' ')}");
+      print("Teléfono: ${_telefonoController.text}");
+      print("Condición 8.1: ${_telefonoController.text.isNotEmpty}");
+      print("Condición 8.2: ${!_telefonoController.text.contains(' ')}");
+      print("Condición 8.3: ${!(RegExp(r'[^\d_-]').hasMatch(_telefonoController.text))}");
+      print("Contraseña: ${_contrasenaController.text}");
+      print("Condición 9.1: ${_contrasenaController.text.isNotEmpty}");
+      print("Condición 9.2: ${!_contrasenaController.text.contains(' ')}");
+      print("Condición 9.3: ${_contrasenaController.text.length <= 12}");
+      print("Condición 9.4: ${_contrasenaController.text.length >= 8}");
+      print("Confirmar Contraseña: ${_confirmarContrasenaController.text}");
+      print("Condición 10.1: ${_confirmarContrasenaController.text.isNotEmpty}");
+      print("Condición 10.2: ${!_confirmarContrasenaController.text.contains(' ')}");
+      print("Condición 10.3: ${_confirmarContrasenaController.text.length <= 12}");
+      print("Condición 10.4: ${_confirmarContrasenaController.text.length >= 8}");
+      print("Condición Final: ${_contrasenaController.text == _confirmarContrasenaController.text}");
+      if (_pNombresController.text.isNotEmpty  &&
           !_pNombresController.text.contains(' ') &&
-          RegExp(r'[0-9]').hasMatch(_pNombresController.text) &&
+          !(RegExp(r'[0-9]').hasMatch(_pNombresController.text)) &&
           /* _sNombresController.text.isNotEmpty && */
           !_sNombresController.text.contains(' ') &&
-          RegExp(r'[0-9]').hasMatch(_sNombresController.text) &&
+          !(RegExp(r'[0-9]').hasMatch(_sNombresController.text)) &&
           _pApellidosController.text.isNotEmpty &&
           !_pApellidosController.text.contains(' ') &&
-          RegExp(r'[0-9]').hasMatch(_pApellidosController.text) &&
+          !(RegExp(r'[0-9]').hasMatch(_pApellidosController.text)) &&
            /* _sApellidosController.text.isNotEmpty && */
           !_sApellidosController.text.contains(' ') &&
-          RegExp(r'[0-9]').hasMatch(_sApellidosController.text) &&
+          !(RegExp(r'[0-9]').hasMatch(_sApellidosController.text)) &&
           _usuarioController.text.isNotEmpty &&
           !_usuarioController.text.contains(' ') &&
-          RegExp(r'[0-9]').hasMatch(_usuarioController.text) &&
+          !(RegExp(r'[0-9]').hasMatch(_usuarioController.text)) &&
           _identidadController.text.isNotEmpty &&
           !_identidadController.text.contains(' ') &&
-          RegExp(r'[^\d_-]').hasMatch(_identidadController.text) &&
-          _identidadController.text.length != 13 &&
+          !(RegExp(r'[^\d_-]').hasMatch(_identidadController.text)) &&
+          _identidadController.text.length == 13 &&
           _correoController.text.isNotEmpty &&
           !_correoController.text.contains(' ') &&
           _telefonoController.text.isNotEmpty &&
           !_telefonoController.text.contains(' ') &&
-          RegExp(r'[^\d_-]').hasMatch(_telefonoController.text) &&
-          _telefonoController.text.length != 8 &&
+          !(RegExp(r'[^\d_-]').hasMatch(_telefonoController.text)) &&
+          _telefonoController.text.length == 8 &&
           _contrasenaController.text.isNotEmpty &&
           !_contrasenaController.text.contains(' ') &&
           _contrasenaController.text.length <= 12 &&
@@ -133,12 +173,25 @@ class _SingUpPageState extends State<SignupPage> {
           !_confirmarContrasenaController.text.contains(' ') &&
           _confirmarContrasenaController.text.length <= 12 &&
           _confirmarContrasenaController.text.length >= 8 &&
-          _contrasenaController.text == _confirmarContrasenaController.text) {
+          (_contrasenaController.text == _confirmarContrasenaController.text)) {
         _registroHabilitado = true; // Utiliza = en lugar de ==
+        print(" Está habilitado?: $_registroHabilitado");
       } else {
-        _registroHabilitado = false; // Utiliza = en lugar de ==
+        _registroHabilitado = false;
+        print(" Está habilitado?: $_registroHabilitado");
+        /* showToast("Hay ingresado mal los datos"); */ // Utiliza = en lugar de ==
       }
-      print(_registroHabilitado);
+      print(" Está habilitado?: $_registroHabilitado");
+      /* print(_pNombresController.text);
+      print(_sNombresController.text);
+      print(_pApellidosController.text);
+      print(_sApellidosController.text);
+      print(_usuarioController.text);
+      print(_identidadController.text);
+      print(_correoController.text);
+      print(_telefonoController.text);
+      print(_contrasenaController.text);
+      print(_confirmarContrasenaController.text); */
     });
   }
 
@@ -185,6 +238,17 @@ class _SingUpPageState extends State<SignupPage> {
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+  void showToastExitoso(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0,
     );
@@ -256,12 +320,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_pNombresFocus, _sNombresFocus),
                           onChanged: (text) {
-                             setState(() {
+                             /* setState(() {
                               _pNombresController.text = text.toUpperCase();
                               _pNombresController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _pNombresController.text.length),
                               );
-                             });
+                             }); */
                           }
                         ),
                         makeInput(
@@ -271,12 +335,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_sNombresFocus, _pApellidosFocus),
                           onChanged: (text) {
-                             setState(() {
+                             /* setState(() {
                               _sNombresController.text = text.toUpperCase();
                               _sNombresController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _sNombresController.text.length),
                               );
-                             });
+                             }); */
                           }
                         ),
                         makeInput(
@@ -286,12 +350,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_pApellidosFocus, _sApellidosFocus),
                           onChanged: (text) {
-                             setState(() {
+                             /* setState(() {
                               _pApellidosController.text = text.toUpperCase();
                               _pApellidosController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _pApellidosController.text.length),
                               );
-                             });
+                             }); */
                           }
                         ),
                         makeInput(
@@ -301,12 +365,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_sApellidosFocus, _usuarioFocus),
                           onChanged: (text) {
-                             setState(() {
+                             /* setState(() {
                               _sApellidosController.text = text.toUpperCase();
                               _sApellidosController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _sApellidosController.text.length),
                               );
-                             });
+                             }); */
                           }
                         ),
                         makeInput(
@@ -316,12 +380,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_usuarioFocus, _identidadFocus),
                           onChanged: (text) {
-                             setState(() {
+                             /* setState(() {
                               _usuarioController.text = text.toUpperCase();
                               _usuarioController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _usuarioController.text.length),
                               );
-                             });
+                             }); */
                           }
                         ),
                         makeInput(
@@ -432,8 +496,8 @@ class _SingUpPageState extends State<SignupPage> {
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () {
-                          _registroHabilitado ? _registrarse() : null;
-                          mostrarValidaciones();
+                          _registroHabilitado ? _registrarse() : mostrarValidaciones();
+                          
                         },
                         color: Color.fromARGB(255, 81, 124, 193),
                         elevation: 0,
@@ -491,38 +555,39 @@ class _SingUpPageState extends State<SignupPage> {
       FocusScope.of(context).unfocus();
       try {
         var ingBody = {
-        "primer_nombre": _pNombresController.text,
-        "segundo_nombre": _sNombresController.text,
-        "primer_apellido": _pApellidosController.text,
-        "segundo_apellido": _sApellidosController.text,
-        "usuario": _usuarioController.text,
-        "dni": _identidadController.text,
-        "correo": _correoController.text,
-        "contrasena": _contrasenaController.text,
-        "confcontrasena": _confirmarContrasenaController.text,
-        "telefono": _telefonoController.text
-      };
+          "primer_nombre": _pNombresController.text,
+          "segundo_nombre": _sNombresController.text,
+          "primer_apellido": _pApellidosController.text,
+          "segundo_apellido": _sApellidosController.text,
+          "usuario": _usuarioController.text,
+          "dni": _identidadController.text,
+          "correo": _correoController.text,
+          "contrasena": _contrasenaController.text,
+          "confcontrasena": _confirmarContrasenaController.text,
+          "telefono": _telefonoController.text
+        };
 
-      print("Hola");
+        print("Hola");
 
-      var response = await http.post(Uri.parse(registro),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(ingBody));
+        var response = await http.post(Uri.parse(registro),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(ingBody));
 
-      var jsonResponse = jsonDecode(response.body);
+        var jsonResponse = jsonDecode(response.body);
 
-      print(jsonResponse);
+        print(jsonResponse);
 
-      if (jsonResponse['status']) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())); 
-        /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
-        }else{
-          showToast(jsonResponse['msg']);
-          print("Algo anda mal");
-        }
+        if (jsonResponse['status']) {
+            showToastExitoso(jsonResponse['msg']);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())); 
+          /* context, MaterialPageRoute(builder: (context) => LoginPage())); */
+          }else{
+            showToast(jsonResponse['msg']);
+            print("Algo anda mal");
+          }
 
-      /* Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage())); */
+        /* Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage())); */
       } catch (e) {
         // Manejar errores de red o excepciones
         showToast('Hubo un problema al intentar registrar al usuario.');

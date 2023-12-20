@@ -20,6 +20,8 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
   List<String> _departamentosUsuario = [];
   List<Map<String, dynamic>> _usuariosPorDepartamento = [];
+  List<int> _idsDepartamentos = [];
+  Map<String, int> _departamentosIdMap = {};
   /* var idDepto; */
 
   @override
@@ -38,20 +40,30 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
       if (jsonResponse['status']) {
         final data = json.decode(response.body);
         final departamentos = List<String>.from(data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+        final idsDepartamento = List<int>.from(data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
         /* final idDepartamento = data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']); */ //LANZA VACÍO
         /* final idDepartamento = data['departamento'].first['ID_DEPARTAMENTO']; */  //FUNCIONA SÓLO RRHH Usar el primer ID
         /* final idDepartamento = data['departamento'].map((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; */
         /* final idDepartamento = data['departamento'].firstWhere((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; //NO FUNCIONA */
         /* final index = departamentos.indexOf(_valorSelec);
         final idDepartamento = data['departamento'][index]['ID_DEPARTAMENTO']; */
+
         setState(() {
           _departamentosUsuario = departamentos;
+          _idsDepartamentos = idsDepartamento;
           /* idDepto = idDepartamento; */
           /* idDepto = data['departamento'].firstWhere((dep) => dep['DEPARTAMENTO'] == _valorSelec)['ID_DEPARTAMENTO']; */
           // Puedes agregar más lógica aquí según tus necesidades
         });
+
+        for (final dep in data['departamento']) {
+          _departamentosIdMap[dep['DEPARTAMENTO']] = dep['ID_DEPARTAMENTO'];
+        }
+
+        print("ChatGPT : $_departamentosIdMap");
         
-        
+        print("Los departamentos son: $_departamentosUsuario");
+        print("Los IDs son: $_idsDepartamentos");
         print("Hola");
       } else {
         
@@ -67,10 +79,92 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
   }
 
   Future<void> _getUsuariosPorDepartamento(String departamento) async {
+
+    if (departamento == "TODOS") {
+      try {
+        /* final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1; */
+
+        final response = await http.get(Uri.parse(traer_todos_usuarios_deptos));
+        var jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+
+        if (jsonResponse['status']) {
+          final data = json.decode(response.body);
+          /* final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO'])); */
+          final usuarios = List<Map<String, dynamic>>.from(data['todosUsuarios'].map((dep) => {
+            'id': dep['ID'],
+            'nombreCompleto': dep['NOMBRE'] + ' ' + dep['APELLIDO'],
+            'departamentousuario': dep['NOMBRE_DEP'],
+          }));
+          /* final idsUsuarios = List<int>.from(data['usuario'].map((dep) => dep['ID'])); */
+          setState(() {
+            _usuariosPorDepartamento = usuarios;
+            /* _idsUsuariosPorDepartamento = idsUsuarios; */
+          });
+          /* print("El id debe ser este: $idDepartamento"); */
+          print('Detalles de los usuarios: $data');
+          /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
+          print("Usuarios del departamento $departamento: $usuarios");
+          print(usuarios);
+
+          // Puedes continuar con la lógica para mostrar los usuarios en tu aplicación.
+
+        } else {
+          showToast(jsonResponse['msg']);
+          print("Algo anda mal al obtener usuarios");
+        }
+      } catch (error) {
+        print(error);
+        showToast('Hubo un problema al obtener los usuarios.');
+      } 
+
+    } else {
+      try {
+        /* final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1; */
+        final idDepartamento = _departamentosIdMap[departamento];
+        final response = await http.get(Uri.parse('$traer_usuario_cada_depto/$idDepartamento'));
+        var jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+
+        if (jsonResponse['status']) {
+          final data = json.decode(response.body);
+          /* final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO'])); */
+          final usuarios = List<Map<String, dynamic>>.from(data['usuario'].map((dep) => {
+            'id': dep['ID'],
+            'nombreCompleto': dep['NOMBRE'] + ' ' + dep['APELLIDO'],
+            'departamentousuario': dep['NOMBRE_DEP'],
+          }));
+          /* final idsUsuarios = List<int>.from(data['usuario'].map((dep) => dep['ID'])); */
+          setState(() {
+            _usuariosPorDepartamento = usuarios;
+            /* _idsUsuariosPorDepartamento = idsUsuarios; */
+          });
+          print("El id debe ser este: $idDepartamento");
+          /* print("El id ChatGPT debe ser este: $pruebi"); */
+          print('Detalles de los usuarios: $data');
+          /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
+          print("Usuarios del departamento $departamento: $usuarios");
+          print(usuarios);
+
+          // Puedes continuar con la lógica para mostrar los usuarios en tu aplicación.
+
+        } else {
+          showToast(jsonResponse['msg']);
+          print("Algo anda mal al obtener usuarios");
+        }
+      }catch (error) {
+        print(error);
+        showToast('Hubo un problema al obtener los usuarios.');
+      } 
+    } 
+    
+  }
+
+    /* Future<void> _getTodosUsuariosPorDepartamento(String departamento) async {
     try {
       final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1;
 
-      final response = await http.get(Uri.parse('$traer_usuario_cada_depto/$idDepartamento'));
+      final response = await http.get(Uri.parse(traer_todos_usuarios_deptos));
       var jsonResponse = jsonDecode(response.body);
       print(jsonResponse);
 
@@ -102,11 +196,19 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
       print(error);
       showToast('Hubo un problema al obtener los usuarios.');
     }
+  } */
+
+  void updateUsuariosList() {
+    setState(() {
+      // Llamada a _getUsuariosPorDepartamento() u otras acciones de actualización
+      _getUsuariosPorDepartamento(_valorSelec!);
+    });
   }
 
   _GestionUsuariosPageState() {
     // Asegúrate de que _departamentosUsuario no esté vacío antes de asignar el valor
     _valorSelec = _departamentosUsuario.isNotEmpty ? _departamentosUsuario[0] : null;
+    _idSelec = _idsDepartamentos.isNotEmpty ? _idsDepartamentos[0] : null;
   }
 
   // Función para mostrar toasts con FlutterToast
@@ -123,6 +225,7 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
   }
 
   String? _valorSelec = "";
+  int? _idSelec = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -187,9 +290,11 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
                                   
                                 });
 
-                                print("Seleccionaste: $_valorSelec");
-                                _getUsuariosPorDepartamento(_valorSelec!);
+                                print("Seleccionaste el Dep: $_valorSelec");
                                 
+                               _getUsuariosPorDepartamento(_valorSelec!);
+
+                               print("Seleccionaste el ID: ${_departamentosIdMap[_valorSelec]}");
                               },
                               icon: const Icon(
                                 Icons.arrow_drop_down_circle,
@@ -230,7 +335,7 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
                                 itemUsuarios('Adoniss Ponce', 'Contabilidad', context),
                                 itemUsuarios('Henry Cabrera', 'Contabilidad', context), */
                                 for (var usuario in _usuariosPorDepartamento)
-                                itemUsuarios(usuario, _valorSelec, context),
+                                itemUsuarios(usuario, usuario['departamentousuario'], context),
 
                               ]
 
@@ -255,101 +360,103 @@ class _GestionUsuariosPageState extends State<GestionUsuariosPage> {
 
     );
   }
- 
-}
+  itemUsuarios(Map<String, dynamic> usuario, String? depart, context) {
 
-itemUsuarios(Map<String, dynamic> usuario, String? depart, context) {
+    String capitalize(String input) {
+      if (input.isEmpty) {
+        return input;
+      }
+      return input[0].toUpperCase() + input.substring(1).toLowerCase();
+    } 
 
-  String capitalize(String input) {
-    if (input.isEmpty) {
-      return input;
+    String capitalizeFullName(String fullName) {
+      List<String> nameParts = fullName.split(' ');
+      List<String> capitalizedParts = nameParts.map((part) => capitalize(part)).toList();
+      return capitalizedParts.join(' ');
     }
-    return input[0].toUpperCase() + input.substring(1).toLowerCase();
-  } 
 
-  String capitalizeFullName(String fullName) {
-    List<String> nameParts = fullName.split(' ');
-    List<String> capitalizedParts = nameParts.map((part) => capitalize(part)).toList();
-    return capitalizedParts.join(' ');
-  }
-
-  String capitalizedNombre = capitalizeFullName(usuario['nombreCompleto']);
-  // Convierte la primera letra de nombreComp a mayúscula
-  /* String formattedNombreComp = nombreComp.isNotEmpty
-      ? nombreComp[0].toUpperCase() + nombreComp.substring(1)
-      : nombreComp; */
+    String capitalizedNombre = capitalizeFullName(usuario['nombreCompleto']);
+    // Convierte la primera letra de nombreComp a mayúscula
+    /* String formattedNombreComp = nombreComp.isNotEmpty
+        ? nombreComp[0].toUpperCase() + nombreComp.substring(1)
+        : nombreComp; */
 
 
-  /* String capitalizedDepart = depart != null ? capitalize(depart) : ''; */
+    /* String capitalizedDepart = depart != null ? capitalize(depart) : ''; */
 
-  return Column(
-    children: <Widget>[
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 5),
-              color: const Color.fromARGB(179, 10, 47, 196).withOpacity(0.2),
-              spreadRadius: 5,
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            ListTile(
-              subtitle: Text(depart!,
-              style: TextStyle(
-                fontSize: 15, color: Colors.grey[700])),
-              title: Text(capitalizedNombre),
-              
-              
-              textColor: const Color.fromARGB(255, 0, 0, 0),
-            ),
-            Positioned(
-              top: 10,
-              bottom: 10,
-              right: 10,
-              child: Container(
-                width: 130,
-                child: ElevatedButton(
-                          //minWidth: double.infinity,
-                          //height: 0,
-                          onPressed: () {
-                             Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => ConfiguracionUsuariosPage(usuarioId: usuario['id'])));
-                              
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 81, 124, 193), // Cambia el color del botón a rojo
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25), // Bordes redondeados
+    return Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 5),
+                color: const Color.fromARGB(179, 10, 47, 196).withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              ListTile(
+                subtitle: Text(depart!,
+                style: TextStyle(
+                  fontSize: 15, color: Colors.grey[700])),
+                title: Text(capitalizedNombre),
+
+
+                textColor: const Color.fromARGB(255, 0, 0, 0),
+              ),
+              Positioned(
+                top: 10,
+                bottom: 10,
+                right: 10,
+                child: Container(
+                  width: 130,
+                  child: ElevatedButton(
+                            //minWidth: double.infinity,
+                            //height: 0,
+                            onPressed: () {
+                               Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => ConfiguracionUsuariosPage(usuarioId: usuario['id'],
+                                onUpdateUsuariosList: updateUsuariosList,)));
+
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 81, 124, 193), // Cambia el color del botón a rojo
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25), // Bordes redondeados
+                              ),
+                            ),
+                            //: Color.fromARGB(255, 81, 124, 193),
+                            //elevation: 0,
+                            child: const Text(
+                              "Gestionar",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
                             ),
                           ),
-                          //: Color.fromARGB(255, 81, 124, 193),
-                          //elevation: 0,
-                          child: const Text(
-                            "Gestionar",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15),
-                          ),
-                        ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+
         ),
-        
-      ),
-      const SizedBox(
-          height: 10,
-        )
-    ],
-    
-  );
-  
+        const SizedBox(
+            height: 10,
+          )
+      ],
+
+    );
+
+  } 
+
+
+ 
 }
 

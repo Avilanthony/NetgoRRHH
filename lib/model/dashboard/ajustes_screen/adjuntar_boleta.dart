@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
@@ -6,14 +8,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 /* import 'package:pdf_render/pdf_render.dart'; */
 /* import 'package:pdf_thumbnail/pdf_thumbnail.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data'; */
 /* import 'dart:ui' as ui; */
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/configurar_usuario.dart';
+import 'package:http/http.dart' as http;
 
 class AdjuntarBoletaPage extends StatefulWidget {
+  final int usuarioId;
+  const AdjuntarBoletaPage({Key? key, required this.usuarioId}) : super(key: key);
   @override
   _AdjuntarBoletaPageState createState() => _AdjuntarBoletaPageState();
 }
@@ -22,6 +28,7 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
     with SingleTickerProviderStateMixin {
   late AnimationController loadingController;
 
+  Map<String, dynamic> _datosUsuario = {}; // Cambiado a Map
   File? _file;
   PlatformFile? _platformFile;
   Image? thumbnailImage;
@@ -31,6 +38,36 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
     final List<int> bytes = data.buffer.asUint8List();
     return Image.memory(Uint8List.fromList(bytes));
   }
+
+  Future<void> obtenerDetallesUsuario(int idUsuario) async {
+    try {
+      final response = await http.get(Uri.parse('$datos_cada_usuario_gestionar/${widget.usuarioId}'));
+      var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+
+      if (jsonResponse['status']) {
+        // La solicitud fue exitosa
+        /* final Map<String, dynamic> data = json.decode(response.body);
+        print('Tipo de data: ${data['usuario'].runtimeType}'); */
+        final data = json.decode(response.body);
+        final detallesUsuario = data['usuario']; // Acceder directamente al mapa
+
+        setState(() {
+          _datosUsuario = detallesUsuario;
+        });
+        
+        print('Detalles del usuario: $data');
+        print("Esto es una prueba: $_datosUsuario");
+        print(_datosUsuario['LOCAL']);
+      } else {
+        // La solicitud falló con un código de estado diferente de 200
+        print('Error al obtener detalles del usuario: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Manejar errores de red u otros
+      print('Error al obtener detalles del usuario: $error');
+    }
+  } 
 
   selectFile() async {
     final file = await FilePicker.platform
@@ -42,6 +79,8 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
         _platformFile = file.files.first;
       });
 
+      await _uploadPDF(_file!);
+
      /*  final document = await PdfDocument.openFile(_file!.path);
       final page = await document.getPage(1);  // Usar la primera página para la miniatura
       final pageImage = await page.render(width: 70, height: 100); */
@@ -51,6 +90,34 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
       thumbnailImage = placeholderImage;
     });
     }
+  }
+
+  Future<void> _uploadPDF(File pdf) async {
+  // Construye la solicitud para subir la imagen al backend
+  var request = http.MultipartRequest(
+    'PUT', // o 'PUT' según tu API
+    Uri.parse('$gestionar/gest_boleta/${widget.usuarioId}'), // Reemplaza con la URL correcta de tu endpoint de carga
+  );
+
+  // Agrega la imagen al formulario multipart
+  request.files.add(await http.MultipartFile.fromPath('pdf', pdf.path));
+
+  // Envía la solicitud al backend
+  var response = await request.send();
+
+  // Maneja la respuesta del servidor
+  if (response.statusCode == 200) {
+    print('PDF cargado con éxito');
+  } else {
+    print('Error al cargar el PDF: ${response.statusCode}');
+  }
+}
+
+  void updateUsuariosList() {
+    setState(() {
+      // Llamada a _getUsuariosPorDepartamento() u otras acciones de actualización
+      
+    });
   }
 
  /*  Future<Uint8List> _captureImage(Image image) async {
@@ -77,10 +144,12 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
       });
 
     super.initState();
+    obtenerDetallesUsuario(widget.usuarioId);
   }
 
   @override
   Widget build(BuildContext context) {
+    print("El ID traído a la boleta es el siguiente: ${widget.usuarioId}");
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 247, 247, 255),
         appBar: AppBar(
@@ -113,9 +182,9 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text(
-                      'Anthony Joshua Avila Laguna',
-                      style: TextStyle(fontSize: 18),
+                    Text(
+                      ((_datosUsuario['P_NOMBRE'] ?? '') + ' '+ (_datosUsuario['S_NOMBRE'] ?? '') +' ' + (_datosUsuario['P_APELLIDO'] ?? '')+' ' + (_datosUsuario['S_APELLIDO'] ?? '')).toUpperCase(),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(
                       height: 30,
@@ -307,13 +376,11 @@ class _AdjuntarBoletaPageState extends State<AdjuntarBoletaPage>
                           minWidth: double.infinity,
                           height: 60,
                           onPressed: () {
-                            /* _registroHabilitado ? _registrarse() : null; */
-                            /* Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ConfiguracionUsuariosPage())); */
-                          },
+                               Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => ConfiguracionUsuariosPage(usuarioId: widget.usuarioId,
+                                onUpdateUsuariosList: updateUsuariosList,)));
+
+                            },
                           color: const Color.fromARGB(255, 81, 124, 193),
                           elevation: 0,
                           shape: RoundedRectangleBorder(

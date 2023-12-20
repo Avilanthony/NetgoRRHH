@@ -1,4 +1,4 @@
-final url = 'http://192.168.0.2:8081/';
+final url = 'http://192.168.0.13:8081/';
 // ip Pepetoño: 192.168.0.2
 // ip Donita: 192.168.0.13
 // ip AWS: 3.143.83.212
@@ -24,6 +24,8 @@ final editables = url + "editar";
 final llenar_select_deptos = url + "depto_users/departamentos";
 
 final traer_usuario_cada_depto = url + "depto_users/deptosUsuarios";
+
+final traer_todos_usuarios_deptos = url + "depto_users/todosUsuarios";
 
 final datos_cada_usuario_gestionar = url + "admin/admin_user";
 

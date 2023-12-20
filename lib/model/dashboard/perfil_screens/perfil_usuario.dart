@@ -29,6 +29,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   String usuarioPrimerApellido = '';
   String usuarioCorreo = '';
   String usuarioTelefono = '';
+  String imagenUsuario = '';
 
   @override
   void initState() {
@@ -65,11 +66,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
           usuarioCorreo = myUsuario['CORREO'];
           usuarioTelefono = myUsuario['TELEFONO'];
+          imagenUsuario = myUsuario['IMAGEN'];
           //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
           print(usuarioPrimerNombre);
           print(usuarioPrimerApellido);
           print(usuarioCorreo);
           print(usuarioTelefono);
+          print(imagenUsuario);
           // Otros campos del usuario...
         });
       } else {
@@ -99,10 +102,22 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
-            const CircleAvatar(
+            imagenUsuario == ''  || imagenUsuario.isEmpty?
+            CircleAvatar(
+              
               radius: 90,
+              
               backgroundImage: AssetImage('assets/images/user.png'),
-            ),
+              
+            ):
+            CircleAvatar(
+              
+              radius: 90,
+              
+              backgroundImage: NetworkImage(imagenUsuario),
+              
+            )
+            ,
             const SizedBox(height: 20),
             itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre',
                 CupertinoIcons.person),

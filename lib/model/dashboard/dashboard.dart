@@ -29,10 +29,12 @@ class _DashboardState extends State<Dashboard> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
 
+  late int usuarioID = 0;
   late String usuario = '';
   String usuarioNombre = '';
   String usuarioDepartamento = '';
   String usuarioRol = '';
+  /* String usuarioImagen = ''; */
   late SharedPreferences prefs;
 
 
@@ -87,18 +89,26 @@ class _DashboardState extends State<Dashboard> {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
 
+        print(jsonResponse);
+
         var myUsuario = jsonResponse['usuario'];
 
         print(myUsuario);
 
+        print("MyUsuario Dash: $myUsuario");
+
         setState(() {
           // Actualiza el estado con la información del usuario
+          usuarioID = myUsuario['ID'];
           usuarioNombre = myUsuario['USUARIO'];
           usuarioRol = myUsuario['ROL'];
           usuarioDepartamento = myUsuario['DEPARTAMENTO'];
+          /* usuarioImagen = myUsuario['IMG']; */
+          print(usuarioID);
           print(usuarioNombre);
           print(usuarioRol);
           print(usuarioDepartamento);
+          /* print(usuarioImagen); */
           // Otros campos del usuario...
         });
       } else {
