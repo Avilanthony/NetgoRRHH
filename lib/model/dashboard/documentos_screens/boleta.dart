@@ -18,7 +18,9 @@ import 'package:http/http.dart' as http;
 class BoletaPdfViewerScreen extends StatefulWidget {
   final int usuarioId;
   final token;
-  const BoletaPdfViewerScreen({Key? key, required this.usuarioId, required this.token}) : super(key: key);
+  const BoletaPdfViewerScreen(
+      {Key? key, required this.usuarioId, required this.token})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -28,7 +30,7 @@ class BoletaPdfViewerScreen extends StatefulWidget {
 class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
   late String usuarioBoleta = '';
   late String usuario = '';
-  String pdfurl =  '';
+  String pdfurl = '';
 
   @override
   void initState() {
@@ -37,10 +39,9 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
     usuario = jwtDecodedToken['uid'].toString();
     NotificationService().initNotification();
     obtenerInformacionUsuario();
-    
   }
 
-    Future<void> obtenerInformacionUsuario() async {
+  Future<void> obtenerInformacionUsuario() async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -73,8 +74,7 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
       print('Error: $error');
     }
   }
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,37 +95,32 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () async{
+              onPressed: () async {
                 final androidInfo = await DeviceInfoPlugin().androidInfo;
-                late final Map<Permission, PermissionStatus> statusses /* = await [Permission.storage].request() */;
+                late final Map<Permission, PermissionStatus>
+                    statusses /* = await [Permission.storage].request() */;
                 if (Platform.isAndroid) {
-                  if (androidInfo.version.sdkInt <= 32){
-                    statusses = await[
-                      Permission.storage
-                    ].request();
+                  if (androidInfo.version.sdkInt <= 32) {
+                    statusses = await [Permission.storage].request();
                   } else {
-                    statusses = await [
-                      Permission.notification
-                    ].request();
+                    statusses = await [Permission.notification].request();
                   }
                 } else {
-                  statusses = await [
-                    Permission.storage
-                  ].request();
+                  statusses = await [Permission.storage].request();
                 }
-                
+
                 print("Status de permisos: ${statusses[Permission.storage]}");
                 var allAcepted = true;
                 statusses.forEach((permission, status) {
                   if (status != PermissionStatus.granted) {
                     allAcepted = false;
                   }
-                 });
-                if(allAcepted){
+                });
+                if (allAcepted) {
                   /* bool dirDownloadExists = true;
                   dynamic directory;
                   String path; */
-                  
+
                   /* if (Platform.isIOS) {
                     directory = await getDownloadsDirectory();
                   } else {
@@ -140,7 +135,7 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
                     }
                   } */
                   var directory = await getDownloadsDirectory();
-                  if(directory!=null){
+                  if (directory != null) {
                     String appFolder;
                     /* if (Platform.isIOS) {
                       appFolder = "${directory.path}";
@@ -149,72 +144,60 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
                     } */
                     appFolder = directory.path;
                     await Directory(appFolder).create(recursive: true);
-                    String guardaComo = "boleta.pdf";
+                    String guardaComo = "Boletica.pdf";
                     String savePath = "$appFolder/$guardaComo";
                     print(savePath);
 
                     try {
-                      await Dio().download(
-                        pdfurl, 
-                        savePath,
-                        onReceiveProgress: (received, total){
-                          if (total != -1) {
-
-                            print("${(received/total*100).toStringAsFixed(0)}%");
-
-                            
-                          }
+                      await Dio().download(pdfurl, savePath,
+                          onReceiveProgress: (received, total) {
+                        if (total != -1) {
+                          print(
+                              "${(received / total * 100).toStringAsFixed(0)}%");
                         }
-                      );
+                      });
                       print("Archivo guardado en la carpeta RRHH_Netgo");
                       NotificationService().showNotification(
                         title: "Descargar de Archivo",
-                        body: "El archivo ha sido guardado en la carpeta RRHH_Netgo",
+                        body:
+                            "El archivo ha sido guardado en la carpeta RRHH_Netgo",
                         pdfFilePath: savePath,
                       );
                     } on DioException catch (e) {
-
                       print(e.message);
-                      
                     }
-                  }
-                  else{
-
+                  } else {
                     print("No se pudo obtener el directorio de descargas");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Permiso Denegado"),
-                      )
-                    );
-                    
-
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Permiso Denegado"),
+                    ));
                   }
                 }
               },
             ),
           ],
         ),
+        backgroundColor: const Color.fromARGB(255, 236, 237, 255),
         body: Container(
-          color:
-              const Color.fromRGBO(216,212,212,1), // Establece el color de fondo del segundo Container
+          color: const Color.fromARGB(255, 236, 237, 255), // Establece el color de fondo del segundo Container
           child: Container(
             padding: const EdgeInsets.all(20),
             child: /* SfPdfViewer.network(usuarioBoleta), */
-             usuarioBoleta == ''  || usuarioBoleta.isEmpty?
-             const Text(
-
-              "No se ha brindado una boleta de pago"
-
-            ):
-            SfPdfViewer.network(
-              /* usuarioBoleta */
-              usuarioBoleta
-            )
-            ,
+                usuarioBoleta == '' || usuarioBoleta.isEmpty
+                    ? Text(
+                        "No hay una boleta de pago visible.",
+                        style: GoogleFonts.croissantOne(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                        textAlign: TextAlign.center,
+                      )
+                    : SfPdfViewer.network(
+                        /* usuarioBoleta */
+                        usuarioBoleta),
           ),
         ),
       ),
     );
   }
-
 }

@@ -21,7 +21,6 @@ class Dashboard extends StatefulWidget {
   const Dashboard({@required this.token, Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _DashboardState createState() => _DashboardState();
 }
 
@@ -34,9 +33,11 @@ class _DashboardState extends State<Dashboard> {
   String usuarioNombre = '';
   String usuarioDepartamento = '';
   String usuarioRol = '';
-  /* String usuarioImagen = ''; */
+  String usuarioImagen = '';
   late SharedPreferences prefs;
 
+  // Agrega esta línea
+  final GlobalKey<_DashboardState> dashboardKey = GlobalKey<_DashboardState>();
 
   @override
   void initState() {
@@ -45,7 +46,6 @@ class _DashboardState extends State<Dashboard> {
     usuario = jwtDecodedToken['uid'].toString();
     obtenerInformacionUsuario();
     initSharedPreferences();
-    obtenerInformacionUsuario();
   }
 
   @override
@@ -54,36 +54,14 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-  /* Future<void> verificarToken() async {
-    try {
-      bool tokenValido = !JwtDecoder.isExpired(widget.token);
-
-      if (tokenValido) {
-        Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-        usuario = jwtDecodedToken['uid'].toString();
-        obtenerInformacionUsuario();
-      } else {
-        // Token vencido, navegar a la pantalla principal (MyHomePage)
-        prefs.remove('token');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-        );
-      }
-    } catch (error) {
-      print('Error al verificar el token: $error');
-    }
-  }*/
-
-   Future<void> initSharedPreferences() async {
+  Future<void> initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
-  } 
+  }
 
   Future<void> obtenerInformacionUsuario() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            '$dashboard/$usuario'), // Reemplaza con la URL correcta de tu backend
+        Uri.parse('$dashboard/$usuario'),
       );
 
       if (response.statusCode == 200) {
@@ -98,32 +76,30 @@ class _DashboardState extends State<Dashboard> {
         print("MyUsuario Dash: $myUsuario");
 
         setState(() {
-          // Actualiza el estado con la información del usuario
           usuarioID = myUsuario['ID'];
           usuarioNombre = myUsuario['USUARIO'];
           usuarioRol = myUsuario['ROL'];
           usuarioDepartamento = myUsuario['DEPARTAMENTO'];
-          /* usuarioImagen = myUsuario['IMG']; */
-          print(usuarioID);
-          print(usuarioNombre);
-          print(usuarioRol);
-          print(usuarioDepartamento);
-          /* print(usuarioImagen); */
-          // Otros campos del usuario...
+          usuarioImagen = myUsuario['IMAGEN'];
         });
+
+        // Agrega esta línea para reconstruir la pantalla
+        dashboardKey.currentState?.setState(() {});
       } else {
-        // La solicitud no fue exitosa, maneja el error según sea necesario
         print('Error en la solicitud: ${response.statusCode}');
       }
     } catch (error) {
-      // Maneja errores de red u otros errores aquí
       print('Error: $error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    dashboardKey.currentState?.setState(() {});
+    print("------------------------------");
+    print(usuarioImagen);
     return Scaffold(
+      key: dashboardKey, // Agrega esta línea
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 81, 124, 193),
         title: Text.rich(
@@ -141,14 +117,12 @@ class _DashboardState extends State<Dashboard> {
               size: 30,
             ),
             onPressed: () async {
-               // Eliminar el token al cerrar sesión
               final prefs = await SharedPreferences.getInstance();
               prefs.clear();
-              // Navegar a la pantalla principal
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => MyHomePage()),
-                (route) => false, // Elimina todas las rutas del historial de navegación
+                (route) => false,
               );
             },
           ),
@@ -171,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: PageView(
         controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // Deshabilitar deslizamiento
+        physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             _currentIndex = index;
@@ -210,21 +184,25 @@ class _DashboardState extends State<Dashboard> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
-                          trailing: const CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 30,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/images/user.png'),
-                              backgroundColor: Colors.black,
-                              radius: 25,
-                            ),
-                          ),
+                          trailing: usuarioImagen == '' || usuarioImagen.isEmpty
+                              ? const CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 30,
+                                  child: CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage('assets/images/user.png'),
+                                    backgroundColor: Colors.black,
+                                    radius: 25,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: NetworkImage(usuarioImagen),
+                                ),
                         ),
                       ],
                     ),
                   ),
-                  // Otros elementos de la lista aquí
                 ],
               ),
               Align(

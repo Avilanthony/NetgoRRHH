@@ -82,6 +82,9 @@ triggerNotification() {
 
   @override
   Widget build(BuildContext context) {
+    print("------------------------------");
+    print(usuarioImagen);
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);

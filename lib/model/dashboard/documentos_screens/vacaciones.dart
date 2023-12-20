@@ -133,7 +133,8 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
+                        child: 
+                        Text(
                           usuarioVacaciones,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
