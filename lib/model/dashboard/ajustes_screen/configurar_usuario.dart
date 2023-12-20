@@ -426,10 +426,26 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                 const Center(
                   child:  Padding
                   (padding:  EdgeInsets.all(25))),
-                const CircleAvatar(
+                /* const CircleAvatar(
                   radius: 35,
                   backgroundImage: AssetImage('assets/images/user.png'),
-                ),
+                ), */
+                  _datosUsuario['IMG'] == ''  || _datosUsuario['IMG'] == null ?
+                  const CircleAvatar(
+              
+                  radius: 35,
+              
+                  backgroundImage: AssetImage('assets/images/user.png'),
+              
+                ):
+                CircleAvatar(
+              
+                  radius: 35,
+              
+                  backgroundImage: NetworkImage(_datosUsuario['IMG']),
+              
+                )
+                ,
                 SizedBox(width: screenWidth * 0.05),
                 Text(
                   ((_datosUsuario['P_NOMBRE'] ?? '') + ' ' + (_datosUsuario['P_APELLIDO'] ?? '')).toUpperCase(),
@@ -461,7 +477,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
-                    '${_datosUsuario['VACACIONES']} días',
+                    '${_datosUsuario['VACACIONES']  ?? 'ND'} días',
                     'Vacaciones', 
                     'Actualizar', 
                     () => _actualizarVacaciones(),
@@ -510,7 +526,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   void _adjuntarBoleta() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AdjuntarBoletaPage()),
+      MaterialPageRoute(builder: (context) => AdjuntarBoletaPage(usuarioId: widget.usuarioId)),
     );
   }
 

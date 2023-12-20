@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/boleta.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/constancia.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaciones.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class Documentos extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -22,21 +26,63 @@ late String _token; // Variable para almacenar el token
 final websiteUrl =
       Uri.parse('https://sites.google.com/view/loginrrhh/acceso?authuser=0');
 
+
+
 class _Documentos extends State<Documentos> {
+  late int usuarioID = 0;
   late String usuario = '';
 
   @override
   void initState() {
     super.initState();
+    
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    
 
     usuario = jwtDecodedToken['uid'].toString();
     _token = widget.token; // Almacenar el token en la variable _token
+    obtenerInformacionUsuario();
   }
 
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$dashboard/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        print(jsonResponse);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        print("MyUsuario Dash: $myUsuario");
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioID = myUsuario['ID'];
+          /* usuarioImagen = myUsuario['IMG']; */
+          print(usuarioID);
+          /* print(usuarioImagen); */
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
+    print(usuarioID);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 237, 255),
       body: Padding(
@@ -69,9 +115,7 @@ class _Documentos extends State<Documentos> {
       ),
     );
   }
-}
-
-itemPerfil(
+  itemPerfil(
     String title, String subtitle, IconData iconData, BuildContext context) {
   return GestureDetector(
     onTap: () {
@@ -100,7 +144,7 @@ itemPerfil(
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const BoletaPdfViewerScreen()),
+                builder: (context) => BoletaPdfViewerScreen(usuarioId: usuarioID, token: widget.token,)),
           );
           break;
         default:
@@ -131,6 +175,9 @@ itemPerfil(
     ),
   );
 }
+
+}
+
 
 Widget itemPerfilUrl(
   String title, String subtitle, IconData iconData, String url) {

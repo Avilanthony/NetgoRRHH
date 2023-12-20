@@ -22,6 +22,7 @@ class _TicketsPage extends State<TicketsPage> {
   String usuarioPrimerNombre = '';
   String usuarioPrimerApellido = '';
   String usuarioDepto = '';
+  String usuarioImagen = '';
 
   @override
   void initState() {
@@ -51,10 +52,12 @@ class _TicketsPage extends State<TicketsPage> {
           usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
           usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
           usuarioDepto = myUsuario['DEPARTAMENTO'];
+          usuarioImagen = myUsuario['IMG'];
           //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
           print(usuarioPrimerNombre);
           print(usuarioPrimerApellido);
           print(usuarioDepto);
+          print(usuarioImagen);
           // Otros campos del usuario...
         });
       } else {
@@ -126,15 +129,25 @@ triggerNotification() {
                           child: Center(
                             child: Column(
                               children: [
-                                const CircleAvatar(
+                                CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   radius: 60,
-                                  child: CircleAvatar(
-                                    backgroundImage:
-                                        AssetImage('assets/images/user.png'),
-                                    backgroundColor: Color.fromARGB(255, 172, 172, 172),
-                                    radius: 55,
-                                  ),
+                                  child: usuarioImagen == ''  || usuarioImagen.isEmpty?
+                                  const CircleAvatar(
+
+                                    radius: 90,
+
+                                    backgroundImage: AssetImage('assets/images/user.png'),
+
+                                  ):
+                                  CircleAvatar(
+
+                                    radius: 90,
+
+                                    backgroundImage: NetworkImage(usuarioImagen),
+
+                                  )
+                                  ,
                                 ),
                                 Text(
                                   "$usuarioPrimerNombre $usuarioPrimerApellido",
