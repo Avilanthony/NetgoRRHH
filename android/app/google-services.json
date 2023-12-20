@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320071146878",
+    "project_id": "netgo-notificaciones",
+    "storage_bucket": "netgo-notificaciones.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320071146878:android:c083e8fad3a3baf949a72f",
+        "android_client_info": {
+          "package_name": "com.netgo.recursos_humanos_netgo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_Ld-rL6nbtCNfp1kOF-qZYS61fHru7dM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
