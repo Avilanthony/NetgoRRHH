@@ -154,6 +154,8 @@ class _SingUpPageState extends State<SignupPage> {
           !(RegExp(r'[0-9]').hasMatch(_sApellidosController.text)) &&
           _usuarioController.text.isNotEmpty &&
           !_usuarioController.text.contains(' ') &&
+          _usuarioController.text.length <= 15 &&
+          _usuarioController.text.length >= 5 &&
           !(RegExp(r'[0-9]').hasMatch(_usuarioController.text)) &&
           _identidadController.text.isNotEmpty &&
           !_identidadController.text.contains(' ') &&
@@ -208,6 +210,8 @@ class _SingUpPageState extends State<SignupPage> {
     RegExp(r'[0-9]').hasMatch(_sApellidosController.text) ? showToast("El campo del segundo apellido no puede contener números"): null;
     _usuarioController.text.isEmpty ? showToast("El campo del usuario no puede estar vacío") : null;
     _usuarioController.text.contains(' ') ? showToast("El campo del usuario no puede contener espacios") : null;
+    _usuarioController.text.length > 15 ? showToast("El campo del usuario debe tener 15 caracteres máximo") : null;
+    _usuarioController.text.length < 5 ? showToast("El campo del usuario debe tener 5 caracteres mínimo") : null;
     RegExp(r'[0-9]').hasMatch(_usuarioController.text) ? showToast("El campo del usuario no puede contener números"): null;
     _identidadController.text.isEmpty ? showToast("El campo del DNI no puede estar vacío") : null;
     _identidadController.text.contains(' ') ? showToast("El campo del DNI no puede contener espacios") : null;
@@ -320,12 +324,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_pNombresFocus, _sNombresFocus),
                           onChanged: (text) {
-                             /* setState(() {
+                             setState(() {
                               _pNombresController.text = text.toUpperCase();
                               _pNombresController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _pNombresController.text.length),
                               );
-                             }); */
+                             });
                           }
                         ),
                         makeInput(
@@ -335,12 +339,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_sNombresFocus, _pApellidosFocus),
                           onChanged: (text) {
-                             /* setState(() {
+                             setState(() {
                               _sNombresController.text = text.toUpperCase();
                               _sNombresController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _sNombresController.text.length),
                               );
-                             }); */
+                             });
                           }
                         ),
                         makeInput(
@@ -350,12 +354,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_pApellidosFocus, _sApellidosFocus),
                           onChanged: (text) {
-                             /* setState(() {
+                             setState(() {
                               _pApellidosController.text = text.toUpperCase();
                               _pApellidosController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _pApellidosController.text.length),
                               );
-                             }); */
+                             }); 
                           }
                         ),
                         makeInput(
@@ -365,12 +369,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_sApellidosFocus, _usuarioFocus),
                           onChanged: (text) {
-                             /* setState(() {
+                              setState(() {
                               _sApellidosController.text = text.toUpperCase();
                               _sApellidosController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _sApellidosController.text.length),
                               );
-                             }); */
+                             }); 
                           }
                         ),
                         makeInput(
@@ -380,12 +384,12 @@ class _SingUpPageState extends State<SignupPage> {
                           onSubmitted: (value) =>
                               cambiarFoco(_usuarioFocus, _identidadFocus),
                           onChanged: (text) {
-                             /* setState(() {
+                             setState(() {
                               _usuarioController.text = text.toUpperCase();
                               _usuarioController.selection = TextSelection.fromPosition(
                                 TextPosition(offset: _usuarioController.text.length),
                               );
-                             }); */
+                             });
                           }
                         ),
                         makeInput(
@@ -497,6 +501,7 @@ class _SingUpPageState extends State<SignupPage> {
                         height: 60,
                         onPressed: () {
                           _registroHabilitado ? _registrarse() : mostrarValidaciones();
+                          mostrarValidaciones();
                           
                         },
                         color: Color.fromARGB(255, 81, 124, 193),
@@ -590,7 +595,7 @@ class _SingUpPageState extends State<SignupPage> {
           context, MaterialPageRoute(builder: (context) => LoginPage())); */
       } catch (e) {
         // Manejar errores de red o excepciones
-        showToast('Hubo un problema al intentar registrar al usuario.');
+        showToast('Hubo un problema al intentar registrar al usuario. Verifica los datos');
       }
       
     } else {

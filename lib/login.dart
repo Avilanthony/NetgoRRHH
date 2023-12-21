@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage>{
     _contrasenaController.dispose();
     _usuarioFocus.dispose();
     _contrasenaFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -387,6 +388,10 @@ Widget build(BuildContext context) {
         var jsonResponse = jsonDecode(response.body);
 
         print(jsonResponse);
+
+        var myUsuario = jsonResponse['User'];
+
+        print("Estamos en Login $myUsuario");
 
         if (jsonResponse['status']) {
           var myToken = jsonResponse['token'];

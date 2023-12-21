@@ -22,7 +22,7 @@ class _TicketsPage extends State<TicketsPage> {
   String usuarioPrimerNombre = '';
   String usuarioPrimerApellido = '';
   String usuarioDepto = '';
-  String usuarioImagen = '';
+  String? usuarioImagen = '';
 
   @override
   void initState() {
@@ -31,6 +31,7 @@ class _TicketsPage extends State<TicketsPage> {
 
     usuario = jwtDecodedToken['uid'].toString();
     obtenerInformacionUsuario();
+   
   }
 
   Future<void> obtenerInformacionUsuario() async {
@@ -63,6 +64,7 @@ class _TicketsPage extends State<TicketsPage> {
           print(usuarioImagen);
           // Otros campos del usuario...
         });
+         /* _scaffoldKey.currentState!.setState(() {obtenerInformacionUsuario();}); */
       } else {
         // La solicitud no fue exitosa, maneja el error según sea necesario
         print('Error en la solicitud: ${response.statusCode}');
@@ -138,20 +140,19 @@ triggerNotification() {
                                 CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   radius: 60,
-                                  child: usuarioImagen == ''  || usuarioImagen.isEmpty?
-                                  const CircleAvatar(
-
-                                    radius: 90,
-
-                                    backgroundImage: AssetImage('assets/images/user.png'),
-
+                                  child: (usuarioImagen != null)?
+                                    CircleAvatar(
+              
+                                      radius: 55,
+                                    backgroundImage: NetworkImage(usuarioImagen!),
+              
                                   ):
-                                  CircleAvatar(
-
-                                    radius: 90,
-
-                                    backgroundImage: NetworkImage(usuarioImagen),
-
+                                  const CircleAvatar(
+              
+                                    radius: 55,
+              
+                                    backgroundImage: AssetImage('assets/images/user.png'),
+              
                                   )
                                   ,
                                 ),

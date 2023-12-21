@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+
 
 import 'dart:convert';
 
@@ -29,8 +29,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   String usuarioPrimerApellido = '';
   String usuarioCorreo = '';
   String usuarioTelefono = '';
-  String imagenUsuario = '';
-  Map<String, dynamic> _datosUsuario = {}; 
+  String? imagenUsuario = '';
 
   @override
   void initState() {
@@ -54,40 +53,28 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             '$perfilUsuario/perfil_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
       );
 
-       print(response);
-
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        final detallesUsuario = jsonResponse['usuario'];
-        print("Hola JD: $detallesUsuario");
-        print("Hola USUARIO: ${detallesUsuario['PRIMER_NOMBRE']}");
-        print("Hola IMG: ${detallesUsuario['IMAGEN']}");
 
-        /* var myUsuario = jsonResponse['usuario'];
+        var myUsuario = jsonResponse['usuario'];
 
-        print(myUsuario); */
+        print(myUsuario);
 
         setState(() {
           // Actualiza el estado con la información del usuario
-          /* usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
           usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
           usuarioCorreo = myUsuario['CORREO'];
           usuarioTelefono = myUsuario['TELEFONO'];
-          imagenUsuario = myUsuario['IMAGEN']; */
-          _datosUsuario = detallesUsuario;
-          print(_datosUsuario['ID']);
-          print(_datosUsuario['PRIMER_NOMBRE']);
-          print(_datosUsuario['APELLIDO_PATERNO']);
-          print(_datosUsuario['CORREO']);
-          print(_datosUsuario['TELEFONO']);
-          print(_datosUsuario['IMAGEN']);
+          imagenUsuario = myUsuario['IMAGEN'];
           //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
-          /* print(usuarioPrimerNombre);
+          print(usuarioPrimerNombre);
           print(usuarioPrimerApellido);
           print(usuarioCorreo);
           print(usuarioTelefono);
-          print(imagenUsuario); */
+          print(imagenUsuario);
           // Otros campos del usuario...
+          /* _scaffoldKey.currentState!.setState(() {obtenerInformacionUsuario();}); */
         });
       } else {
         // La solicitud no fue exitosa, maneja el error según sea necesario
@@ -116,30 +103,31 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
-            _datosUsuario['IMAGEN'] == null || _datosUsuario['IMAGEN'].toString() == '' ?
+            (imagenUsuario != null)?
             CircleAvatar(
+              
+              radius: 90,
+              
+              
+              backgroundImage: NetworkImage(imagenUsuario!),
+              
+            ):
+            const CircleAvatar(
               
               radius: 90,
               
               backgroundImage: AssetImage('assets/images/user.png'),
               
-            ):
-            CircleAvatar(
-              
-              radius: 90,
-              
-              backgroundImage: NetworkImage(_datosUsuario['IMAGEN']),
-              
             )
             ,
             const SizedBox(height: 20),
-            itemPerfil('${_datosUsuario['PRIMER_NOMBRE']} ${_datosUsuario['APELLIDO_PATERNO']}', 'Nombre',
+            itemPerfil('$usuarioPrimerNombre $usuarioPrimerApellido', 'Nombre',
                 CupertinoIcons.person),
             const SizedBox(height: 20),
             itemPerfil(
-                '+504 ${_datosUsuario['TELEFONO']}', 'Telefono', CupertinoIcons.phone),
+                '+504 $usuarioTelefono', 'Telefono', CupertinoIcons.phone),
             const SizedBox(height: 20),
-            itemPerfil(_datosUsuario['CORREO'], 'Correo', CupertinoIcons.mail),
+            itemPerfil(usuarioCorreo, 'Correo', CupertinoIcons.mail),
             const SizedBox(height: 20),
             /* ElevatedButton(
                 onPressed: () {},
@@ -152,10 +140,10 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Container(
-                padding: EdgeInsets.only(top: 1.5, left: 1.5),
+                padding: const EdgeInsets.only(top: 1.5, left: 1.5),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    border: Border(
+                    border: const Border(
                       bottom: BorderSide(color: Colors.black),
                       top: BorderSide(color: Colors.black),
                       left: BorderSide(color: Colors.black),
@@ -177,12 +165,13 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         obtenerInformacionUsuario();
                       }
                     });
+                    /* _scaffoldKey.currentState!.setState(() {obtenerInformacionUsuario();}); */
                   },
                   color: Color.fromARGB(255, 81, 124, 193),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
-                  child: Text(
+                  child: const Text(
                     "Editar Perfil",
                     style: TextStyle(
                         color: Colors.white,
