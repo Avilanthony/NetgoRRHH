@@ -24,7 +24,7 @@ class Documentos extends StatefulWidget {
 
 late String _token; // Variable para almacenar el token
 final websiteUrl =
-      Uri.parse('https://sites.google.com/view/loginrrhh/acceso?authuser=0');
+      Uri.parse('https://sites.google.com/view/recursoshumanoshn/p%C3%A1gina-principal?authuser=0');
 
 
 
@@ -185,7 +185,7 @@ Widget itemPerfilUrl(
     onTap: () {
       launchUrl(
         websiteUrl,
-        mode: LaunchMode.inAppWebView,
+        mode: LaunchMode.inAppBrowserView,
       );
     },
     child: Container(
