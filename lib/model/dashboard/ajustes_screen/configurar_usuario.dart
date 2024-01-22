@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:recursos_humanos_netgo/config.dart';
-import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart';
+/* import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/adjuntar_boleta.dart'; NO NECESARIA*/
 
 import 'package:http/http.dart' as http;
-import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/gestion_usuarios.dart';
+/* import 'package:recursos_humanos_netgo/model/dashboard/ajustes_screen/gestion_usuarios.dart'; NO NECESARIA*/
 
 class ConfiguracionUsuariosPage extends StatefulWidget {
   final int usuarioId;
@@ -163,7 +163,10 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     }
   }
 
-    Future<void> _actualizarLocal() async {
+
+  //FUNICONES YA NO UTILIZADAS
+
+   /*  Future<void> _actualizarLocal() async {
     // Lógica para actualizar el local
 
     var ingBody = {
@@ -197,9 +200,9 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       print(error);
       showToast('Hubo un problema al actualizar el local.', backgroundColor: Colors.red);
     }
-  }
+  } */
 
-  Future<void> _actualizarDepartamento() async {
+  /* Future<void> _actualizarDepartamento() async {
     // Lógica para actualizar el departamento
 
     var ingBody = {
@@ -234,9 +237,9 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       print(error);
       showToast('Hubo un problema al actualizar el departamento.', backgroundColor: Colors.red);
     }
-  }
+  } */
   
-  Future<void> _actualizarVacaciones() async {
+  /* Future<void> _actualizarVacaciones() async {
     // Lógica para gestionar las vacaciones del usuario
 
     // Construye el cuerpo de la solicitud
@@ -279,10 +282,10 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       // Muestra una notificación o realiza otras acciones en caso de error
       showToast('Hubo un problema al gestionar vacaciones: $error', backgroundColor: Colors.red);
     }
-  }
+  } */
 
   
-  Future<void> _actualizarEstado() async {
+  /* Future<void> _actualizarEstado() async {
     // Lógica para actualizar el rol
 
     var ingBody = {
@@ -316,10 +319,10 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       print(error);
       showToast('Hubo un problema al actualizar el rol.', backgroundColor: Colors.red);
     }
-  }
+  } */
 
 
-  Future<void> _actualizarRol() async {
+  /* Future<void> _actualizarRol() async {
     // Lógica para actualizar el rol
 
     var ingBody = {
@@ -353,7 +356,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
       print(error);
       showToast('Hubo un problema al actualizar el rol.', backgroundColor: Colors.red);
     }
-  }
+  } */
 
   // Función para mostrar toasts con FlutterToast
   void showToast(String message,{Color? backgroundColor}) {
@@ -465,51 +468,51 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                   itemConfigurar(
                     estiloTextos(_datosUsuario['LOCAL'] ?? ''),
                     'Local',
-                    'Actualizar',
-                    () => _actualizarLocal(),
+                   /*  'Actualizar',
+                    () => _actualizarLocal(), */
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     _datosUsuario['DEPARTAMENTO'] ?? '',
                     'Departamento',
-                    'Actualizar',
-                    () => _actualizarDepartamento(),
+                   /*  'Actualizar',
+                    () => _actualizarDepartamento(), */
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     '${_datosUsuario['VACACIONES']  ?? 'ND'} días',
                     'Vacaciones', 
-                    'Actualizar', 
-                    () => _actualizarVacaciones(),
+                    /* 'Actualizar', 
+                    () => _actualizarVacaciones(), */
                   ),
-                  const SizedBox(height: 20),
-                  itemConfigurar(
+                  /* const SizedBox(height: 20),
+                  itemConfigurar( ESTE ITEM YA NO ES NECESARIO
                     'Boleta de Pago',
-                    'Adjuntar',
-                    'Adjuntar',
-                    _adjuntarBoleta,
-                  ),
+                    'Observar',
+                   /*  'Adjuntar',
+                    _adjuntarBoleta, */
+                  ), */
                   const SizedBox(height: 20),
                   itemConfigurar(
                     estiloTextos(_datosUsuario['ESTADO'] ?? ''),
                     'Estado del Usuario',
-                    'Actualizar',
-                    () => _actualizarEstado(),
+                    /* 'Actualizar',
+                    () => _actualizarEstado(), */
                   ),
                   const SizedBox(height: 20),
                   itemConfigurar(
                     estiloTextos(_datosUsuario['ROL'] ?? ''),
                     'Rol del Usuario',
-                    'Actualizar',
-                    () => _actualizarRol(),
+                    /* 'Actualizar',
+                    () => _actualizarRol(), */
                   ),
                   const SizedBox(height: 20),
-                  itemNoConfigurar(
+                  itemConfigurar(
                     '+504 ${_datosUsuario['TELEFONO'] ?? ''}',
                     'Teléfono',
                   ),
                   const SizedBox(height: 20),
-                  itemNoConfigurar(
+                  itemConfigurar(
                     (_datosUsuario['CORREO'] ?? '').toLowerCase(),
                     'Correo',
                   ),
@@ -523,12 +526,14 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
     );
   }
 
-  void _adjuntarBoleta() {
+  //FUNCIÓN NO NECESARIA
+
+  /* void _adjuntarBoleta() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AdjuntarBoletaPage(usuarioId: widget.usuarioId)),
     );
-  }
+  } */
 
   Widget _buildAdditionalWidget(String subtitle) {
     if (subtitle == 'Local') {
@@ -679,11 +684,12 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
   Widget itemConfigurar(
     String title,
     String subtitle,
-    String buttonText,
-    Function()? onPressedFunction,
+    /* String buttonText,
+    Function()? onPressedFunction, */
   ) {
     return Container(
 /*       height: subtitle != "Adjuntar" ? 125.0 : 100.0, */
+      /* width: 200, */
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -701,14 +707,16 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
           Stack(
             children: [
               ListTile(
-                title: Text(title),
-                subtitle: Text(
+                title: Text(
                   subtitle,
-                  style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 15, color: Colors.grey[700]),),
+                subtitle: Text(
+                  title,
+                  style: const TextStyle(fontSize: 17),
                 ),
                 textColor: const Color.fromARGB(255, 0, 0, 0),
               ),
-              Positioned(
+              /* Positioned( BOTÓN YA NO UTILIZADO
                 top: 10,
                 bottom: 10,
                 right: 10,
@@ -733,7 +741,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
                     ),
                   ),
                 ),
-              ),
+              ), */
               
               
             ],
@@ -742,30 +750,29 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
             
           ),
 
-          Padding(
-                /* top: 10, // Ajusta la posición del widget adicional según tus necesidades
-                left: 20,
-                right: 20, */
-                padding: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0 ),
-                child: SizedBox(
-                  width: 300,
-                  child: _buildAdditionalWidget(subtitle),
-                ),
-              ),
+          /* Padding( AQUI SE LLAMABAN LOS CONTROLES QUE YA NO SON NECESARIOS
+            padding: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0 ),
+            child: SizedBox(
+              width: 300,
+              child: _buildAdditionalWidget(subtitle),
+            ),
+          ), */
 
-              if (subtitle != "Adjuntar")
+           /*    if (subtitle != "Adjuntar")
           const SizedBox(
             height: 10,
           ), 
-          
+           */
         ],
       ),
       
     );
   }
 
-  Widget itemNoConfigurar(String title, String subtitle) {
+  /* Widget itemNoConfigurar(String title, String subtitle) {
     return Container(
+      alignment: Alignment.centerLeft,
+      /* width: 200, */
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -792,7 +799,7 @@ class _ConfiguracionUsuariosPageState extends State<ConfiguracionUsuariosPage> {
         ],
       ),
     );
-  }
+  } */
 }
 
 estiloTextos(String texto){
