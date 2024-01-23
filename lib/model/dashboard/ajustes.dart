@@ -44,8 +44,8 @@ class Settings extends StatelessWidget {
                           Colors.black, context),
                       itemSettings('Notificar', CupertinoIcons.bell,
                           Colors.black, context),
-                      itemSettings('Editables', CupertinoIcons.building_2_fill,
-                          Colors.black, context),
+                      /* itemSettings('Editables', CupertinoIcons.building_2_fill,
+                          Colors.black, context), */
                     ],
                   ),
                 ],
