@@ -102,13 +102,13 @@ class _Proyectos extends State<Proyectos> {
                   color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             const SizedBox(height: 20),
-            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, context),
+            itemPerfil('Nombre Proyecto 1', '', CupertinoIcons.tray_2_fill, context),
             const SizedBox(height: 20),
-            itemPerfil('Contancia', '', CupertinoIcons.doc, context),
+            itemPerfil('Nombre Proyecto 2', '', CupertinoIcons.tray_2_fill, context),
             const SizedBox(height: 20),
-            itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, context),
+            itemPerfil('Nombre Proyecto 2', '', CupertinoIcons.tray_2_fill, context),
             const SizedBox(height: 20),
-            itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, context),
+            itemPerfil('Nombre Proyecto 4', '', CupertinoIcons.tray_2_fill, context),
           ],
         ),
       ),
@@ -117,7 +117,7 @@ class _Proyectos extends State<Proyectos> {
   itemPerfil(
     String title, String subtitle, IconData iconData, BuildContext context) {
   return GestureDetector(
-    onTap: () {
+    /* onTap: () {
       switch (title) {
         case 'DNI':
           Navigator.push(
@@ -156,7 +156,7 @@ class _Proyectos extends State<Proyectos> {
         default:
           break;
       }
-    },
+    }, */
     child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -174,8 +174,8 @@ class _Proyectos extends State<Proyectos> {
         title: Text(title),
         leading: Icon(iconData),
         iconColor: const Color.fromARGB(255, 81, 124, 193),
-        trailing: const Icon(Icons.arrow_forward,
-            color: Color.fromARGB(255, 81, 124, 193)),
+        /* trailing: const Icon(Icons.arrow_forward,
+            color: Color.fromARGB(255, 81, 124, 193)), */
         textColor: const Color.fromARGB(255, 0, 0, 0),
       ),
     ),

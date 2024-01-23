@@ -112,7 +112,7 @@ class _Documentos extends State<Documentos> {
             const SizedBox(height: 20),
             itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, context),
             const SizedBox(height: 20),
-            itemPerfil('Proyectos', '', CupertinoIcons.projective, context),
+            itemPerfil('Proyectos', '', CupertinoIcons.person_3_fill, context),
           ],
         ),
       ),
