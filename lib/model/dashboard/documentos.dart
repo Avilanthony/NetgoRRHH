@@ -123,12 +123,12 @@ class _Documentos extends State<Documentos> {
   return GestureDetector(
     onTap: () {
       switch (title) {
-        case 'DNI':
+        /* case 'DNI':
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ImagenDniPage()),
           );
-          break;
+          break; */
         case 'Contancia':
           Navigator.push(
             context,
@@ -149,13 +149,13 @@ class _Documentos extends State<Documentos> {
             MaterialPageRoute(
                 builder: (context) => BoletaPdfViewerScreen(usuarioId: usuarioID, token: widget.token,)),
           );
-          break;
+          /* break;
           case 'Proyectos':
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => Proyectos(usuarioId: usuarioID, token: widget.token,)),
-          );
+          ); */
           break;
         default:
           break;
