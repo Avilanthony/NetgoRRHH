@@ -147,7 +147,7 @@ class _Documentos extends State<Documentos> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => BoletaPdfViewerScreen(usuarioId: usuarioID, token: widget.token,)),
+                builder: (context) => BoletaScreen(usuarioId: usuarioID, token: widget.token,)),
           );
           /* break;
           case 'Proyectos':

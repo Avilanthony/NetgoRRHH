@@ -15,19 +15,19 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 
-class BoletaPdfViewerScreen extends StatefulWidget {
+class BoletaScreen extends StatefulWidget {
   final int usuarioId;
   final token;
-  const BoletaPdfViewerScreen(
+  const BoletaScreen(
       {Key? key, required this.usuarioId, required this.token})
       : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _PdfViewerScreenState createState() => _PdfViewerScreenState();
+  _BoletaScreenState createState() => _BoletaScreenState();
 }
 
-class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
+class _BoletaScreenState extends State<BoletaScreen> {
   late String usuarioBoleta = '';
   late String usuario = '';
   String pdfurl = '';
@@ -77,125 +77,925 @@ class _PdfViewerScreenState extends State<BoletaPdfViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 81, 124, 193),
-          title: Text.rich(
-            TextSpan(
-                text: 'BOLETA DE PAGO',
-                style: GoogleFonts.josefinSans(
-                    fontSize: 20, fontWeight: FontWeight.bold)),
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.download,
-                color: Colors.white,
-                size: 30,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Boleta de Pago'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 40,
+              color: const Color.fromARGB(255, 6, 82, 144),
+              child: const Row(
+                children:[
+                  Expanded(
+                    child: Text(
+                      'COMPROBANTE DE PAGO',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center
+                    ),
+                  ),
+                ],
               ),
-              onPressed: () async {
-                final androidInfo = await DeviceInfoPlugin().androidInfo;
-                late final Map<Permission, PermissionStatus>
-                    statusses /* = await [Permission.storage].request() */;
-                if (Platform.isAndroid) {
-                  if (androidInfo.version.sdkInt <= 32) {
-                    statusses = await [Permission.storage].request();
-                  } else {
-                    statusses = await [Permission.notification].request();
-                  }
-                } else {
-                  statusses = await [Permission.storage].request();
-                }
-
-                print("Status de permisos: ${statusses[Permission.storage]}");
-                var allAcepted = true;
-                statusses.forEach((permission, status) {
-                  if (status != PermissionStatus.granted) {
-                    allAcepted = false;
-                  }
-                });
-                if (allAcepted) {
-                  /* bool dirDownloadExists = true;
-                  dynamic directory;
-                  String path; */
-
-                  /* if (Platform.isIOS) {
-                    directory = await getDownloadsDirectory();
-                  } else {
-
-                    dirDownloadExists = await Directory(directory).exists();
-                    if(dirDownloadExists){
-                      path = "/storage/emulated/0/Download";
-                      directory = File(path);
-                    }else{
-                      path = "/storage/emulated/0/Download";
-                      directory = File(path);
-                    }
-                  } */
-                  var directory = await getDownloadsDirectory();
-                  if (directory != null) {
-                    String appFolder;
-                    /* if (Platform.isIOS) {
-                      appFolder = "${directory.path}";
-                    } else {
-                      appFolder = directory;
-                    } */
-                    appFolder = directory.path;
-                    await Directory(appFolder).create(recursive: true);
-                    String guardaComo = "Boletica.pdf";
-                    String savePath = "$appFolder/$guardaComo";
-                    print(savePath);
-
-                    try {
-                      await Dio().download(pdfurl, savePath,
-                          onReceiveProgress: (received, total) {
-                        if (total != -1) {
-                          print(
-                              "${(received / total * 100).toStringAsFixed(0)}%");
-                        }
-                      });
-                      print("Archivo guardado en la carpeta RRHH_Netgo");
-                      NotificationService().showNotification(
-                        title: "Descargar de Archivo",
-                        body:
-                            "El archivo ha sido guardado en la carpeta RRHH_Netgo",
-                        pdfFilePath: savePath,
-                      );
-                    } on DioException catch (e) {
-                      print(e.message);
-                    }
-                  } else {
-                    print("No se pudo obtener el directorio de descargas");
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Permiso Denegado"),
-                    ));
-                  }
-                }
-              },
+            ),
+            const SizedBox(height: 5),
+            /* =================================================================================== */
+            Container(
+              height: 25,
+              color: const Color.fromARGB(255, 6, 82, 144),
+              child: const Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Datos de la Empresa',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Nombre:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "NETGO GROUP S DE R.L.",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 130, // Ancho deseado para la imagen
+                  height: 70, // Altura deseada para la imagen
+                  child: Image.asset(
+                    'assets/images/Logo_Netgo.png', 
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'RTN:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "08019012466398",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            /* =================================================================================== */
+            Container(
+              height: 25,
+              color: const Color.fromARGB(255, 6, 82, 144),
+              child: const Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Datos del Empleado',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Nombre:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "ISAAC DAVID LUQUE MEDINA",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Fecha de Ingreso:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "26/3/22",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            //const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Puesto:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "DESARROLLADOR",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Departamento:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "MARKETING",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            /* =================================================================================== */
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 100, // Ancho deseado para la columna "Quincena"
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        color: const Color.fromARGB(255, 6, 82, 144),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Quincena:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 25,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                    ),
+                    child: const Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Segunda Quincena de Septiembre 2022',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 100, // Ancho deseado para la columna "Quincena"
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        color: const Color.fromARGB(255, 6, 82, 144),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'DNI:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 25,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                    ),
+                    child: const Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '0801199910865',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+             /* =================================================================================== */
+            Container(
+              height: 25,
+              color: const Color.fromARGB(255, 6, 82, 144),
+              child: const Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Datos del Salario',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Sueldo Mensual:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "L. 20,000.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Sueldo Quincenal',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "L. 10,000.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Horas Trabajadas',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "30",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            /* =================================================================================== */
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        color: const Color.fromARGB(255, 6, 82, 144),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Ingresos:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "L. 15,000.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        color: const Color.fromARGB(255, 6, 82, 144),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Deducciones:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 246, 254),
+                          border: Border.all(
+                            color: Colors.black
+                          )
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el nombre
+                                "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 25,
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                ':',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        child: const Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                // Dato donde irá el RTN
+                                "L. 20,000.00",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            const Text(
+              'Ingresos',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            // Ingresos
+            const SizedBox(height: 20),
+            const Text(
+              'Deducciones',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            // Deducciones
+            const SizedBox(height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Ingresos:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    // Valor de los ingresos totales
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Deducciones:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    // Valor del total de deducciones
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Valor Neto Recibido:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                // Valor del valor neto recibido
+              ],
             ),
           ],
-        ),
-        backgroundColor: const Color.fromARGB(255, 236, 237, 255),
-        body: Container(
-          color: const Color.fromARGB(255, 236, 237, 255), // Establece el color de fondo del segundo Container
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: /* SfPdfViewer.network(usuarioBoleta), */
-                usuarioBoleta == '' || usuarioBoleta.isEmpty
-                    ? Text(
-                        "No hay una boleta de pago visible.",
-                        style: GoogleFonts.croissantOne(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0)),
-                        textAlign: TextAlign.center,
-                      )
-                    : SfPdfViewer.network(
-                        /* usuarioBoleta */
-                        usuarioBoleta),
-          ),
         ),
       ),
     );
