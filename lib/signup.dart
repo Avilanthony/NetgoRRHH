@@ -7,10 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:recursos_humanos_netgo/config.dart';
-import 'package:recursos_humanos_netgo/screens/imagen_de_perfil.dart'; //YA NO 
 import 'package:http/http.dart' as http;
 import 'package:recursos_humanos_netgo/login.dart';
-import 'package:shared_preferences/shared_preferences.dart'; //YA NO
 
 class SignupPage extends StatefulWidget {
   @override

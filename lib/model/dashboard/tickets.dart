@@ -8,6 +8,7 @@ import 'package:ticket_widget/ticket_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class TicketsPage extends StatefulWidget {
   dynamic token;
   TicketsPage({@required this.token, Key? key}) : super(key: key);
@@ -185,9 +186,9 @@ triggerNotification() {
                                       hintText: 'Asunto',
                                       hintStyle: TextStyle(color: Colors.grey)),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 15),
                                 const TextField(
-                                  maxLines: 10,
+                                  maxLines: 8,
                                   decoration: InputDecoration(
                                       
                                       border: InputBorder.none,

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "320071146878",
-    "project_id": "netgo-notificaciones",
-    "storage_bucket": "netgo-notificaciones.appspot.com"
+    "project_number": "440724346753",
+    "project_id": "flutter-netgo-app-bcfff",
+    "storage_bucket": "flutter-netgo-app-bcfff.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:320071146878:android:c083e8fad3a3baf949a72f",
+        "mobilesdk_app_id": "1:440724346753:android:e6a4ceca5273b0ea783a80",
         "android_client_info": {
           "package_name": "com.netgo.recursos_humanos_netgo"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD_Ld-rL6nbtCNfp1kOF-qZYS61fHru7dM"
+          "current_key": "AIzaSyBIsPinei013LsrOGCxhPP3zMoVUysXNCk"
         }
       ],
       "services": {

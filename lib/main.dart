@@ -6,30 +6,30 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
+import 'package:recursos_humanos_netgo/services/notification_services.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PushNotificationService.initializeApp();
+  runAppWithObserver();
+  //await PushNotificationService.initializeApp();
   /* SharedPreferences prefs = await SharedPreferences.getInstance(); */
   //final storedToken = prefs.getString('token');
-  runAppWithObserver();
-  AwesomeNotifications().initialize(
-  null, // Reemplaza con la ruta correcta a tu icono de la aplicación
-  [
-     NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Color(0xFF9D50DD),
-        ledColor: Colors.white)
-  ],
-  debug: true
   
-);
+  AwesomeNotifications().initialize(
+      null, // Reemplaza con la ruta correcta a tu icono de la aplicación
+      [
+        NotificationChannel(
+            channelKey: 'basic_channel',
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic tests',
+            defaultColor: Color(0xFF9D50DD),
+            ledColor: Colors.white)
+      ],
+      debug: true);
   runApp(MaterialApp(
-    
-    
     debugShowCheckedModeBanner: false,
     /* home: (JwtDecoder.isExpired(token)==false)?Dashboard(token: token):MyHomePage(),
 
@@ -40,17 +40,19 @@ void main() async {
   ));
 }
 
-void runAppWithObserver() async { //NI IDEA PA QUE
+void runAppWithObserver() async {
+  //NI IDEA PA QUE
   final myObserver = MyNavigatorObserver();
   WidgetsFlutterBinding.ensureInitialized();
   //SharedPreferences prefs = await SharedPreferences.getInstance();
   //final storedToken = prefs.getString('token');
-  
+
   runApp(MaterialApp(
     navigatorObservers: [myObserver],
     debugShowCheckedModeBanner: false,
-     home: await determineHomeScreen(),//(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken): 
-     /* MyHomePage(
+    home:
+        await determineHomeScreen(), //(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
+    /* MyHomePage(
        //title: '',
       //token: prefs.getString('token'), 
     ), */
@@ -72,12 +74,10 @@ class MyHomePage extends StatefulWidget {
   final String? token;
   /* final String title; */
   const MyHomePage({
-    
     this.token,
     /* required this.title, */
     Key? key,
-
-  }):super(key: key);
+  }) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -101,11 +101,12 @@ class MyNavigatorObserver extends NavigatorObserver {
 
 class NotificationController {
   @pragma("vm:entry-point")
-  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
     if (receivedAction.payload != null) {
       final payloadMap = Map<String, dynamic>.from(receivedAction.payload!);
       final screen = payloadMap['screen'];
-      
+
       if (screen == 'tickets' && MyNavigatorObserver.navigatorContext != null) {
         // Navegar a la pantalla de Notificaciones
         Navigator.push(
@@ -119,28 +120,23 @@ class NotificationController {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final String? token;
 
-final String? token;
+  _MyHomePageState({
+    @required this.token,
+  });
 
-_MyHomePageState({
-  @required this.token,
-});
-  
-@override
+  @override
   void initState() {
+    PushNotificationService.messageStream.listen((message) {
+      print('MyApp: $message');
+     });
 
-    _requestNotificationPermissions();
-
-    // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
-        onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
-/*         onNotificationCreatedMethod:    NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:  NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:  NotificationController.onDismissActionReceivedMethod */
-    );
+     _requestNotificationPermissions();
 
     super.initState();
   }
+
   void _requestNotificationPermissions() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
@@ -148,7 +144,7 @@ _MyHomePageState({
       }
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
