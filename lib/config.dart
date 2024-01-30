@@ -1,6 +1,6 @@
-final url = 'http://192.168.0.4:8081/';
+final url = 'http://192.168.0.19:8081/';
 // ip Pepetoño: 192.168.0.4
-// ip Donita: 192.168.0.13
+// ip Donita: 192.168.0.19
 // ip AWS: 3.143.83.212
 
 final ingreso = url + "auth/login";
