@@ -8,7 +8,7 @@ import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/boleta.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/constancia.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
-import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/proyectos.dart';
+//import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/proyectos.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaciones.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -111,8 +111,8 @@ class _Documentos extends State<Documentos> {
             itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, context),
             const SizedBox(height: 20),
             itemPerfil('Boleta de pago', '', CupertinoIcons.doc_chart, context),
-            const SizedBox(height: 20),
-            itemPerfil('Proyectos', '', CupertinoIcons.person_3_fill, context),
+            /* const SizedBox(height: 20),
+            itemPerfil('Proyectos', '', CupertinoIcons.person_3_fill, context), */
           ],
         ),
       ),
@@ -123,12 +123,12 @@ class _Documentos extends State<Documentos> {
   return GestureDetector(
     onTap: () {
       switch (title) {
-        /* case 'DNI':
+        case 'DNI':
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ImagenDniPage()),
           );
-          break; */
+          break;
         case 'Contancia':
           Navigator.push(
             context,
