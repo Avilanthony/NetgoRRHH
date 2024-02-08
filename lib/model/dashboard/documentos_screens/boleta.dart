@@ -11,8 +11,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/services/notificacion_pdf_service.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+/* import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart'; */
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 
 class BoletaScreen extends StatefulWidget {
@@ -31,6 +32,9 @@ class _BoletaScreenState extends State<BoletaScreen> {
   late String usuarioBoleta = '';
   late String usuario = '';
   String pdfurl = '';
+  Map<String, dynamic> _datosBoletaUsuario = {};
+  final formatter = NumberFormat.currency(locale: 'es_HN', symbol: 'L.', customPattern: '\u00A4 #,##0.00');
+  
 
   @override
   void initState() {
@@ -45,11 +49,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-            '$dashboard/$usuario'), // Reemplaza con la URL correcta de tu backend
+            '$boleta/boleta_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
       );
 
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
+        final data = json.decode(response.body);
+        final detallesUsuario = data['usuario']; 
 
         print(jsonResponse);
 
@@ -57,14 +63,19 @@ class _BoletaScreenState extends State<BoletaScreen> {
 
         print(myUsuario);
 
-        print("MyUsuario Dash: $myUsuario");
+        print("MyUsuario Boleta: $myUsuario");
+        print("==================================================");
 
         setState(() {
           // Actualiza el estado con la información del usuario
-          usuarioBoleta = myUsuario['BOLETA'];
-          print(usuarioBoleta);
-          pdfurl = usuarioBoleta;
+          _datosBoletaUsuario = detallesUsuario;
         });
+        
+        print('Detalles del usuario: $data');
+        print("Esto es una prueba: $_datosBoletaUsuario");
+        print(_datosBoletaUsuario['NOMBRE_COMPLETO']);
+        print(formatter.format(_datosBoletaUsuario['SUELDO_MENSUAL']));
+
       } else {
         // La solicitud no fue exitosa, maneja el error según sea necesario
         print('Error en la solicitud: ${response.statusCode}');
@@ -80,7 +91,7 @@ class _BoletaScreenState extends State<BoletaScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        title: Text('Boleta de Pago'),
+        title: const Text('Boleta de Pago'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -309,13 +320,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child:  Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "ISAAC DAVID LUQUE MEDINA",
-                                      style: TextStyle(
+                                     ((_datosBoletaUsuario['NOMBRE_COMPLETO'] ?? '')).toUpperCase(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -360,13 +371,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el RTN
-                                      "26/3/22",
-                                      style: TextStyle(
+                                      ((_datosBoletaUsuario['FECHA_INGRESO'] ?? '')).toUpperCase(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -417,13 +428,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "DESARROLLADOR",
-                                      style: TextStyle(
+                                      ((_datosBoletaUsuario['PUESTO'] ?? '')).toUpperCase(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -468,13 +479,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el RTN
-                                      "MARKETING",
-                                      style: TextStyle(
+                                      ((_datosBoletaUsuario['DEPARTAMENTO'] ?? '')).toUpperCase(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -527,12 +538,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               color: Colors.black,
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             children: [
                               Expanded(
                                 child: Text(
-                                  'Segunda Quincena de Septiembre 2022',
-                                  style: TextStyle(
+                                  estiloTextos((_datosBoletaUsuario['FECHA_QUINCENA'] ?? '')).toUpperCase(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
@@ -582,12 +593,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               color: Colors.black,
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             children: [
                               Expanded(
                                 child: Text(
-                                  '0801199910865',
-                                  style: TextStyle(
+                                  ((_datosBoletaUsuario['DNI'] ?? '')).toUpperCase(),
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
@@ -656,13 +667,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 20,000.00",
-                                      style: TextStyle(
+                                      formatter.format(_datosBoletaUsuario['SUELDO_MENSUAL'] ?? 0),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -707,13 +718,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el RTN
-                                      "L. 10,000.00",
-                                      style: TextStyle(
+                                      formatter.format(_datosBoletaUsuario['SUELDO_QUINCENAL'] ?? 0),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -758,13 +769,13 @@ class _BoletaScreenState extends State<BoletaScreen> {
                                   color: Colors.black
                                 )
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el RTN
-                                      "30",
-                                      style: TextStyle(
+                                      '${_datosBoletaUsuario['DIAS_TRABAJADOS']  ?? 'ND'} días',
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold
                                       ),
                                       textAlign: TextAlign.center
@@ -1083,12 +1094,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 10,666.67",
+                                      formatter.format(_datosBoletaUsuario['SUELDO_DEVENGADO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1100,12 +1111,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 255.00",
+                                      formatter.format(_datosBoletaUsuario['OTROS_INGRESOS'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1117,12 +1128,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['BONIFICACION'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1689,12 +1700,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 10,666.67",
+                                      formatter.format(_datosBoletaUsuario['IHSS'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1706,12 +1717,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 255.00",
+                                      formatter.format(_datosBoletaUsuario['ISR'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1723,12 +1734,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['INCAPACIDAD'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1740,12 +1751,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['PRESTAMOS_EMPLEADOS'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1757,12 +1768,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['VIATICOS_NO_LIQUIDADOS'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1774,12 +1785,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['LIQUIDACION_VIA_VENCIDA'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1791,12 +1802,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['REPOSTERIA'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1808,12 +1819,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['APARATO_TELEFONICO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1825,12 +1836,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['BANCO_FICENSA_PRESTAMO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1842,12 +1853,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['SEGURO_MEDICO_DEP'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1859,12 +1870,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['IMPUESTO_VECINAL'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1876,12 +1887,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['GO_CREDITO_AHORRO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1893,12 +1904,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['MI_OPTICA'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1910,12 +1921,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['OTRAS_DEDUCCIONES'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1927,12 +1938,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['CARNET'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1944,12 +1955,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['PLAN_TELEFONICO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1961,12 +1972,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['CREDI_LEE'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1978,12 +1989,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['FARMACIAS'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -1995,12 +2006,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 220, 228, 235),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       // Dato donde irá el nombre
-                                      "L. 500.00",
+                                      formatter.format(_datosBoletaUsuario['BANCO_ATLANTIDA_PRESTAMO'] ?? 0),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -2048,12 +2059,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 168, 215, 255),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'L. 11,421.67',
-                                      style: TextStyle(
+                                      formatter.format(_datosBoletaUsuario['TOTAL_INGRESOS'] ?? 0),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.center
@@ -2096,12 +2107,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:   Color.fromARGB(255, 168, 215, 255),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'L. 831.24',
-                                      style: TextStyle(
+                                      formatter.format(_datosBoletaUsuario['TOTAL_DEDUCCIONES'] ?? 0),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.center
@@ -2151,12 +2162,12 @@ class _BoletaScreenState extends State<BoletaScreen> {
                               decoration: const BoxDecoration(
                                 color:    Color.fromARGB(255, 6, 82, 144),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'L. 10,590.43',
-                                      style: TextStyle(
+                                      formatter.format(_datosBoletaUsuario['VALOR_NETO'] ?? 0),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white
                                       ),
@@ -2180,4 +2191,22 @@ class _BoletaScreenState extends State<BoletaScreen> {
       ),
     );
   }
+}
+
+estiloTextos(String texto){
+  String capitalize(String input) {
+    if (input.isEmpty) {
+      return input;
+    }
+    return input[0].toUpperCase() + input.substring(1).toLowerCase();
+  } 
+
+  String capitalizeFullText(String fulltexto) {
+    List<String> textParts = fulltexto.split(' ');
+    List<String> capitalizedParts = textParts.map((part) => capitalize(part)).toList();
+    return capitalizedParts.join(' ');
+  }
+
+  String capitalizedTexto = capitalizeFullText(texto);
+  return capitalizedTexto;
 }
