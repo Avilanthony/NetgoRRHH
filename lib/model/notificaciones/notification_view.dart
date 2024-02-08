@@ -13,7 +13,7 @@ class NotificationView extends StatelessWidget {
           TextSpan(
               text: 'NOTIFICACIONES',
               style: GoogleFonts.josefinSans(
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
           textAlign: TextAlign.center,
         ),
       ),

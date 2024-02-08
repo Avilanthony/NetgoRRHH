@@ -86,7 +86,7 @@ class _ImagenDniPage extends State<ImagenDniPage> {
           TextSpan(
               text: 'DNI',
               style: GoogleFonts.josefinSans(
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
           textAlign: TextAlign.center,
         ),
       ),

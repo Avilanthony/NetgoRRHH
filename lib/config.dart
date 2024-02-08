@@ -1,4 +1,4 @@
-final url = 'http://192.168.0.19:8081/';
+final url = 'http://192.168.0.4:8081/';
 // ip Pepetoño: 192.168.0.4
 // ip Donita: 192.168.0.19
 // ip AWS: 3.143.83.212
@@ -34,3 +34,5 @@ final llenar_select_locales = url + "local_users/locales";
 final llenar_select_roles = url + "rol_users/roles";
 
 final gestionar = url+ "gestion_user";
+
+final notificacion = "https://fcm.googleapis.com/fcm/send";
