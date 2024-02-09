@@ -1,12 +1,12 @@
 part of 'notifications_bloc.dart';
 
 class NotificationsState extends Equatable {
-
   final AuthorizationStatus status;
+
   final List<PushMessage> notifications;
 
   const NotificationsState({
-    this.status = AuthorizationStatus.notDetermined, 
+    this.status = AuthorizationStatus.notDetermined,
     this.notifications = const[],
   });
 
@@ -15,9 +15,9 @@ class NotificationsState extends Equatable {
     List<PushMessage>? notifications,
   }) => NotificationsState(
     status: status ?? this.status,
-    notifications: notifications ?? this.notifications,
+    notifications: notifications ?? this.notifications
   );
-  
+
   @override
-  List<Object> get props => [ status, notifications ];
+  List<Object> get props => [status, notifications];
 }

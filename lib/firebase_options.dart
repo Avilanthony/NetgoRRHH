@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,21 +43,39 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBoipK8_JxQvF3KA4N28YrSz3s8rJ5lEq0',
+    appId: '1:440724346753:web:fe56c7eb59b62b7c783a80',
+    messagingSenderId: '440724346753',
+    projectId: 'flutter-netgo-app-bcfff',
+    authDomain: 'flutter-netgo-app-bcfff.firebaseapp.com',
+    storageBucket: 'flutter-netgo-app-bcfff.appspot.com',
+    measurementId: 'G-M3ZRDN5C7E',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDsmunOBKGf_lrBwEzBEEE6dgfIxHSZATY',
-    appId: '1:1039643282608:android:5265449f0ad33d4c83ff75',
-    messagingSenderId: '1039643282608',
-    projectId: 'flutter-projects-cb336',
-    storageBucket: 'flutter-projects-cb336.appspot.com',
+    apiKey: 'AIzaSyBIsPinei013LsrOGCxhPP3zMoVUysXNCk',
+    appId: '1:440724346753:android:e6a4ceca5273b0ea783a80',
+    messagingSenderId: '440724346753',
+    projectId: 'flutter-netgo-app-bcfff',
+    storageBucket: 'flutter-netgo-app-bcfff.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCF92CaNJyj25G30T1lklZ-YEJK-isOvhk',
-    appId: '1:1039643282608:ios:94cc1a825a9e541e83ff75',
-    messagingSenderId: '1039643282608',
-    projectId: 'flutter-projects-cb336',
-    storageBucket: 'flutter-projects-cb336.appspot.com',
-    iosClientId: '1039643282608-es0e9uv3ldo39k842cpj1v40h8f5jc20.apps.googleusercontent.com',
-    iosBundleId: 'com.fernandoherrera.push-app',
+    apiKey: 'AIzaSyBdCc9fYwf_mRO8UV44RiTMX-4btZ8CLjE',
+    appId: '1:440724346753:ios:537da2b5d03f1137783a80',
+    messagingSenderId: '440724346753',
+    projectId: 'flutter-netgo-app-bcfff',
+    storageBucket: 'flutter-netgo-app-bcfff.appspot.com',
+    iosBundleId: 'com.example.recursosHumanosNetgo',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBdCc9fYwf_mRO8UV44RiTMX-4btZ8CLjE',
+    appId: '1:440724346753:ios:2d5ad5a769d3e929783a80',
+    messagingSenderId: '440724346753',
+    projectId: 'flutter-netgo-app-bcfff',
+    storageBucket: 'flutter-netgo-app-bcfff.appspot.com',
+    iosBundleId: 'com.example.recursosHumanosNetgo.RunnerTests',
   );
 }
