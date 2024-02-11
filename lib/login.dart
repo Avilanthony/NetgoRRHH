@@ -21,11 +21,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage>{
 
   // Controladores para los campos de entrada
-  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _dniController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
 
   // Define FocusNode para cada campo de entrada
-  final _usuarioFocus = FocusNode();
+  final _dniFocus = FocusNode();
   final _contrasenaFocus = FocusNode();
 
   // Variable para habilitar/deshabilitar el botón de registro
@@ -38,9 +38,9 @@ class _LoginPageState extends State<LoginPage>{
   @override
   void dispose() {
     // Liberar los controladores y los focus
-    _usuarioController.dispose();
+    _dniController.dispose();
     _contrasenaController.dispose();
-    _usuarioFocus.dispose();
+    _dniFocus.dispose();
     _contrasenaFocus.dispose();
     super.dispose();
   }
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage>{
     super.initState();
 
     // Vincular onChanged a cada campo de entrada
-    _usuarioController.addListener(_verificarCampos);
+    _dniController.addListener(_verificarCampos);
     _contrasenaController.addListener(_verificarCampos);
     initSharedPref();
   }
@@ -64,12 +64,12 @@ class _LoginPageState extends State<LoginPage>{
   void _verificarCampos() {
     setState(() {
       if (
-          _usuarioController.text.isNotEmpty &&
+          _dniController.text.isNotEmpty &&
           _contrasenaController.text.isNotEmpty &&
           _contrasenaController.text.length <= 12 &&
           _contrasenaController.text.length >= 8 &&
-          _usuarioController.text == _usuarioController.text.toUpperCase() &&
-          !_usuarioController.text.contains(' ') &&
+          _dniController.text == _dniController.text.toUpperCase() &&
+          !_dniController.text.contains(' ') &&
           !_contrasenaController.text.contains(' ')) {
           _accesoHabilitado = true; // Utiliza = en lugar de ==
       } else {
@@ -99,11 +99,14 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   void mostrarValidaciones(){
-    _usuarioController.text.isEmpty ? showToast("El campo del usuario no puede estar vacío") : null;
+    _dniController.text.isEmpty ? showToast("El campo del DNI de la persona no puede estar vacío") : null;
+    _dniController.text.contains(' ') ? showToast("El campo del DNI no puede contener espacios") : null;
+    RegExp(r'[^\d_-]').hasMatch(_dniController.text) ? showToast("El campo del DNI no puede contener letras"): null;
+    _dniController.text.length != 13 ? showToast("El campo del DNI debe tener exactamente 13 números"):null;
     _contrasenaController.text.isEmpty ? showToast("El campo de la contraseña no puede estar vacío") : null;
     _contrasenaController.text.length > 12 ? showToast("El campo de la contraseña debe tener 12 caracteres máximo") : null;
     _contrasenaController.text.length < 8 ? showToast("El campo de la contraseña debe tener 8 caracteres mínimo") : null;
-    _usuarioController.text.contains(' ') ? showToast("El campo del usuario no puede contener espacios") : null;
+    _dniController.text.contains(' ') ? showToast("El campo del usuario no puede contener espacios") : null;
     _contrasenaController.text.contains(' ') ? showToast("El campo de la contraseña no puede contener espacios") : null;
   }
 
@@ -198,15 +201,15 @@ Widget build(BuildContext context) {
               
                         children: <Widget>[
               
-                          makeInput(label: "Usuario",
-                          controller: _usuarioController,
-                          focusNode: _usuarioFocus,
-                          onSubmitted: (value) => cambiarFoco(_usuarioFocus, _contrasenaFocus),
+                          makeInput(label: "DNI",
+                          controller: _dniController,
+                          focusNode: _dniFocus,
+                          onSubmitted: (value) => cambiarFoco(_dniFocus, _contrasenaFocus),
                           onChanged: (text) {
                              setState(() {
-                              _usuarioController.text = text.toUpperCase();
-                              _usuarioController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: _usuarioController.text.length),
+                              _dniController.text = text.toUpperCase();
+                              _dniController.selection = TextSelection.fromPosition(
+                                TextPosition(offset: _dniController.text.length),
                               );
                              });
                           }),
@@ -375,7 +378,7 @@ Widget build(BuildContext context) {
       FocusScope.of(context).unfocus();
       try {
         var ingBody = {
-          "usuario": _usuarioController.text,
+          "dni": _dniController.text,
           "contrasena": _contrasenaController.text,
         };
         print("Hola");
