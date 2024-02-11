@@ -76,7 +76,7 @@ class _VacationRequestScreenState extends State<VacationRequestScreen> {
             TextSpan(
                 text: 'VACACIONES',
                 style: GoogleFonts.josefinSans(
-                    fontSize: 20, fontWeight: FontWeight.bold)),
+                    fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
             textAlign: TextAlign.center,
           ),
         ),

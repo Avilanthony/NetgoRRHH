@@ -1,63 +1,66 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+//import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:recursos_humanos_netgo/blocs/notifications/notifications_bloc.dart';
+import 'package:recursos_humanos_netgo/config/routes/app_router.dart';
+import 'package:recursos_humanos_netgo/config/routes/local_notification/local_notifications.dart';
 import 'package:recursos_humanos_netgo/login.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/dashboard.dart';
 import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
-import 'package:recursos_humanos_netgo/services/notification_services.dart';
+//import 'package:recursos_humanos_netgo/services/notification_services.dart';
 import 'package:recursos_humanos_netgo/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await PushNotificationService.initializeApp();
   runAppWithObserver();
-  //await PushNotificationService.initializeApp();
-  /* SharedPreferences prefs = await SharedPreferences.getInstance(); */
-  //final storedToken = prefs.getString('token');
-  
-  AwesomeNotifications().initialize(
-      null, // Reemplaza con la ruta correcta a tu icono de la aplicación
-      [
-        NotificationChannel(
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: Color(0xFF9D50DD),
-            ledColor: Colors.white)
-      ],
-      debug: true);
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    /* home: (JwtDecoder.isExpired(token)==false)?Dashboard(token: token):MyHomePage(),
-
-     MyHomePage(
-      //title: '',
-      token: prefs.getString('token'),
-    ),  */
-  ));
 }
 
 void runAppWithObserver() async {
-  //NI IDEA PA QUE
-  final myObserver = MyNavigatorObserver();
   WidgetsFlutterBinding.ensureInitialized();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final storedToken = prefs.getString('token');
 
-  runApp(MaterialApp(
-    navigatorObservers: [myObserver],
-    debugShowCheckedModeBanner: false,
-    home:
-        await determineHomeScreen(), //(JwtDecoder.isExpired(storedToken!)==false)?Dashboard(token: storedToken):
-    /* MyHomePage(
-       //title: '',
-      //token: prefs.getString('token'), 
-    ), */
-  ));
+  // Inicializar Firebase
+  //await Firebase.initializeApp();
+
+  // Inicializar FCM
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificationsBloc.initializeFCM();
+  await LocalNotifications.initializeLocalNotifications();
+
+  // Crear el bloc después de inicializar Firebase y FCM
+  final myObserver = MyNavigatorObserver();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => NotificationsBloc(
+          requestLocalNotificationsPermission: LocalNotifications.requestPermissionLocalNotifications,
+          showLocalNotification: LocalNotifications.showLocalNotification
+        ))
+      ],
+      child: MaterialApp(
+        navigatorObservers: [myObserver],
+        debugShowCheckedModeBanner: false,
+        home: FutureBuilder<Widget>(
+          future: determineHomeScreen(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return HandleNotificationInteractions(child: snapshot.data!);
+            } else {
+              return Container(); // Puedes cambiar esto a un indicador de carga si lo deseas
+            }
+          },
+        ),
+      ),
+    ),
+  );
 }
+
 
 Future<Widget> determineHomeScreen() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -127,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   });
 
   @override
-  void initState() {
+  /* void initState() {
     PushNotificationService.messageStream.listen((message) {
       print('MyApp: $message');
      });
@@ -135,15 +138,15 @@ class _MyHomePageState extends State<MyHomePage> {
      _requestNotificationPermissions();
 
     super.initState();
-  }
+  } */
 
-  void _requestNotificationPermissions() {
+  /* void _requestNotificationPermissions() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -258,5 +261,57 @@ class _MyHomePageState extends State<MyHomePage> {
             )),
       ),
     );
+  }
+}
+
+class HandleNotificationInteractions extends StatefulWidget {
+  final Widget child;
+  const HandleNotificationInteractions({super.key, required this.child});
+
+  @override
+  State<HandleNotificationInteractions> createState() => _HandleNotificationInteractionsState();
+}
+
+class _HandleNotificationInteractionsState extends State<HandleNotificationInteractions>{
+
+  // It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+  
+  void _handleMessage(RemoteMessage message) {
+
+    context.read<NotificationsBloc>().handleRemoteMessage(message);
+
+    final messageId = message.messageId?.replaceAll(':', '').replaceAll('%', '');
+    appRouter.push('/push-details/$message');
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Run code required to handle interacted messages in an async function
+    // as initState() must not be async
+    setupInteractedMessage();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

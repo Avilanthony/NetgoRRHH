@@ -96,7 +96,7 @@ class _ConstanciaSolicitudScreenState extends State<ConstanciaPdfViewerScreen> {
           TextSpan(
               text: 'Solicitud de constancia',
               style: GoogleFonts.josefinSans(
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
           textAlign: TextAlign.center,
         ),
       ),
