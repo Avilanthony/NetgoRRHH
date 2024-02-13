@@ -91,68 +91,79 @@ class _PersonalNotificationScreenState
   }
 
   Future<void> _getDepartamentos() async {
-    try {
-      final response = await http.get(Uri.parse(llenar_select_deptos));
-      var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
+  try {
+    final response = await http.get(Uri.parse(llenar_select_deptos));
+    var jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
 
-      if (jsonResponse['status']) {
-        final data = json.decode(response.body);
-        final departamentos = List<String>.from(
-            data['departamento'].map((dep) => dep['DEPARTAMENTO']));
-        final idsDepartamento = List<int>.from(
-            data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
+    final data = json.decode(response.body);
+    if (data.containsKey('departamento')) {
+      final departamentos = List<String>.from(
+          data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+      final idsDepartamento = List<int>.from(
+          data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
 
-        setState(() {
-          _departamentosUsuario = departamentos;
-          _idsDepartamentos = idsDepartamento;
-          _valorSelec = _departamentosUsuario.isNotEmpty
-              ? _departamentosUsuario[0]
-              : null;
-          _idSelec = _idsDepartamentos.isNotEmpty ? _idsDepartamentos[0] : null;
-        });
+      setState(() {
+        _departamentosUsuario = departamentos;
+        _idsDepartamentos = idsDepartamento;
+        _valorSelec =
+            _departamentosUsuario.isNotEmpty ? _departamentosUsuario[0] : null;
+        _idSelec = _idsDepartamentos.isNotEmpty ? _idsDepartamentos[0] : null;
+      });
 
-        for (final dep in data['departamento']) {
-          _departamentosIdMap[dep['DEPARTAMENTO']] = dep['ID_DEPARTAMENTO'];
-        }
-
-        print("ChatGPT : $_departamentosIdMap");
-        print("Los departamentos son: $_departamentosUsuario");
-        print("Los IDs son: $_idsDepartamentos");
-        print("Hola");
-      } else {
-        showToast(jsonResponse['msg']);
-        print("Algo anda mal");
+      for (final dep in data['departamento']) {
+        _departamentosIdMap[dep['DEPARTAMENTO']] = dep['ID_DEPARTAMENTO'];
       }
-    } catch (error) {
-      print(error);
-      showToast('Hubo un problema al traer los departamentos.');
-    }
-  }
 
-  Future<void> _enviarNotificacion() async {
+      print("ChatGPT : $_departamentosIdMap");
+      print("Los departamentos son: $_departamentosUsuario");
+      print("Los IDs son: $_idsDepartamentos");
+      print("Hola");
+    } else {
+      showToast('La respuesta del servidor no contiene información válida.');
+      print("Algo anda mal");
+    }
+  } catch (error) {
+    print(error);
+    showToast('Hubo un problema al traer los departamentos.');
+  }
+}
+
+
+  Future<void> _enviarNotificacion(String asunto, String detalle) async {
     try {
       final response = await http.post(
         Uri.parse('$ticket/enviar_noti_rrhh'),
-        body: {
-          'id_usuario_origen': usuario,
-          'asunto': _asuntoController.text,
-          'detalle': _detalleController.text,
-          'id_Depto_Destino': _idSelec,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-      );
+        body: jsonEncode(<String, dynamic>{
+          'id_usuario_origen': usuario,
+          'asunto': asunto,
+          'detalle': detalle,
+          'id_Depto_Destino': _idSelec.toString(),
+        },
+      ));
       print('-----------------------');
       print(usuario);
-      print(_asuntoController.text);
-      print(_detalleController.text);
-      print(_idSelec);
+      print(asunto);
+      print(detalle);
+      print(_idSelec.toString());
       print('-----------------------');
 
-      var jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status']) {
-        showToast('Notificación enviada exitosamente');
+      if (response.statusCode == 200) {
+        // Solicitud exitosa, puedes manejar la respuesta según sea necesario
+        print('Notificación enviada exitosamente');
+
+        // Limpiar los TextFields
+        _asuntoController.clear();
+        _detalleController.clear();
+
+        // Mostrar mensaje de éxito
+        mostrarMensaje('Notificación enviada exitosamente');
       } else {
-        showToast(jsonResponse['msg']);
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
       }
     } catch (error) {
       print(error);
@@ -170,6 +181,16 @@ class _PersonalNotificationScreenState
       backgroundColor: Colors.red,
       textColor: Colors.white,
       fontSize: 16.0,
+    );
+  }
+
+    void mostrarMensaje(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 
@@ -287,7 +308,9 @@ class _PersonalNotificationScreenState
                 width: 140,
                 child: ElevatedButton(
                   onPressed: () {
-                    _enviarNotificacion();
+                    String asunto = _asuntoController.text;
+                      String detalle = _detalleController.text;
+                    _enviarNotificacion(asunto, detalle);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 81, 124, 193),
