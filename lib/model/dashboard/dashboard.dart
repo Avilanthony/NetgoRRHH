@@ -7,7 +7,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/main.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/ajustes.dart';
-import 'package:recursos_humanos_netgo/model/notificaciones/notification_view.dart';
+import 'package:recursos_humanos_netgo/model/notificaciones/new_view_noti.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/perfil_screens/perfil_usuario.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/tickets.dart';
@@ -165,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const NotificationView()),
+                    builder: (context) => ViewNotiUser(token: widget.token)),
               );
             },
           ),
@@ -256,7 +256,7 @@ class _DashboardState extends State<Dashboard> {
           TicketsPage(token: widget.token),
           Documentos(token: widget.token),
           PerfilUsuario(token: widget.token),
-          const Settings(),
+          Settings(token: widget.token),
         ],
       ),
       bottomNavigationBar: Container(

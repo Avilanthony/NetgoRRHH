@@ -7,7 +7,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:recursos_humanos_netgo/config.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/boleta.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/constancia.dart';
-import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
+//import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/dni.dart';
 //import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/proyectos.dart';
 import 'package:recursos_humanos_netgo/model/dashboard/documentos_screens/vacaciones.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -104,8 +104,8 @@ class _Documentos extends State<Documentos> {
               CupertinoIcons.macwindow,""
             ),
             const SizedBox(height: 25),
-            itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, context),
-            const SizedBox(height: 20),
+            /* itemPerfil('DNI', '', CupertinoIcons.person_alt_circle, context),
+            const SizedBox(height: 20), */
             itemPerfil('Contancia', '', CupertinoIcons.doc, context),
             const SizedBox(height: 20),
             itemPerfil('Vacaciones', '', CupertinoIcons.sun_dust, context),
@@ -123,12 +123,12 @@ class _Documentos extends State<Documentos> {
   return GestureDetector(
     onTap: () {
       switch (title) {
-        case 'DNI':
+        /* case 'DNI':
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ImagenDniPage()),
           );
-          break;
+          break; */
         case 'Contancia':
           Navigator.push(
             context,

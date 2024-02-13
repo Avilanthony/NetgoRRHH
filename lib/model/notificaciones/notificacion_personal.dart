@@ -8,22 +8,34 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:recursos_humanos_netgo/config.dart';
 
 class PersonalNotificationScreen extends StatefulWidget {
-  const PersonalNotificationScreen({super.key});
+  final token;
+  const PersonalNotificationScreen({required this.token, Key? key})
+      : super(key: key);
 
   @override
-  _PersonalNotificationScreenState createState() => _PersonalNotificationScreenState();
+  _PersonalNotificationScreenState createState() =>
+      _PersonalNotificationScreenState();
 }
 
-class _PersonalNotificationScreenState extends State<PersonalNotificationScreen> {
+class _PersonalNotificationScreenState
+    extends State<PersonalNotificationScreen> {
+  TextEditingController _asuntoController = TextEditingController();
+  TextEditingController _detalleController = TextEditingController();
+
   List<String> _departamentosUsuario = [];
-  List<Map<String, dynamic>> _usuariosPorDepartamento = [];
   List<int> _idsDepartamentos = [];
   Map<String, int> _departamentosIdMap = {};
-  bool showDepartmentDropdown = false;
-  bool showPersonDropdown = false;
+
+  late String usuario = '';
+  String usuarioPrimerNombre = '';
+  String usuarioSegundoNombre = '';
+  String usuarioPrimerApellido = '';
+  String usuarioSegundoApellido = '';
+  String usuarioDepartamento = '';
 
   String? _valorSelec;
   int? _idSelec;
@@ -31,8 +43,51 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
   @override
   void initState() {
     super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+
+    usuario = jwtDecodedToken['uid'].toString();
+    obtenerInformacionUsuario();
     // Llamar a la función para obtener la lista de departamentos al inicio
     _getDepartamentos();
+  }
+
+  Future<void> obtenerInformacionUsuario() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$ticket/ticket_usuario/$usuario'), // Reemplaza con la URL correcta de tu backend
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        var myUsuario = jsonResponse['usuario'];
+
+        print(myUsuario);
+
+        setState(() {
+          // Actualiza el estado con la información del usuario
+          usuarioPrimerNombre = myUsuario['PRIMER_NOMBRE'];
+          usuarioSegundoNombre = myUsuario['SEGUNDO_NOMBRE'];
+          usuarioPrimerApellido = myUsuario['APELLIDO_PATERNO'];
+          usuarioSegundoApellido = myUsuario['APELLIDO_MATERNO'];
+          usuarioDepartamento = myUsuario['DEPARTAMENTO'];
+          //VER QUE TRAE LOS DATOS DESDE LA CONSOLA
+          print(usuarioPrimerNombre);
+          print(usuarioSegundoNombre);
+          print(usuarioPrimerApellido);
+          print(usuarioSegundoApellido);
+          print(usuarioDepartamento);
+          // Otros campos del usuario...
+        });
+      } else {
+        // La solicitud no fue exitosa, maneja el error según sea necesario
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Maneja errores de red u otros errores aquí
+      print('Error: $error');
+    }
   }
 
   Future<void> _getDepartamentos() async {
@@ -43,15 +98,17 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
 
       if (jsonResponse['status']) {
         final data = json.decode(response.body);
-        final departamentos =
-            List<String>.from(data['departamento'].map((dep) => dep['DEPARTAMENTO']));
-        final idsDepartamento =
-            List<int>.from(data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
+        final departamentos = List<String>.from(
+            data['departamento'].map((dep) => dep['DEPARTAMENTO']));
+        final idsDepartamento = List<int>.from(
+            data['departamento'].map((dep) => dep['ID_DEPARTAMENTO']));
 
         setState(() {
           _departamentosUsuario = departamentos;
           _idsDepartamentos = idsDepartamento;
-          _valorSelec = _departamentosUsuario.isNotEmpty ? _departamentosUsuario[0] : null;
+          _valorSelec = _departamentosUsuario.isNotEmpty
+              ? _departamentosUsuario[0]
+              : null;
           _idSelec = _idsDepartamentos.isNotEmpty ? _idsDepartamentos[0] : null;
         });
 
@@ -73,98 +130,34 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
     }
   }
 
-  Future<void> _getUsuariosPorDepartamento(String departamento) async {
-    if (departamento == "TODOS") {
-      try {
-        /* final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1; */
+  Future<void> _enviarNotificacion() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$ticket/enviar_noti_rrhh'),
+        body: {
+          'id_usuario_origen': usuario,
+          'asunto': _asuntoController.text,
+          'detalle': _detalleController.text,
+          'id_Depto_Destino': _idSelec,
+        },
+      );
+      print('-----------------------');
+      print(usuario);
+      print(_asuntoController.text);
+      print(_detalleController.text);
+      print(_idSelec);
+      print('-----------------------');
 
-        final response = await http.get(Uri.parse(traer_todos_usuarios_deptos));
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-
-        if (jsonResponse['status']) {
-          final data = json.decode(response.body);
-          /* final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO'])); */
-          final usuarios = List<Map<String, dynamic>>.from(data['todosUsuarios'].map((dep) => {
-            'id': dep['ID'],
-            'nombreCompleto': dep['NOMBRE'] + ' ' + dep['APELLIDO'],
-            'departamentousuario': dep['NOMBRE_DEP'],
-          }));
-          /* final idsUsuarios = List<int>.from(data['usuario'].map((dep) => dep['ID'])); */
-          setState(() {
-            _usuariosPorDepartamento = usuarios;
-            /* _idsUsuariosPorDepartamento = idsUsuarios; */
-          });
-          /* print("El id debe ser este: $idDepartamento"); */
-          print('Detalles de los usuarios: $data');
-          /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
-          print("Usuarios del departamento $departamento: $usuarios");
-          print(usuarios);
-
-          // Puedes continuar con la lógica para mostrar los usuarios en tu aplicación.
-
-        } else {
-          showToast(jsonResponse['msg']);
-          print("Algo anda mal al obtener usuarios");
-        }
-      } catch (error) {
-        print(error);
-        showToast('Hubo un problema al obtener los usuarios.');
-      } 
-
-    } else {
-      try {
-        /* final idDepartamento = _departamentosUsuario.indexOf(departamento) + 1; */
-        final idDepartamento = _departamentosIdMap[departamento];
-        final response = await http.get(Uri.parse('$traer_usuario_cada_depto/$idDepartamento'));
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-
-        if (jsonResponse['status']) {
-          final data = json.decode(response.body);
-          /* final usuarios = List<String>.from(data['usuario'].map((dep) => dep['NOMBRE'] + ' ' + dep['APELLIDO'])); */
-          final usuarios = List<Map<String, dynamic>>.from(data['usuario'].map((dep) => {
-            'id': dep['ID'],
-            'nombreCompleto': dep['NOMBRE'] + ' ' + dep['APELLIDO'],
-            'departamentousuario': dep['NOMBRE_DEP'],
-          }));
-          /* final idsUsuarios = List<int>.from(data['usuario'].map((dep) => dep['ID'])); */
-          setState(() {
-            _usuariosPorDepartamento = usuarios;
-            /* _idsUsuariosPorDepartamento = idsUsuarios; */
-          });
-          print("El id debe ser este: $idDepartamento");
-          /* print("El id ChatGPT debe ser este: $pruebi"); */
-          print('Detalles de los usuarios: $data');
-          /* print("Usuarios del departamento $departamento: $usuarios "); *//* con ID: $idsUsuarios */
-          print("Usuarios del departamento $departamento: $usuarios");
-          print(usuarios);
-
-          // Puedes continuar con la lógica para mostrar los usuarios en tu aplicación.
-
-        } else {
-          showToast(jsonResponse['msg']);
-          print("Algo anda mal al obtener usuarios");
-        }
-      }catch (error) {
-        print(error);
-        showToast('Hubo un problema al obtener los usuarios.');
-      } 
-    }  
-  }
-
-  void updateUsuariosList() {
-    setState(() {
-      // Llamada a _getUsuariosPorDepartamento() u otras acciones de actualización
-      _getUsuariosPorDepartamento(_valorSelec!);
-    });
-  }
-
-  _GestionUsuariosPageState() {
-    // Asegúrate de que _departamentosUsuario no esté vacío antes de asignar el valor
-    _valorSelec =
-        _departamentosUsuario.isNotEmpty ? _departamentosUsuario[0] : null;
-    _idSelec = _idsDepartamentos.isNotEmpty ? _idsDepartamentos[0] : null;
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status']) {
+        showToast('Notificación enviada exitosamente');
+      } else {
+        showToast(jsonResponse['msg']);
+      }
+    } catch (error) {
+      print(error);
+      showToast('Hubo un problema al enviar la notificación.');
+    }
   }
 
   // Función para mostrar toasts con FlutterToast
@@ -211,180 +204,42 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Checkbox(
-                    value: showDepartmentDropdown,
-                    onChanged: (value) {
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: DropdownButtonFormField(
+                  value: _valorSelec,
+                  items: _departamentosUsuario
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e),
+                          ))
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null) {
                       setState(() {
-                        showDepartmentDropdown = value!;
-                        showPersonDropdown = false;
+                        _valorSelec = val as String;
+                        _idSelec = _departamentosIdMap[_valorSelec];
                       });
-                    },
+                    }
+                    print("Seleccionaste el Dep: $_valorSelec");
+                    print("Seleccionaste el ID: $_idSelec");
+                  },
+                  icon: const Icon(
+                    Icons.arrow_drop_down_circle,
+                    color: Color.fromARGB(255, 81, 124, 193),
                   ),
-                  const Text('Por Departamento'),
-                ],
-              ),
-              if (showDepartmentDropdown)
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        "Selecciona el departamento al que quieres notificar",
-                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                        textAlign: TextAlign.center,
-                      ),
+                  dropdownColor: const Color.fromARGB(255, 231, 241, 246),
+                  decoration: const InputDecoration(
+                    labelText: "Elige un Departamento",
+                    prefixIcon: Icon(
+                      CupertinoIcons.briefcase_fill,
+                      color: Color.fromARGB(255, 81, 124, 193),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: DropdownButtonFormField(
-                        value: _valorSelec,
-                        items: _departamentosUsuario
-                            .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e),
-                                ))
-                            .toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            _valorSelec = val as String;
-                          });
-
-                          print("Seleccionaste el Dep: $_valorSelec");
-
-                          _getUsuariosPorDepartamento(_valorSelec!);
-
-                          print(
-                              "Seleccionaste el ID: ${_departamentosIdMap[_valorSelec]}");
-                        },
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle,
-                          color: Color.fromARGB(255, 81, 124, 193),
-                        ),
-                        dropdownColor: const Color.fromARGB(255, 231, 241, 246),
-                        decoration: const InputDecoration(
-                          labelText: "Elige un Departamento",
-                          prefixIcon: Icon(
-                            CupertinoIcons.briefcase_fill,
-                            color: Color.fromARGB(255, 81, 124, 193),
-                          ),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              Row(
-                children: [
-                  Checkbox(
-                    value: showPersonDropdown,
-                    onChanged: (value) {
-                      setState(() {
-                        showPersonDropdown = value!;
-                        showDepartmentDropdown = false;
-                      });
-                    },
+                    border: UnderlineInputBorder(),
                   ),
-                  const Text('Por Usuario'),
-                ],
-              ),
-              if (showPersonDropdown)
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        "Selecciona el departamento del usuario a notificar",
-                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: DropdownButtonFormField(
-                        value: _valorSelec,
-                        items: _departamentosUsuario
-                            .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e),
-                                ))
-                            .toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            _valorSelec = val as String;
-                          });
-
-                          print("Seleccionaste el Dep: $_valorSelec");
-
-                          _getUsuariosPorDepartamento(_valorSelec!);
-
-                          print(
-                              "Seleccionaste el ID: ${_departamentosIdMap[_valorSelec]}");
-                        },
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle,
-                          color: Color.fromARGB(255, 81, 124, 193),
-                        ),
-                        dropdownColor: const Color.fromARGB(255, 231, 241, 246),
-                        decoration: const InputDecoration(
-                          labelText: "Elige un Departamento",
-                          prefixIcon: Icon(
-                            CupertinoIcons.briefcase_fill,
-                            color: Color.fromARGB(255, 81, 124, 193),
-                          ),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "Selecciona el USUARIO al que quieres notificar",
-                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: DropdownButtonFormField(
-                        value: _valorSelec,
-                        items: _departamentosUsuario
-                            .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e),
-                                ))
-                            .toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            _valorSelec = val as String;
-                          });
-
-                          print("Seleccionaste el Dep: $_valorSelec");
-
-                          _getUsuariosPorDepartamento(_valorSelec!);
-
-                          print(
-                              "Seleccionaste el ID: ${_departamentosIdMap[_valorSelec]}");
-                        },
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle,
-                          color: Color.fromARGB(255, 81, 124, 193),
-                        ),
-                        dropdownColor: const Color.fromARGB(255, 231, 241, 246),
-                        decoration: const InputDecoration(
-                          labelText: "Elige un Usuario",
-                          prefixIcon: Icon(
-                            CupertinoIcons.briefcase_fill,
-                            color: Color.fromARGB(255, 81, 124, 193),
-                          ),
-                          border: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-              const SizedBox(height: 10),
+              ),
+              const SizedBox(height: 20),
               Text(
                 "Asunto:",
                 style: GoogleFonts.croissantOne(
@@ -396,9 +251,10 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
               const SizedBox(height: 0),
               Container(
                 padding: const EdgeInsets.all(15),
-                child: const TextField(
+                child: TextField(
+                  controller: _asuntoController,
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Asunto de la notificación...',
                     border: OutlineInputBorder(),
                   ),
@@ -416,9 +272,10 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
               const SizedBox(height: 0),
               Container(
                 padding: const EdgeInsets.all(15),
-                child: const TextField(
+                child: TextField(
+                  controller: _detalleController,
                   maxLines: 4,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Descripción de la notificación...',
                     border: OutlineInputBorder(),
                   ),
@@ -429,11 +286,14 @@ class _PersonalNotificationScreenState extends State<PersonalNotificationScreen>
                 height: 40,
                 width: 140,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _enviarNotificacion();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 81, 124, 193),
                   ),
-                  child: const Text('Enviar'),
+                  child: const Text('Enviar',
+                      style: TextStyle(color: Colors.white)),
                 ),
               )
             ],
